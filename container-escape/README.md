@@ -130,6 +130,39 @@ sh -c "echo \$\$ > /tmp/cgrp/x/cgroup.procs"
 
 ## kubernetes cluster
 
+If minikube is used, you can easily start and build the container locally:
+
+```bash
+# NOTE: if minikube is used with docker desktop, you need to configure docker desktop before
+minikube start --memory 4096 --cpus 4
+eval $(minikube docker-env)
+docker build -t docker.io/hacklab/gitlab-escape -f ./Dockerfile .
+```
+
+Deploy Gitlab into Minikube
+
+```
+kubectl apply -f gitlab-deployment.yaml
+```
+
+Forward the pod ports locally:
+
+```bash
+kubectl get pods
+NAME                                       READY   STATUS    RESTARTS   AGE
+gitlab-container-escape-7d845f77c6-4twd7   1/1     Running   0          94s
+
+kubectl port-forward gitlab-container-escape-7d7cfb4699-rp6dq 5080:80
+kubectl port-forward gitlab-container-escape-7d7cfb4699-rp6dq 50443:443
+kubectl port-forward gitlab-container-escape-7d845f77c6-4twd7 5022:22
+```
+
+To delete the deployment just run:
+
+```
+kubectl delete -f gitlab-deployment.yaml
+```
+
 ### some ideas
 
 - just execute `ps aux` on the container host
