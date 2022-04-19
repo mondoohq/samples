@@ -359,6 +359,33 @@ resource "aws_security_group" "kali_linux_access" {
     ]
   }
 
+  ingress {
+    from_port = 4242
+    to_port   = 4242
+    protocol  = "tcp"
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+  }
+
+  ingress {
+    from_port = 4243
+    to_port   = 4243
+    protocol  = "tcp"
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+  }
+
+  ingress {
+    from_port = 8001
+    to_port   = 8001
+    protocol  = "tcp"
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+  }
+
   tags = local.default_tags
 }
 
