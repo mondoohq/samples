@@ -32,3 +32,9 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Ignore creds.json for Mondoo environment
+creds.json
+
+# Ignore EKS cluster config
+eks-demo-config
