@@ -4,7 +4,7 @@ This folder contains Terraform automation code to provision the following:
 
 - **AWS VPC**
 - **AWS EKS Cluster** - 2 worker managed nodes (m5.medium)
-- **Kali Linux AWS EC2 Instance** - Kali Linux for ethical hacking
+- **Kali Linux AWS EC2 Instance** - This instance is provisioned for the demonstration of the container-escape demo. The instance is provisioned with  
 
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
@@ -21,14 +21,14 @@ This folder contains Terraform automation code to provision the following:
 
 <!-- /code_chunk_output -->
 
-
-
 ### Prerequsites
 
 - [AWS Account](https://aws.amazon.com/free/)
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) - `~> aws-cli/2.4.28`
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) - `~> v1.0.5`
 - [AWS EC2 Key Pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html) - You should already have an AWS key pair created and uploaded to the region where you want to provision.
+- [`kubectl`]() - Kubectl must be installed on the host that you run `terraform` from.
+- [`config.json`]() - Service account credentials for the Mondoo Operator to send scan results to Mondoo.
 
 ## Configuration
 
@@ -37,7 +37,9 @@ Before provisioning set the following environment variables:
 - `TF_VAR_region` - AWS region where you want to provision the cluster.
 - `TF_VAR_demo_name` - This is a prefix that will be applied to all provisioned resources (i.e. `your_name`).
 - `TF_VAR_ssh_key` - AWS EC2 key pair for Kali linux access.
+- `TF_VAR_ssh_key_path` - Path to to local ssh key for connecting to Kali Linux instance.
 - `TF_VAR_publicIP` - IP address of your home network to be applied to the security group for the Kali linux instance.
+- `TF_VAR_mondoo_credentials` - Path to creds.json file to be used with Mondoo Operator.
 
 ### Example configuration 
 
@@ -50,7 +52,11 @@ export TF_VAR_demo_name=my_demo
 
 export TF_VAR_ssh_key=aws_key
 
+export TF_VAR_ssh_key_path=~/.ssh/id_rsa
+
 export TF_VAR_publicIP="73.231.132.25"
+
+export TF_VAR_mondoo_credentials=creds.json
 ```
 
 ## Provision the cluster

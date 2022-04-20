@@ -197,9 +197,9 @@ module "eks" {
 
       subnet_ids = module.vpc.public_subnets
 
-      ami_type       = "AL2_x86_64"
+      ami_type = "AL2_x86_64"
 
-      min_size     = 2 
+      min_size     = 2
       max_size     = 4
       desired_size = 2
 
@@ -326,6 +326,10 @@ data "aws_ami" "kali_linux" {
   }
 }
 
+data "template_file" "setup_metapreter" {
+  template = file("${path.module}/../templates/setup_metapreter.tpl")
+}
+
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
@@ -338,6 +342,7 @@ module "ec2_instance" {
   monitoring             = true
   vpc_security_group_ids = [aws_security_group.kali_linux_access.id]
   subnet_id              = element(module.vpc.public_subnets, 0)
+  user_data              = data.template_file.setup_metapreter.rendered
 
   tags = merge(
     local.default_tags, {
@@ -381,6 +386,15 @@ resource "aws_security_group" "kali_linux_access" {
     from_port = 8001
     to_port   = 8001
     protocol  = "tcp"
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+  }
+
+  ingress {
+    from_port = -1
+    to_port   = -1
+    protocol  = "icmp"
     cidr_blocks = [
       "0.0.0.0/0"
     ]
@@ -550,6 +564,53 @@ resource "null_resource" "kubectl_config_update" {
     module.eks
   ]
   provisioner "local-exec" {
-    command = "aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)"
+    command = "aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name) --kubeconfig ./eks-demo-config"
+  }
+}
+
+################################################################################
+# Install Mondoo Operator
+################################################################################
+
+resource "null_resource" "kubectl_install_mondoo_operator" {
+  depends_on = [
+    module.eks,
+    null_resource.kubectl_config_update
+  ]
+  provisioner "local-exec" {
+    command = "kubectl --kubeconfig eks-demo-config apply -f https://github.com/mondoohq/mondoo-operator/releases/latest/download/mondoo-operator-manifests.yaml"
+  }
+}
+
+resource "null_resource" "kubectl_mondoo_operator_secret" {
+  depends_on = [
+    module.eks,
+    null_resource.kubectl_config_update,
+    null_resource.kubectl_install_mondoo_operator
+  ]
+  provisioner "local-exec" {
+    command = "kubectl --kubeconfig eks-demo-config create secret generic mondoo-client --namespace mondoo-operator --from-file=config=${var.mondoo_credentials} || true"
+  }
+}
+
+resource "null_resource" "kubectl_install_cert_manager" {
+  depends_on = [
+    module.eks,
+    null_resource.kubectl_config_update,
+    null_resource.kubectl_mondoo_operator_secret
+  ]
+  provisioner "local-exec" {
+    command = "kubectl --kubeconfig eks-demo-config apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yaml"
+  }
+}
+
+resource "null_resource" "kubectl_apply_mondoo_audit_config" {
+  depends_on = [
+    module.eks,
+    null_resource.kubectl_config_update,
+    null_resource.kubectl_install_cert_manager
+  ]
+  provisioner "local-exec" {
+    command = "kubectl --kubeconfig eks-demo-config apply -f mondoo-config.yaml"
   }
 }
