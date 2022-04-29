@@ -204,6 +204,7 @@ module "eks" {
       desired_size = 2
 
       ami_id                     = data.aws_ami.eks_default.image_id
+      key_name                   = var.ssh_key
       enable_bootstrap_user_data = true
       bootstrap_extra_args       = "--kubelet-extra-args '--max-pods=20'"
 
@@ -589,7 +590,7 @@ resource "null_resource" "kubectl_mondoo_operator_secret" {
     null_resource.kubectl_install_mondoo_operator
   ]
   provisioner "local-exec" {
-    command = "kubectl --kubeconfig eks-demo-config create secret generic mondoo-client --namespace mondoo-operator --from-file=config=${var.mondoo_credentials} || true"
+    command = "kubectl --kubeconfig eks-demo-config create secret generic mondoo-client --namespace mondoo-operator --from-file=config=${var.mondoo_credentials}"
   }
 }
 

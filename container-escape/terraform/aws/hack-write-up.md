@@ -106,8 +106,7 @@ Log in to DVWA using `admin` with the password `password`.
 
 Once logged in, click on "Create / Reset Database" after which, you will be logged out. Log back in to the web application and click on "Command Injection."
 
-- please replace the variable `kali_linux_public_ip` in the following commands
-- create the reverse meterpreter shell for the container
+Next, open three command line terminals and continue the setup process.
 
 ## Setup Kali Linux Instance
 
@@ -286,12 +285,46 @@ mondoo scan -t k8s
 
 ## shell to kubernetes eks cluster
 
-- ask if container is tag or digest
+- List all of the pods and all of their settings:
+
+```bash
+k8s.pods { * }
+```
+
+- Use MQL to search for configuration across your cluster such as "are containers being pulled using `tags` or their image `digest`:
 
 ```bash
 k8s.pods { _.containers { image containerImage { identifierType == "digest" } } }
+```
 
+- You can also just turn that into an assertion where you expect that all containers use `digest` for `identifierType`:
+
+```bash
+k8s.pods.all( _.containers { image containerImage { identifierType == "digest" } })
+```
+
+- You can also use a `where` clause and just turn that into a list and filter the results:
+
+```bash
+k8s.pods.where( _.containers { image containerImage { identifierType != "digest" } })
+```
+
+You can quick check the securityContext of your clusters to see if `allowPrivilegeEscalation` is set to `true`:
+
+```bash
 k8s.pods { containers { name securityContext } }
+```
+
+Turn it into an assertion:
+
+```bash
+k8s.pods.none(containers { securityContext['allowPrivilegeEscalation'] == true })
+```
+
+Get the list of pods that fail:
+
+```bash
+k8s.pods.where(containers { securityContext['allowPrivilegeEscalation'] != true })
 ```
 
 # scan/shell kubernetes node via SSM
