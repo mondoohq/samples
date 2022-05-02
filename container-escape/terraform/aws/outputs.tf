@@ -69,7 +69,7 @@ EOT
 }
 
 output "command_injection" {
-  value = <<COMMAND_INJECTION
+  value = <<-COMMAND_INJECTION
 
 ################################################################################
 # USE THIS FOR THE COMMAND INJECTION:
@@ -86,7 +86,7 @@ output "command_injection" {
 }
 
 output "escape_container_script" {
-  value = <<EOT
+  value = <<-EOT
 
 ################################################################################
 # USE THIS TO ESCAPE CONTAINER ONTO THE HOST
