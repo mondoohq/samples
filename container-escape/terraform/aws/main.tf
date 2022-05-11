@@ -327,10 +327,6 @@ data "aws_ami" "kali_linux" {
   }
 }
 
-data "template_file" "setup_metapreter" {
-  template = file("${path.module}/../templates/setup_metapreter.tpl")
-}
-
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
@@ -343,7 +339,7 @@ module "ec2_instance" {
   monitoring             = true
   vpc_security_group_ids = [aws_security_group.kali_linux_access.id]
   subnet_id              = element(module.vpc.public_subnets, 0)
-  user_data              = data.template_file.setup_metapreter.rendered
+  user_data              = file("${path.module}/../templates/setup_metapreter")
 
   tags = merge(
     local.default_tags, {

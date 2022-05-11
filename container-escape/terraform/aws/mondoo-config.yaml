@@ -1,16 +1,14 @@
-apiVersion: k8s.mondoo.com/v1alpha1
+apiVersion: k8s.mondoo.com/v1alpha2
 kind: MondooAuditConfig
 metadata:
   name: mondoo-client
   namespace: mondoo-operator
 spec:
-  workloads:
+  mondooCredsSecretRef:
+    name: mondoo-client
+  kubernetesResources:
     enable: true
-    serviceAccount: mondoo-operator-workload
-  webhooks:
-    enable: true
-    certificateConfig:
-      injectionStyle: cert-manager
   nodes:
     enable: true
-  mondooSecretRef: mondoo-client
+  admission:
+    enable: false
