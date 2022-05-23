@@ -11,4 +11,6 @@ spec:
   nodes:
     enable: true
   admission:
-    enable: false
+    enable: true
+    certificateProvisioning:
+      mode: cert-manager
