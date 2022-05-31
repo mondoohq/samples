@@ -43,11 +43,6 @@ EOF
 resource "aws_instance" "pass_example_4" {
   ami           = "ami-0279c3b3186e54acd"
   instance_type = "t2.micro"
-  user_data = <<EOF
-export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
-export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/A1AAAAA/bPxRfiCYAAAAAAAKEY
-export AWS_DEFAULT_REGION=us-east-1
-EOF
 
   metadata_options {
     http_tokens = "required"
