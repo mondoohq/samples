@@ -184,7 +184,7 @@ C:\Windows\system32>
 
 Mimikatz is an open-source application that allows users to view and save authentication credentials like Kerberos tickets
 
-- download mimikatz via to the windows vm
+- download mimikatz to the windows vm
 
 ```powershell
 C:\Windows\system32>powershell
