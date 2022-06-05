@@ -3,7 +3,9 @@
 This folder contains Terraform automation code to provision the following:
 
 - **AWS VPC**
-- **Kali Linux AWS EC2 Instance** - This instance is provisioned for the demonstration of the container-escape demo. The instance is provisioned with  
+- **Kali Linux AWS EC2 Instance** - This instance is provisioned for the demonstration of the container-escape and windows hack.
+- **Ubuntu 20.04 AWS EC2 Instance** - This instance is provisioned for the minikube and to demonstrate the container escape
+- **Windows 2016** - This instance is provisioned for the demonstration of the Windows Hack and Printnightmare vulnerability. (ami-0808d6a0d91e57fd3 in eu-central-1)
 
 ### Prerequsites
 
