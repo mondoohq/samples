@@ -192,7 +192,7 @@ module "eks" {
 
     # Complete
     complete = {
-      name            = "complete-eks-mng"
+      name            = "${var.demo_name}-eks-managed-nodes-${random_string.suffix.result}"
       use_name_prefix = true
 
       subnet_ids = module.vpc.public_subnets
@@ -229,7 +229,7 @@ module "eks" {
         max_unavailable_percentage = 50 # or set `max_unavailable`
       }
 
-      description = "EKS managed node group"
+      description = "${var.demo_name} EKS managed node group"
 
       ebs_optimized           = true
       vpc_security_group_ids  = [aws_security_group.additional.id]
@@ -254,7 +254,7 @@ module "eks" {
       create_iam_role          = true
       iam_role_name            = "${local.name}-iam-role"
       iam_role_use_name_prefix = false
-      iam_role_description     = "EKS managed node group role"
+      iam_role_description     = "${var.demo_name} EKS managed node group role"
       iam_role_tags = {
         Purpose = "Protector of the kubelet"
       }
@@ -266,9 +266,9 @@ module "eks" {
       ]
 
       create_security_group          = true
-      security_group_name            = "${local.name}-managed-worker-sg"
+      security_group_name            = "${var.demo_name}-managed-worker-sg-${random_string.suffix.result}"
       security_group_use_name_prefix = false
-      security_group_description     = "EKS managed node group security group"
+      security_group_description     = "${var.demo_name} EKS managed node group security group"
       security_group_rules = {
         phoneOut = {
           description = "Hello CloudFlare"
@@ -327,10 +327,6 @@ data "aws_ami" "kali_linux" {
   }
 }
 
-data "template_file" "setup_metapreter" {
-  template = file("${path.module}/../templates/setup_metapreter.tpl")
-}
-
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
@@ -343,7 +339,7 @@ module "ec2_instance" {
   monitoring             = true
   vpc_security_group_ids = [aws_security_group.kali_linux_access.id]
   subnet_id              = element(module.vpc.public_subnets, 0)
-  user_data              = data.template_file.setup_metapreter.rendered
+  user_data              = file("${path.module}/../templates/setup_metapreter")
 
   tags = merge(
     local.default_tags, {
@@ -409,7 +405,7 @@ resource "aws_security_group" "kali_linux_access" {
 ################################################################################
 
 resource "aws_security_group" "additional" {
-  name_prefix = "${local.name}-additional"
+  name_prefix = "${var.demo_name}-eks-additional-sg-${random_string.suffix.result}"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
@@ -420,7 +416,16 @@ resource "aws_security_group" "additional" {
       "10.0.0.0/8",
       "172.16.0.0/12",
       "192.168.0.0/16",
+      "${var.publicIP}/32"
     ]
+  }
+
+  ingress {
+    description       = "Cluster SG to Nodes"
+    protocol          = "-1"
+    from_port         = 0
+    to_port           = 0
+    security_groups   = [module.eks.cluster_security_group_id, module.eks.cluster_primary_security_group_id]
   }
 
   tags = local.default_tags
@@ -525,7 +530,7 @@ resource "aws_security_group" "remote_access" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/8"]
+    cidr_blocks = ["10.0.0.0/8", "${var.publicIP}/32"]
   }
 
   egress {

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: dvwa
-          image: 921877552404.dkr.ecr.us-east-2.amazonaws.com/dvwa-container-escape
+          image: public.ecr.aws/x6s5a8t7/dvwa:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

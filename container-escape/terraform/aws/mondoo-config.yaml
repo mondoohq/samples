@@ -13,5 +13,5 @@ spec:
   admission:
     enable: true
     certificateProvisioning:
-      # Could be "cert-manager", "openshift" or "manual"
       mode: cert-manager
+
