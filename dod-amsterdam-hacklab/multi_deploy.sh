@@ -59,6 +59,7 @@ do
   terraform plan
   terraform apply -auto-approve
   terraform output > terraform-run.log
+  sed "/^EOT/c\ " terraform-run.log | sed "/hack_write_up = <<EOT/c\ " | sed 's/\$\\{CSRF\\}/\${CSRF}/g' | sed 's/\$\\{SESSIONID\\}/\${SESSIONID}/g' > "$c.md"
 
   cd ../../
 
