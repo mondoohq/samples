@@ -12,11 +12,11 @@ This Repo contains a couple Demo/Hacks to have some nice Mondoo demos
 
 ## Contributors + Kudos
 
+* Scott Ford [scottford-io](https://github.com/scottford-io)
+* Yvo Vandoorn [yvovandoorn](https://github.com/yvovandoorn)
 * Dominik Richter [arlimus](https://github.com/arlimus)
 * Christoph Hartmann [chris-rock](https://github.com/chris-rock)
 * Patrick Münch [atomic111](https://github.com/atomic111)
-* Scott Ford [scottford-io](https://github.com/scottford-io)
-* Yvo Vandoorn [yvovandoorn](https://github.com/yvovandoorn)
 
 Thanks to all of you!!
 
