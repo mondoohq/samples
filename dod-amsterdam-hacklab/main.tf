@@ -65,7 +65,7 @@ module "vpc" {
 
 data "aws_ami" "kali_linux" {
   most_recent = true
-  owners      = ["679593333241"]
+  owners      = ["679593333241", "769304176199"]
 
   filter {
     name   = "name"
