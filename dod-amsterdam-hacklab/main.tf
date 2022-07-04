@@ -142,11 +142,11 @@ module "kali" {
 
 data "aws_ami" "windows" {
   most_recent = true
-  owners      = ["214143765918"]
+  owners      = ["921877552404"]
 
   filter {
     name   = "name"
-    values = ["win2016-dvwa-printnightmare-final*"]
+    values = ["win2016-dvwa-printnightmare-final-2022*"]
   }
 
   filter {
@@ -191,7 +191,7 @@ module "windows-instance" {
 
   name = "${local.name}-windows-dvwa"
 
-  ami                    = data.aws_ami.windows.id #"ami-0808d6a0d91e57fd3"
+  ami                    = data.aws_ami.windows.id #"ami-0937b231c090e893d"
   instance_type          = "t3.medium"
   key_name               = var.ssh_key
   monitoring             = true
