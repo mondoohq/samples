@@ -25,34 +25,6 @@ resource "random_string" "suffix" {
 }
 
 ################################################################################
-# ECR Repo Create & Docker Build & Push
-################################################################################
-
-# resource "aws_ecr_repository" "dvwa" {
-#   name = "dvwa-container-escape"
-# }
-
-# resource "null_resource" "ecr_login" {
-#   provisioner "local-exec" {
-#     command = "aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin ${aws_ecr_repository.dvwa.repository_url}"
-#   }
-# }
-
-# resource "docker_image" "dvwa" {
-#   name = "dvwa-container-escape"
-#   build {
-#     path = "${path.module}/../../dvwa-example"
-#     tag  = ["${aws_ecr_repository.dvwa.repository_url}:latest"]
-#   }
-# }
-
-# resource "null_resource" "docker_push" {
-#   provisioner "local-exec" {
-#     command = "docker push ${aws_ecr_repository.dvwa.repository_url}:latest"
-#   }
-# }
-
-################################################################################
 # VPC Configuration
 ################################################################################
 
@@ -76,17 +48,17 @@ module "vpc" {
   tags = merge(
     local.default_tags, {
       "Name"                                = "${local.name}-vpc"
-      "kubernetes.io/cluster/${local.name}" = "shared"
+      "kubernetes.io/cluster/container-escape-demo" = var.demo_name
     },
   )
 
   public_subnet_tags = {
-    "kubernetes.io/cluster/${local.name}" = "shared"
+    "kubernetes.io/cluster/container-escape-demo" = var.demo_name
     "kubernetes.io/role/elb"              = "1"
   }
 
   private_subnet_tags = {
-    "kubernetes.io/cluster/${local.name}" = "shared"
+    "kubernetes.io/cluster/container-escape-demo" = var.demo_name
     "kubernetes.io/role/internal-elb"     = "1"
   }
 }
@@ -98,10 +70,10 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 18.20.2"
+  version = "~> 18.26.6"
 
   cluster_name                    = "${local.name}-cluster"
-  cluster_version                 = local.cluster_version
+  cluster_version                 = "1.21"
   cluster_endpoint_private_access = false
   cluster_endpoint_public_access  = true
 
@@ -176,23 +148,8 @@ module "eks" {
 
   }
   eks_managed_node_groups = {
-    # Default node group - as provided by AWS EKS
-    # default_node_group = {
-    #   # By default, the module creates a launch template to ensure tags are propagated to instances, etc.,
-    #   # so we need to disable it to use the default template provided by the AWS EKS managed node group service
-    #   create_launch_template = false
-    #   launch_template_name   = ""
-
-    #   # Remote access cannot be specified with a launch template
-    #   remote_access = {
-    #     ec2_ssh_key               = var.ssh_key
-    #     source_security_group_ids = [aws_security_group.remote_access.id]
-    #   }
-    # }
-
-    # Complete
     complete = {
-      name            = "${var.demo_name}-eks-managed-nodes-${random_string.suffix.result}"
+      name            = "eks-managed-nodes-${random_string.suffix.result}"
       use_name_prefix = true
 
       subnet_ids = module.vpc.public_subnets
@@ -252,7 +209,7 @@ module "eks" {
       }
 
       create_iam_role          = true
-      iam_role_name            = "${local.name}-iam-role"
+      iam_role_name            = "${var.demo_name}-iam-role"
       iam_role_use_name_prefix = false
       iam_role_description     = "${var.demo_name} EKS managed node group role"
       iam_role_tags = {
@@ -266,7 +223,7 @@ module "eks" {
       ]
 
       create_security_group          = true
-      security_group_name            = "${var.demo_name}-managed-worker-sg-${random_string.suffix.result}"
+      security_group_name            = "${var.demo_name}-${random_string.suffix.result}"
       security_group_use_name_prefix = false
       security_group_description     = "${var.demo_name} EKS managed node group security group"
       security_group_rules = {
@@ -329,7 +286,7 @@ data "aws_ami" "kali_linux" {
 
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 3.0"
+  version = "~> 4.1.1"
 
   name = "${local.name}-kali-linux"
 
