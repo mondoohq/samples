@@ -28,14 +28,14 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
-.terraform.lock.hcl
 
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
 
-# Ignore creds.json for Mondoo environment
-creds.json
-
 # Ignore EKS cluster config
 eks-demo-config
+
+# Ignore Azure demo credentials
+aks-kubeconfig
+id_rsa
