@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dvwa-container-escape
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: dvwa-container-escape
+  template:
+    metadata:
+      labels:
+        app: dvwa-container-escape
+    spec:
+      containers:
+        - name: dvwa
+          image: public.ecr.aws/x6s5a8t7/dvwa:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          securityContext:
+            privileged: true
+      terminationGracePeriodSeconds: 30

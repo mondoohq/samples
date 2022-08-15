@@ -11,7 +11,7 @@ The hacking-Demo in aks and eks have the following hacking procedure
 - do a privilege escalation to gain root rights within the container
 - do a container escape to get a root shell on the container host
 
-![Attack picture](images/container-escape.png)
+![Attack picture](assets/container-escape.png)
 
 ## Contributors + Kudos
 
