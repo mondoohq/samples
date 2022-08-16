@@ -11,7 +11,7 @@ variable "demo_name" {
 }
 
 variable "kubernetes_version" {
-  default     = "1.21"
+  default     = "1.22"
   description = "Kubernetes cluster version used with EKS"
 }
 
