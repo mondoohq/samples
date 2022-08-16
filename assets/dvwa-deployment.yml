@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: dvwa
-          image: public.ecr.aws/x6s5a8t7/dvwa:latest
+          image: docker.io/pmuench/dvwa-container-escape
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
