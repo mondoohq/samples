@@ -97,11 +97,6 @@ resource "tls_private_key" "attacker_vm_ssh" {
   rsa_bits  = 4096
 }
 
-# Create the prepare shell
-data "template_file" "prepare-hacking-vm" {
-  template = file("${path.module}/templates/prepare-hacking-vm.tpl")
-}
-
 # Create virtual machine
 resource "azurerm_linux_virtual_machine" "attacker_vm" {
   name                  = "Hacking-VM-${random_string.suffix.result}"
@@ -109,7 +104,7 @@ resource "azurerm_linux_virtual_machine" "attacker_vm" {
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.attacker_vm-nic.id]
   size                  = "Standard_DS1_v2"
-  custom_data           = base64encode(data.template_file.prepare-hacking-vm.rendered)
+  custom_data           = base64encode(templatefile("${path.module}/templates/prepare-hacking-vm.tpl", {}))
 
   os_disk {
     name                 = "Hacking-VM-OsDisk-${random_string.suffix.result}"
