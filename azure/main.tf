@@ -228,12 +228,12 @@ resource "azurerm_key_vault_secret" "ssh-key" {
 # ISSUE https://github.com/hashicorp/terraform-provider-azurerm/issues/10233
 # have to wait 15 min to get from azurerm_resources the node_resource_group of the cluster
 
-#data "azurerm_resources" "cluster" {
-#  resource_group_name = azurerm_kubernetes_cluster.cluster.node_resource_group
-#
-#  type = "Microsoft.Network/networkSecurityGroups"
-#  depends_on = [azurerm_kubernetes_cluster.cluster]
-#}
+data "azurerm_resources" "cluster" {
+  resource_group_name = azurerm_kubernetes_cluster.cluster.node_resource_group
+
+  type = "Microsoft.Network/networkSecurityGroups"
+  depends_on = [azurerm_kubernetes_cluster.cluster]
+}
 #
 #resource "time_sleep" "wait_20_min" {
 #  depends_on = [data.azurerm_resources.cluster]
@@ -241,17 +241,17 @@ resource "azurerm_key_vault_secret" "ssh-key" {
 #  create_duration = "20m"
 #}
 #
-#resource "azurerm_network_security_rule" "nsg-cluster" {
-#  name                        = "aks-ssh-inbound"
-#  priority                    = 100
-#  direction                   = "Inbound"
-#  access                      = "Allow"
-#  protocol                    = "Tcp"
-#  source_port_range           = "*"
-#  destination_port_range      = "22"
-#  source_address_prefix       = "*"
-#  destination_address_prefix  = "*"
-#  resource_group_name         = azurerm_kubernetes_cluster.cluster.node_resource_group
-#  network_security_group_name = data.azurerm_resources.cluster.resources.0.name
+resource "azurerm_network_security_rule" "nsg-cluster" {
+  name                        = "aks-ssh-inbound"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "22"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_kubernetes_cluster.cluster.node_resource_group
+  network_security_group_name = data.azurerm_resources.cluster.resources.0.name
 #  depends_on = [time_sleep.wait_20_min]
-#}
+}

