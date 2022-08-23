@@ -15,6 +15,7 @@ resource "azurerm_virtual_network" "attacker_vm-network" {
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
+  depends_on = [azurerm_resource_group.rg]
 }
 
 # Create subnet
@@ -23,6 +24,7 @@ resource "azurerm_subnet" "attacker_vm-subnet" {
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.attacker_vm-network.name
   address_prefixes     = ["10.0.1.0/24"]
+  depends_on = [azurerm_virtual_network.attacker_vm-network]
 }
 
 # Create public IPs
@@ -31,6 +33,7 @@ resource "azurerm_public_ip" "attacker_vm-publicip" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Dynamic"
+  depends_on = [azurerm_resource_group.rg]
 }
 
 # Create Network Security Group and rule
@@ -50,6 +53,7 @@ resource "azurerm_network_security_group" "attacker_vm-nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+  depends_on = [azurerm_resource_group.rg]
 }
 
 # Create network interface
@@ -64,22 +68,14 @@ resource "azurerm_network_interface" "attacker_vm-nic" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.attacker_vm-publicip.id
   }
+  depends_on = [azurerm_resource_group.rg, azurerm_subnet.attacker_vm-subnet, azurerm_public_ip.attacker_vm-publicip]
 }
 
 # Connect the security group to the network interface
 resource "azurerm_network_interface_security_group_association" "attacker_vm-nic-nsg" {
   network_interface_id      = azurerm_network_interface.attacker_vm-nic.id
   network_security_group_id = azurerm_network_security_group.attacker_vm-nsg.id
-}
-
-# Generate random text for a unique storage account name
-resource "random_id" "randomId" {
-  keepers = {
-    # Generate a new ID only when a new resource group is defined
-    resource_group = azurerm_resource_group.rg.name
-  }
-
-  byte_length = 8
+  depends_on = [azurerm_network_interface.attacker_vm-nic, azurerm_network_security_group.attacker_vm-nsg]
 }
 
 # Create storage account for boot diagnostics
@@ -131,6 +127,7 @@ resource "azurerm_linux_virtual_machine" "attacker_vm" {
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.mystorageaccount.primary_blob_endpoint
   }
+  depends_on = [azurerm_storage_account.mystorageaccount, azurerm_network_interface_security_group_association.attacker_vm-nic-nsg]
 }
 
 # create aks cluster
@@ -166,6 +163,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   tags = {
     Environment = "Mondoo Hacking Demo"
   }
+  depends_on = [azurerm_resource_group.rg]
 }
 
 # configure keyvault
