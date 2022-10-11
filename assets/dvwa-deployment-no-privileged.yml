@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dvwa-container-escape-via-service-account
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: dvwa-container-escape-via-service-account
+  template:
+    metadata:
+      labels:
+        app: dvwa-container-escape-via-service-account
+    spec:
+      containers:
+        - name: dvwa
+          image: docker.io/pmuench/dvwa-container-escape
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+      terminationGracePeriodSeconds: 30
