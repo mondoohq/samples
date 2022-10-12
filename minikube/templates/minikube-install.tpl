@@ -26,4 +26,21 @@ echo "ubuntu:${pass_string}" | sudo chpasswd
 sed -i "/^[^#]*PasswordAuthentication[[:space:]]no/c\PasswordAuthentication yes" /etc/ssh/sshd_config
 systemctl restart sshd
 
+curl -ko /home/ubuntu/dvwa-deployment-no-privileged.yaml https://raw.githubusercontent.com/Lunalectric/container-escape/main/assets/dvwa-deployment-no-privileged.yml
 curl -ko /home/ubuntu/dvwa-deployment.yaml https://raw.githubusercontent.com/Lunalectric/container-escape/main/assets/dvwa-deployment.yml
+
+cat << EOF >> /home/ubuntu/rolebinding-abuse.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: abuse-role
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- namespace: default
+  kind: ServiceAccount
+  name: default
+EOF

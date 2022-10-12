@@ -66,12 +66,12 @@ module "vpc" {
 ################################################################################
 
 resource "aws_iam_instance_profile" "dev-resources-iam-profile" {
-  name = "ec2_ssm_profile"
+  name = "ec2_ssm_profile-${local.name}-${random_string.suffix.result}"
   role = aws_iam_role.dev-resources-iam-role.name
 }
 
 resource "aws_iam_role" "dev-resources-iam-role" {
-  name        = "SSM-role-${local.name}"
+  name        = "SSM-role-${local.name}-${random_string.suffix.result}"
   description = "The SSM role for Mondoo Hacklab"
   assume_role_policy = <<EOF
   {
