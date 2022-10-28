@@ -119,13 +119,6 @@ data "aws_ami" "kali_linux" {
   }
 }
 
-data "template_file" "change_password" {
-  template = file("${path.module}/templates/change-password.tpl")
-  vars = {
-    pass_string = "${random_string.suffix.result}"
-  }
-}
-
 resource "aws_security_group" "kali_linux_access" {
   name_prefix = "${random_string.suffix.result}_kali_linux_access"
   vpc_id      = module.vpc.vpc_id
@@ -164,7 +157,7 @@ module "kali" {
   monitoring             = true
   vpc_security_group_ids = [aws_security_group.kali_linux_access.id]
   subnet_id              = element(module.vpc.public_subnets, 0)
-  user_data              = data.template_file.change_password.rendered
+  user_data              = templatefile("${path.module}/templates/change-password.tpl", { pass_string = "${random_string.suffix.result}" })
 
   tags = merge(
     local.default_tags, {
@@ -194,13 +187,6 @@ data "aws_ami" "ubuntu_linux" {
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
-  }
-}
-
-data "template_file" "setup_minikube" {
-  template = file("${path.module}/templates/minikube-install.tpl")
-  vars = {
-    pass_string = "${random_string.suffix.result}"
   }
 }
 
@@ -242,7 +228,7 @@ module "ubuntu-k8s-instance" {
   monitoring             = true
   vpc_security_group_ids = [aws_security_group.ubuntu_k8s_access.id]
   subnet_id              = element(module.vpc.public_subnets, 0)
-  user_data              = data.template_file.setup_minikube.rendered
+  user_data              = templatefile("${path.module}/templates/minikube-install.tpl", { pass_string = "${random_string.suffix.result}" })
 
   tags = merge(
     local.default_tags, {
