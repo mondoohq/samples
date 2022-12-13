@@ -711,26 +711,26 @@ ip-10-0-6-13.us-east-2.compute.internal
 ### Scan kubernetes manifest
 
 ```bash
-mondoo scan k8s --path ../assets/dvwa-deployment.yml
+cnspec scan k8s --path ../assets/dvwa-deployment.yml
 ```
 
 ### Scan container image from registry
 
 ```bash
-mondoo scan cr docker.io/pmuench/dvwa-container-escape:latest
+cnspec scan container docker.io/pmuench/dvwa-container-escape:latest
 ```
 
 
 ### Scan kubernetes eks cluster
 
 ```bash
-mondoo scan k8s
+cnspec scan k8s
 ```
 
 ### Shell to kubernetes eks cluster
 
 ```bash
-mondoo shell -t k8s
+cnspec shell k8s
 ```
 
 List all of the pods and all of their settings:
@@ -788,9 +788,9 @@ k8s.pods.where(containers { securityContext['allowPrivilegeEscalation'] != true 
 ```bash
 export AWS_REGION=us-east-2
 
-mondoo scan -t aws-ec2-ssm://ssm-user@<AWS Instance ID>
+cnspec scan aws ec2 ssm ssm-user@<AWS Instance ID>
 
-mondoo shell -t aws-ec2-ssm://ssm-user@<AWS Instance ID>
+cnspec shell aws ec2 ssm ssm-user@<AWS Instance ID>
 ```
 
 # scan/shell kubernetes via aws api
@@ -798,7 +798,7 @@ mondoo shell -t aws-ec2-ssm://ssm-user@<AWS Instance ID>
 ```bash
 export AWS_REGION=us-east-2
 
-mondoo shell -t aws
+mondoo shell aws
 
 aws.eks.clusters { * }
 

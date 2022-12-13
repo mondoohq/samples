@@ -101,11 +101,11 @@ resource "aws_iam_role_policy_attachment" "dev-resources-ssm-policy" {
 
 data "aws_ami" "kali_linux" {
   most_recent = true
-  owners      = ["679593333241", "769304176199"]
+  owners      = ["679593333241"]
 
   filter {
     name   = "name"
-    values = ["kali-linux-2022.*"]
+    values = ["kali-rolling-amd64-2022*"]
   }
 
   filter {
@@ -158,6 +158,15 @@ module "kali" {
   vpc_security_group_ids = [aws_security_group.kali_linux_access.id]
   subnet_id              = element(module.vpc.public_subnets, 0)
   user_data              = templatefile("${path.module}/templates/change-password.tpl", { pass_string = "${random_string.suffix.result}" })
+
+  root_block_device = [
+    {
+      encrypted             = true
+      delete_on_termination = true
+      volume_type = "gp2"
+      volume_size = 30
+    },
+  ]
 
   tags = merge(
     local.default_tags, {

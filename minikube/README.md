@@ -73,7 +73,7 @@ terraform apply -auto-approve
 6. Create Hack-Write-up as Markdown
 
 ```bash
-terraform output | sed "/^EOT/c\ " | sed "/hack_write_up = <<EOT/c\ " | sed 's/\$\\{CSRF\\}/\${CSRF}/g' > Hack-writeup.md
+terraform output | sed "/^EOT/c\ " | sed "/hack_write_up = <<EOT/c\ " | sed 's/\$\\{/\${/g' | sed 's/\$\\}/\$}/g' > Hack-writeup.md
 ```
 
 Once the provisioning completes you will see something like this:

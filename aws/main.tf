@@ -267,7 +267,7 @@ data "aws_ami" "kali_linux" {
 
   filter {
     name   = "name"
-    values = ["kali-linux-2022.*"]
+    values = ["kali-rolling-amd64-2022*"]
   }
 
   filter {
@@ -294,6 +294,15 @@ module "ec2_instance" {
   vpc_security_group_ids = [aws_security_group.kali_linux_access.id]
   subnet_id              = element(module.vpc.public_subnets, 0)
   user_data              = file("${path.module}/templates/setup_metapreter")
+
+  root_block_device = [
+    {
+      encrypted             = true
+      delete_on_termination = true
+      volume_type = "gp2"
+      volume_size = 30
+    },
+  ]
 
   tags = merge(
     local.default_tags, {

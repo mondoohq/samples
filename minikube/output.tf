@@ -75,7 +75,7 @@ password: ${random_string.suffix.result}
 
 ```bash
 sudo apt update
-sudo apt install -y wordlists gobuster dirsearch metasploit-framework golang patator
+sudo apt install -y wordlists gobuster dirsearch metasploit-framework golang patator vim
 sudo gem install webrick
 go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
 
@@ -384,7 +384,7 @@ policies:
         email: hello@mondoo.com
     specs:
       - asset_filter:
-          query: platform.name == 'kubernetes'
+          query: asset.platform == 'k8s-cluster' || asset.platform == 'k8s-pod'
         scoring_queries:
           example-01:
         data_queries:
@@ -404,7 +404,7 @@ queries:
 - execute the policy with cnspec
 
 ```bash
-cnspec scan k8s --policy-bundle ./policy.yaml
+cnspec scan k8s --policy-bundle ./policy.yaml --discover clusters -o full
 ```
 
 ## Service Account Hack
