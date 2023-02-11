@@ -1,9 +1,12 @@
 # Container escape in kubernetes
 
-This Repo contains Demo-Hacks for AKS and EKS to have some nice Mondoo demos
+This Repo contains Demo-Hacks for AKS and EKS to have some nice Mondoo demos.
 
-- [aws](aws): Terraform template to deploy a eks kubernetes cluster in aws with the dvwa container escape demo
-- [azure](azure): Terraform template to deploy a aks kubernetes cluster in azure with the dvwa container escape demo
+**Please select one of the folders below and check out the README in the folder to understand how to demo it:**
+
+- **[aws](aws)**: Terraform template to deploy a eks kubernetes cluster in aws with the dvwa container escape demo
+- **[azure](azure)**: Terraform template to deploy a aks kubernetes cluster in azure with the dvwa container escape demo
+- **[minikube](minikube)**: Terraform template to deploy a minikube cluster with the dvwa container escape demo
 
 The hacking-Demo in aks and eks have the following hacking procedure
 
