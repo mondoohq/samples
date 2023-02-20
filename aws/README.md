@@ -182,7 +182,7 @@ Deploy the Mondoo Operator to the EKS cluster according the manual [https://mond
 At first deploy the cert-manager from [https://cert-manager.io/docs/installation/](https://cert-manager.io/docs/installation/):
 
 ```bash
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
 ```
 
 ### Deploy Mondoo Operator
@@ -720,7 +720,6 @@ cnspec scan k8s --path ../assets/dvwa-deployment.yml
 cnspec scan container docker.io/pmuench/dvwa-container-escape:latest
 ```
 
-
 ### Scan kubernetes eks cluster
 
 ```bash
@@ -798,7 +797,7 @@ cnspec shell aws ec2 ssm ssm-user@<AWS Instance ID>
 ```bash
 export AWS_REGION=us-east-2
 
-mondoo shell aws
+cnspec shell aws
 
 aws.eks.clusters { * }
 
