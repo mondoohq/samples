@@ -151,7 +151,7 @@ aks-default-41472297-vmss000001   Ready    agent   24m   v1.22.11
 
 ## Deploy Mondoo Operator to AKS
 
-Deploy the Mondoo Operator to the AKS cluster according the manual [https://mondoo.com/docs/tutorials/kubernetes/scan-kubernetes-with-operator/](https://mondoo.com/docs/tutorials/kubernetes/scan-kubernetes-with-operator/)
+Deploy the Mondoo Operator to the AKS cluster according the manual [https://mondoo.com/docs/platform/cloud/kubernetes/scan-kubernetes-with-operator/](https://mondoo.com/docs/platform/cloud/kubernetes/scan-kubernetes-with-operator/)
 
 ### Deploy cert-manager
 

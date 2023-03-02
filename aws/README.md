@@ -175,7 +175,7 @@ ip-10-0-6-19.us-east-2.compute.internal   Ready    <none>   8m4s   v1.21.14-eks-
 
 ## Deploy Mondoo Operator to EKS
 
-Deploy the Mondoo Operator to the EKS cluster according the manual [https://mondoo.com/docs/tutorials/kubernetes/scan-kubernetes-with-operator/](https://mondoo.com/docs/tutorials/kubernetes/scan-kubernetes-with-operator/)
+Deploy the Mondoo Operator to the EKS cluster according the manual [https://mondoo.com/docs/platform/cloud/kubernetes/scan-kubernetes-with-operator/](https://mondoo.com/docs/platform/cloud/kubernetes/scan-kubernetes-with-operator/)
 
 ### Deploy cert-manager
 
