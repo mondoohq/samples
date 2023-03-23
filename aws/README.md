@@ -66,7 +66,7 @@ export TF_VAR_ssh_key=aws_key
 
 export TF_VAR_ssh_key_path=~/.ssh/id_rsa
 
-export TF_VAR_publicIP="73.231.132.25"
+export TF_VAR_publicIP="73.231.132.25/32"
 ```
 
 ## Provision the cluster
