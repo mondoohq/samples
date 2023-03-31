@@ -165,14 +165,14 @@ resource "google_container_cluster" "primary" {
     state = "ENCRYPTED"
     key_name = google_kms_crypto_key.key.id
   }
-  private_cluster_config {
-    enable_private_endpoint = false
-    enable_private_nodes = false
-    master_ipv4_cidr_block = "192.168.133.32/28"
-    master_global_access_config {
-      enabled = true
-    }
-  }
+  #private_cluster_config {
+  #  enable_private_endpoint = false
+  #  enable_private_nodes = false
+  #  master_ipv4_cidr_block = "192.168.133.32/28"
+  #  master_global_access_config {
+  #    enabled = true
+  #  }
+  #}
   project                     = var.project_id
   remove_default_node_pool    = false
   subnetwork                  = "projects/${var.project_id}/regions/${var.region}/subnetworks/lunalectric-subnet-01"
