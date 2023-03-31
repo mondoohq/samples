@@ -5,6 +5,12 @@ resource "random_string" "suffix" {
   upper   = false
 }
 
+resource "time_sleep" "wait_120_seconds" {
+  #depends_on = [null_resource.previous]
+
+  create_duration = "120s"
+}
+
 
 provider "google-beta" {
   project = var.project_id
@@ -17,8 +23,8 @@ module "service_accounts-roles" {
   source        = "terraform-google-modules/service-accounts/google"
   version       = "~> 3.0"
   project_id    = var.project_id
-  prefix        = "lunalectric-sa-${random_string.suffix.result}"
-  names         = ["nodes-"]
+  prefix        = "lunalectric-${random_string.suffix.result}"
+  names         = ["node"]
   project_roles = [
     "${var.project_id}=>roles/logging.logWriter",
     "${var.project_id}=>roles/monitoring.metricWriter",
@@ -27,6 +33,43 @@ module "service_accounts-roles" {
   ]
   generate_keys = false
 }
+
+resource "google_kms_key_ring" "pass" {
+  name = "pass-keyring-${random_string.suffix.result}"
+  location = var.region
+  project  = var.project_id
+}
+
+resource "google_kms_crypto_key" "key" {
+  name = "pass-key-${random_string.suffix.result}"
+  key_ring = google_kms_key_ring.pass.id
+  rotation_period = "2592000s"
+
+  version_template {
+    algorithm = "GOOGLE_SYMMETRIC_ENCRYPTION"
+  }
+
+  lifecycle {
+    prevent_destroy = false
+  }
+
+  depends_on = [
+    google_kms_key_ring.pass,
+  ]
+}
+
+resource "google_kms_crypto_key_iam_binding" "crypto_key" {
+  crypto_key_id = google_kms_crypto_key.key.id
+  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  members       = [
+     "serviceAccount:lunalectric-${random_string.suffix.result}-node@manuel-development-3.iam.gserviceaccount.com",
+     "serviceAccount:service-${var.project_number}@container-engine-robot.iam.gserviceaccount.com",
+  ]
+  depends_on = [
+    module.service_accounts-roles,
+  ]
+}
+
 
 
 # Network VPC -> # Create virtual network
@@ -312,7 +355,7 @@ resource "google_container_cluster" "primary" {
   depends_on = [
     module.network,
     module.service_accounts-roles,
-    time_sleep.wait_120_seconds,
     google_kms_crypto_key_iam_binding.crypto_key,
+    time_sleep.wait_120_seconds,
   ]
 }
