@@ -365,7 +365,7 @@ resource "google_container_cluster" "primary" {
 ## Resource-based n2d instance to make CSEK possible
 resource "google_compute_instance" "pass-n2d-res" {
   provider = google-beta
-  name         = "lunalectric-${random_string.suffix.result}"
+  name         = "lunalectric-attacker-vm-${random_string.suffix.result}"
   machine_type = "e2-medium"
   project = var.project_id
   zone = var.zone
@@ -378,6 +378,10 @@ resource "google_compute_instance" "pass-n2d-res" {
   network_interface {
     subnetwork = "projects/${var.project_id}/regions/${var.region}/subnetworks/lunalectric-subnet-01"
 
+    access_config {
+
+    }
+
   }
   boot_disk {
     #disk_encryption_key_raw = var.csek
@@ -386,6 +390,7 @@ resource "google_compute_instance" "pass-n2d-res" {
 
     }
   }
+
 
   service_account {
     email = module.service_accounts-roles.email
