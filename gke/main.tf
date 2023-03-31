@@ -391,7 +391,7 @@ module "vm_instance_template_n2d" {
   depends_on = [
     module.service_accounts-roles
   ]
-  source_image = "centos-stream-9-v20230203"
+  source_image = "ubuntu-2204-jammy-v20230302"
 }
 
 module "vm_compute_instance_n2d" {
