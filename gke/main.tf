@@ -145,12 +145,12 @@ resource "google_container_cluster" "primary" {
   }
   default_max_pods_per_node   = 8
   # create resource to set bin_authz API in gcloud
-  enable_binary_authorization = true
+  enable_binary_authorization = false
   enable_intranode_visibility = true
   enable_kubernetes_alpha     = false
   enable_l4_ilb_subsetting    = false
-  enable_legacy_abac          = false
-  enable_shielded_nodes       = true
+  enable_legacy_abac          = true
+  enable_shielded_nodes       = false
   enable_tpu                  = false
   location                    = var.region
   logging_service             = "logging.googleapis.com/kubernetes"
@@ -166,8 +166,8 @@ resource "google_container_cluster" "primary" {
     key_name = google_kms_crypto_key.key.id
   }
   private_cluster_config {
-    enable_private_endpoint = true
-    enable_private_nodes = true
+    enable_private_endpoint = false
+    enable_private_nodes = false
     master_ipv4_cidr_block = "192.168.133.32/28"
     master_global_access_config {
       enabled = true
@@ -235,8 +235,8 @@ resource "google_container_cluster" "primary" {
         }
 
         shielded_instance_config {
-          enable_integrity_monitoring = true
-          enable_secure_boot          = true
+          enable_integrity_monitoring = false
+          enable_secure_boot          = false
         }
 
       }
@@ -270,7 +270,7 @@ resource "google_container_cluster" "primary" {
       #cluster_ca_certificate = (known after apply)
 
       client_certificate_config {
-        issue_client_certificate = false
+        issue_client_certificate = true
       }
     }
 
@@ -323,8 +323,8 @@ resource "google_container_cluster" "primary" {
           #taint             = (known after apply)
 
           shielded_instance_config {
-            enable_integrity_monitoring = true
-            enable_secure_boot          = true
+            enable_integrity_monitoring = false
+            enable_secure_boot          = false
           }
 
           workload_metadata_config {
