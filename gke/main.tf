@@ -30,6 +30,8 @@ module "service_accounts-roles" {
     "${var.project_id}=>roles/monitoring.metricWriter",
     "${var.project_id}=>roles/monitoring.viewer",
     "${var.project_id}=>roles/iam.serviceAccountAdmin",
+    "${var.project_id}=>roles/compute.admin",
+    "${var.project_id}=>roles/iam.serviceAccountUser",
   ]
   generate_keys = false
 }
@@ -358,4 +360,43 @@ resource "google_container_cluster" "primary" {
     google_kms_crypto_key_iam_binding.crypto_key,
     time_sleep.wait_120_seconds,
   ]
+}
+
+## Module-base n2d instance (only cmek possible)
+module "vm_instance_template_n2d" {
+  source  = "terraform-google-modules/vm/google//modules/instance_template"
+  version = "8.0.0"
+  # insert the 1 required variable here
+  can_ip_forward = true
+  service_account = {
+    email = module.service_accounts-roles.email,
+    scopes = ["cloud-platform"],
+  }
+  #disk_encryption_key = "projects/${var.project_id}/locations/${var.region}/keyRings/${var.keyring_name}/cryptoKeys/${var.cmek}"
+  project_id = var.project_id
+  region = var.region
+  subnetwork = "projects/${var.project_id}/regions/${var.region}/subnetworks/lunalectric-subnet-01"
+  metadata = {
+    "block-project-ssh-keys" = false
+    "serial-port-enable" = true
+    "enable-oslogin" = false
+  }
+  shielded_instance_config = {
+      enable_secure_boot          = false
+      enable_vtpm                 = false
+      enable_integrity_monitoring = false
+  }
+  machine_type = "n2d-standard-2"
+  enable_confidential_vm = false
+  depends_on = [
+    module.service_accounts-roles
+  ]
+  source_image = "centos-stream-9-v20230203"
+}
+
+module "vm_compute_instance_n2d" {
+  source  = "terraform-google-modules/vm/google//modules/compute_instance"
+  version = "8.0.0"
+  # insert the 1 required variable here
+  instance_template = module.vm_instance_template_n2d.self_link
 }
