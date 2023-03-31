@@ -143,7 +143,7 @@ resource "google_container_cluster" "primary" {
   release_channel {
     channel = "STABLE"
   }
-  default_max_pods_per_node   = 8
+  default_max_pods_per_node   = 220
   # create resource to set bin_authz API in gcloud
   enable_binary_authorization = false
   enable_intranode_visibility = true
@@ -158,9 +158,9 @@ resource "google_container_cluster" "primary" {
   monitoring_service          = "monitoring.googleapis.com/kubernetes"
   name                        = "lunalectric-gke-cluster-${random_string.suffix.result}"
   network                     = "lunalectric-gke-${random_string.suffix.result}"
-  master_authorized_networks_config {
-    #gcp_public_cidrs_access_enabled = true
-  }
+  #master_authorized_networks_config {
+  #  #gcp_public_cidrs_access_enabled = true
+  #}
   database_encryption {
     state = "ENCRYPTED"
     key_name = google_kms_crypto_key.key.id
@@ -282,7 +282,7 @@ resource "google_container_cluster" "primary" {
         initial_node_count          = 1
         #instance_group_urls         = (known after apply)
         #managed_instance_group_urls = (known after apply)
-        max_pods_per_node           = 8
+        max_pods_per_node           = 110
         name                        = "lunalectric-pool"
         #name_prefix                 = (known after apply)
         #node_count                  = (known after apply)
@@ -296,7 +296,7 @@ resource "google_container_cluster" "primary" {
 
         network_config {
           #create_pod_range     = (known after apply)
-          enable_private_nodes = true
+          enable_private_nodes = false
           #pod_ipv4_cidr_block  = (known after apply)
           #pod_range            = (known after apply)
         }
