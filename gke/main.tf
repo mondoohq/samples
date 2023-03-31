@@ -139,7 +139,7 @@ module "network" {
 # GKE Cluster -> create aks cluster
 resource "google_container_cluster" "primary" {
   provider = google-beta
-  node_version = "1.23.16-gke.1100"
+  node_version = "1.23.16-gke.1400"
   release_channel {
     channel = "STABLE"
   }
@@ -154,7 +154,7 @@ resource "google_container_cluster" "primary" {
   enable_tpu                  = false
   location                    = var.region
   logging_service             = "logging.googleapis.com/kubernetes"
-  min_master_version          = "1.23.16-gke.1100"
+  min_master_version          = "1.23.16-gke.1400"
   monitoring_service          = "monitoring.googleapis.com/kubernetes"
   name                        = "lunalectric-gke-cluster-${random_string.suffix.result}"
   network                     = "lunalectric-gke-${random_string.suffix.result}"
