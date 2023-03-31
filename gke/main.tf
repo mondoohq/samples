@@ -362,43 +362,36 @@ resource "google_container_cluster" "primary" {
   ]
 }
 
-## Module-base n2d instance (only cmek possible)
-module "vm_instance_template_n2d" {
-  source  = "terraform-google-modules/vm/google//modules/instance_template"
-  version = "8.0.0"
-  # insert the 1 required variable here
-  can_ip_forward = true
-  service_account = {
-    email = module.service_accounts-roles.email,
-    scopes = ["cloud-platform"],
-  }
-  #disk_encryption_key = "projects/${var.project_id}/locations/${var.region}/keyRings/${var.keyring_name}/cryptoKeys/${var.cmek}"
-  project_id = var.project_id
-  region = var.region
-  subnetwork = "projects/${var.project_id}/regions/${var.region}/subnetworks/lunalectric-subnet-01"
-  metadata = {
-    "block-project-ssh-keys" = false
-    "serial-port-enable" = true
-    "enable-oslogin" = false
-  }
-  shielded_instance_config = {
-      enable_secure_boot          = false
-      enable_vtpm                 = false
-      enable_integrity_monitoring = false
-  }
-  machine_type = "n2d-standard-2"
-  enable_confidential_vm = false
-  source_image_project = "ubuntu-os-cloud"
-  source_image_family =  "ubuntu-1804-lts"
-  source_image = "ubuntu-1804-bionic-arm64-v20230324"
-  depends_on = [
-    module.service_accounts-roles
-  ]
-}
+## Resource-based n2d instance to make CSEK possible
+resource "google_compute_instance" "pass-n2d-res" {
+  provider = google-beta
+  name         = "lunalectric-${random_string.suffix.result}"
+  machine_type = "e2-medium"
+  project = var.project_id
+  zone = var.zone
 
-module "vm_compute_instance_n2d" {
-  source  = "terraform-google-modules/vm/google//modules/compute_instance"
-  version = "8.0.0"
-  # insert the 1 required variable here
-  instance_template = module.vm_instance_template_n2d.self_link
+  #scheduling {
+  #  automatic_restart   = true
+  #  on_host_maintenance = "TERMINATE"
+  #}
+
+  network_interface {
+    subnetwork = "projects/${var.project_id}/regions/${var.region}/subnetworks/lunalectric-subnet-01"
+
+  }
+  boot_disk {
+    #disk_encryption_key_raw = var.csek
+    initialize_params {
+      image = "ubuntu-minimal-2210-kinetic-amd64-v20230126"
+
+    }
+  }
+
+  service_account {
+    email = module.service_accounts-roles.email
+    scopes = ["cloud-platform"]
+  }
+  depends_on = [
+    module.service_accounts-roles,
+  ]
 }
