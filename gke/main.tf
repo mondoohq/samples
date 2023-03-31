@@ -18,7 +18,7 @@ module "service_accounts-roles" {
   version       = "~> 3.0"
   project_id    = var.project_id
   prefix        = "lunalectric-sa-${random_string.suffix.result}"
-  names         = ["nodes-fail"]
+  names         = ["nodes-"]
   project_roles = [
     "${var.project_id}=>roles/logging.logWriter",
     "${var.project_id}=>roles/monitoring.metricWriter",
