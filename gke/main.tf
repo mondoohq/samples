@@ -388,10 +388,12 @@ module "vm_instance_template_n2d" {
   }
   machine_type = "n2d-standard-2"
   enable_confidential_vm = false
+  source_image_project = "ubuntu-os-cloud"
+  source_image_family =  "ubuntu-1804-lts"
+  source_image = "ubuntu-1804-bionic-arm64-v20230324"
   depends_on = [
     module.service_accounts-roles
   ]
-  source_image = "ubuntu-2204-jammy-v20230302"
 }
 
 module "vm_compute_instance_n2d" {
