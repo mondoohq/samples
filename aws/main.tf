@@ -69,10 +69,10 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 18.29.0"
+  version = "~> 19.13.0"
 
   cluster_name                    = "${local.name}-cluster"
-  cluster_version                 = "1.22"
+  cluster_version                 = "1.26"
   cluster_endpoint_private_access = false
   cluster_endpoint_public_access  = true
 
@@ -86,10 +86,11 @@ module "eks" {
     }
   }
 
-  cluster_encryption_config = [{
-    provider_key_arn = aws_kms_key.eks.arn
+  #create_kms_key = false
+  cluster_encryption_config = {
     resources        = ["secrets"]
-  }]
+    provider_key_arn = aws_kms_key.eks.arn
+  }
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
@@ -136,9 +137,9 @@ module "eks" {
   iam_role_tags = {
     Purpose = "Protector of the kubelet"
   }
-  iam_role_additional_policies = [
-    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  ]
+  iam_role_additional_policies = {
+    additional = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  }
 
   eks_managed_node_group_defaults = {
     ami_type       = "AL2_x86_64"
@@ -214,13 +215,13 @@ module "eks" {
       iam_role_tags = {
         Purpose = "Protector of the kubelet"
       }
-      iam_role_additional_policies = [
-        "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
-        "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
-        "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
-        "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
-        "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
-      ]
+      iam_role_additional_policies = {
+        additional = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+        additional = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+        additional = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+        additional = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+        additional = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+      }
 
       create_security_group          = true
       security_group_name            = "${var.demo_name}-${random_string.suffix.result}"
@@ -253,8 +254,8 @@ module "eks" {
       }
     }
   }
-
-  tags = local.default_tags
+  #tags = merge(local.tags, { local.default_tags )
+  #tags = local.default_tags
 }
 
 ################################################################################
@@ -283,7 +284,7 @@ data "aws_ami" "kali_linux" {
 
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 4.1.1"
+  version = "~> 4.1.4"
 
   name = "${local.name}-kali-linux"
 
@@ -543,7 +544,6 @@ resource "aws_iam_policy" "node_additional" {
 
   tags = local.default_tags
 }
-
 
 resource "null_resource" "kubectl_config_update" {
   depends_on = [
