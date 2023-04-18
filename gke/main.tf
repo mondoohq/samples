@@ -11,7 +11,7 @@ data "template_file" "init" {
     project = var.project_id
     region = var.region
     zone = var.zone
-    instace = "lunalectric-attacker-vm-${random_string.suffix.result}"
+    instance = "lunalectric-attacker-vm-${random_string.suffix.result}"
   }
 }
 
@@ -413,6 +413,9 @@ resource "google_compute_instance" "pass-n2d-res" {
     email = module.service_accounts-roles.email
     scopes = ["cloud-platform"]
   }
+
+  metadata_startup_script = data.template_file.init.rendered
+
   depends_on = [
     module.service_accounts-roles,
     module.network,

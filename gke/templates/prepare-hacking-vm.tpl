@@ -14,7 +14,7 @@ sudo msfdb init
 ROOT_DIR=/root/container-escape
 
 # test GCP metadata api request
-curl -H "Metadata-Flavor: Google" --noproxy "*" "https://compute.googleapis.com/compute/v1/projects/${project}/zones/${zone}/instances/{instance}"
+curl -H "Metadata-Flavor: Google" --noproxy "*" "https://compute.googleapis.com/compute/v1/projects/${project}/zones/${zone}/instances/${instance}"
 
 sudo mkdir -p $ROOT_DIR
 
