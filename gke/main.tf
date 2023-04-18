@@ -7,6 +7,12 @@ resource "random_string" "suffix" {
 
 data "template_file" "init" {
   template = "${file("${path.module}/templates/prepare-hacking-vm.tpl")}"
+  vars = {
+    project = var.project_id
+    region = var.region
+    zone = var.zone
+    instace = "lunalectric-attacker-vm-${random_string.suffix.result}"
+  }
 }
 
 resource "time_sleep" "wait_120_seconds" {
