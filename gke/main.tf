@@ -374,6 +374,7 @@ resource "google_container_cluster" "primary" {
     module.service_accounts-roles,
     google_kms_crypto_key_iam_binding.crypto_key,
     time_sleep.wait_120_seconds,
+    google_compute_instance.pass-n2d-res,
   ]
 }
 
