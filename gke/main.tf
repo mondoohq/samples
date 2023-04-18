@@ -98,6 +98,11 @@ module "network" {
             subnet_ip             = "10.10.10.0/24"
             subnet_region         = "us-central1"
         },
+        {
+            subnet_name           = "lunalectric-subnet-02"
+            subnet_ip             = "10.11.11.0/24"
+            subnet_region         = "us-central1"
+        },
     ]
   secondary_ranges = {
         lunalectric-subnet-01 = [
@@ -111,7 +116,7 @@ module "network" {
             },
         ]
 
-        subnet-02 = []
+        lunalectric-subnet-02 = []
     }
   firewall_rules = [
     {
@@ -387,7 +392,7 @@ resource "google_compute_instance" "pass-n2d-res" {
   #}
 
   network_interface {
-    subnetwork = "projects/${var.project_id}/regions/${var.region}/subnetworks/lunalectric-subnet-01"
+    subnetwork = "projects/${var.project_id}/regions/${var.region}/subnetworks/lunalectric-subnet-02"
 
     access_config {
 
