@@ -131,7 +131,7 @@ module "network" {
       target_service_accounts = null
       allow = [{
         protocol = "tcp"
-        ports    = ["22","80","443"]
+        ports    = ["22","80","443", "4242", "4243", "8001"]
       }]
       deny = []
       log_config = {
