@@ -5,6 +5,10 @@ resource "random_string" "suffix" {
   upper   = false
 }
 
+data "template_file" "init" {
+  template = "${file("${path.module}/templates/prepare-hacking-vm.tpl")}"
+}
+
 resource "time_sleep" "wait_120_seconds" {
   #depends_on = [null_resource.previous]
 
@@ -362,7 +366,8 @@ resource "google_container_cluster" "primary" {
   ]
 }
 
-## Resource-based n2d instance to make CSEK possible
+
+## Attacker VM, taken from Resource-based n2d instance to make CSEK possible in GKE
 resource "google_compute_instance" "pass-n2d-res" {
   provider = google-beta
   name         = "lunalectric-attacker-vm-${random_string.suffix.result}"
