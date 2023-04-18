@@ -10,7 +10,7 @@ sudo /tmp/msfinstall
 sudo msfdb init
 
 # create all metasploit stuff
-PUBLIC_IP=$( http://metadata/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip)
+PUBLIC_IP=$(curl -sf -H 'Metadata-Flavor:Google' http://metadata/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip)
 ROOT_DIR=/root/container-escape
 
 sudo mkdir -p $ROOT_DIR
