@@ -416,6 +416,6 @@ resource "google_compute_instance" "pass-n2d-res" {
   depends_on = [
     module.service_accounts-roles,
     module.network,
-    template_file.init,
+    data.template_file.init,
   ]
 }
