@@ -26,3 +26,5 @@ sudo [ ! -f $ROOT_DIR/msfconsole2 ] && sudo echo "msfconsole -q -x 'use exploit/
 sudo [ ! -f $ROOT_DIR/start_ruby_webserver ] && echo "ruby -run -ehttpd . -p8001" > $ROOT_DIR/start_ruby_webserver
 
 sudo chmod -R +x $ROOT_DIR
+
+sudo [ ! -f $ROOT_DIR/pub-ip ] && echo $PUBLIC_IP > $ROOT_DIR/pub-ip
