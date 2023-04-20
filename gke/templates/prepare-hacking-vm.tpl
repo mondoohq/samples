@@ -3,7 +3,7 @@
 # install all necessary tools
 sudo apt update && sudo apt remove -y netcat-openbsd && sudo apt install -y netcat-traditional
 sudo apt install -y ca-certificates curl gnupg lsb-release
-sudo apt install -y nmap ruby
+sudo apt install -y nmap ruby nano
 curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > /tmp/msfinstall
 sudo chmod 755 /tmp/msfinstall
 sudo /tmp/msfinstall
