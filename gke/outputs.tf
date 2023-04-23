@@ -16,7 +16,10 @@ output "summary" {
 Connect to attacker VM (in 3-4 separate terminals):
 gcloud compute ssh ${google_compute_instance.pass-n2d-res.name}
 
+Connect to your GKE cluster via gcloud:
 gcloud container clusters get-credentials ${google_container_cluster.primary.name} --region us-central1
+
+
 kubectl apply -f ../assets/dvwa-deployment.yml
 kubectl port-forward $(kubectl get pods -o name) 8080:80
 

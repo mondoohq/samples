@@ -134,12 +134,10 @@ tls_private_key = <sensitive>
 
 ## Connect to the cluster
 
-After Terraform finishes provisioning, you find your `aks-kubeconfig` Kubeconfig in the folder to connect to your AKS cluster:
-
-Configure kubectl to use the aks-kubeconfig to connect to your AKS cluster
+After Terraform finishes provisioning, you can use `gcloud` to connect to your GKE cluster:
 
 ```bash
-export KUBECONFIG="${PWD}/aks-kubeconfig"
+gcloud container clusters get-credentials lunalectric-gke-cluster-$suffix --region us-central1
 ```
 
 ```bash
