@@ -440,13 +440,13 @@ cnspec scan k8s --path ../assets/dvwa-deployment.yml
 cnspec scan container docker.io/pmuench/dvwa-container-escape:latest
 ```
 
-### Scan kubernetes aks cluster
+### Scan kubernetes gke cluster
 
 ```bash
 cnspec scan k8s
 ```
 
-### Shell to kubernetes aks cluster
+### Shell to kubernetes gke cluster
 
 ```bash
 cnspec shell k8s
@@ -488,25 +488,25 @@ Get the list of pods that fail:
 k8s.pods.none(containers { securityContext['privileged'] == true })
 ```
 
-### Scan a azure subscription
+### Scan a Google Cloud project
 
 ```bash
-cnspec scan azure --subscription {subscriptionID}
+cnspec scan gcp project {project-name}
 ```
 
-### Shell to azure subscription
+### Shell to a Google Cloud project
 
 ```bash
-cnspec shell azure --subscription {subscriptionID}
+cnspec shell gcp project {project-name}
 ```
 
-List Azure VMs
+List Google Compute Instances (VMs)
 
 ```bash
-azure.compute.vms { * }
+gcp.compute.instances { * }
 ```
 
-Get access policies of all vaults
+Get access policies of all key stores
 
 ```bash
 azure.keyvault.vaults { vaultName properties }
