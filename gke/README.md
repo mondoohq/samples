@@ -4,14 +4,14 @@ DVWA is the "Damn Vulnerable Web Application" that will be used to demonstrate h
 
 This folder contains Terraform automation code to provision the following:
 
-- **Azure AKS Cluster** - 2 worker managed nodes (standard_d2_v2)
-- **Ubuntu 18.04 Linux Instance** - This instance is provisioned for the demonstration of the container-escape demo.
+- **Google GKE Cluster** - 3 worker managed nodes (standard_d2_v2)
+- **Ubuntu 22.10 Linux Instance** - This instance is provisioned for the demonstration of the container-escape demo. (Using e2-medium)
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
-- [AKS container escape demo](#aks-container-escape-demo)
+- [GKE container escape demo](#aks-container-escape-demo)
   - [Prerequsites](#prerequsites)
   - [Provision the cluster](#provision-the-cluster)
   - [Connect to the cluster](#connect-to-the-cluster)
@@ -25,16 +25,16 @@ This folder contains Terraform automation code to provision the following:
     - [Start the container listener](#start-the-container-listener)
     - [Start the host listener](#start-the-host-listener)
     - [Start Ruby webserver](#start-ruby-webserver)
-  - [Escape time](#escape-time)
-    - [Escalate Privileges on the container](#escalate-privileges-on-the-container)
+  - [Node takeover via service account](#Node-takeover-via-service-account)
+    - [Enumerate Privileges of the service account running the container](#Enumerate-Privileges-of-the-service-account-running-the-container)
     - [Gain access to worker nodes](#gain-access-to-worker-nodes)
   - [Mondoo scan commands](#mondoo-scan-commands)
     - [Scan kubernetes manifest](#scan-kubernetes-manifest)
     - [Scan container image from registry](#scan-container-image-from-registry)
-    - [Scan kubernetes aks cluster](#scan-kubernetes-aks-cluster)
-    - [Shell to kubernetes aks cluster](#shell-to-kubernetes-aks-cluster)
-    - [Scan a azure subscription](#scan-a-azure-subscription)
-    - [Shell to azure subscription](#shell-to-azure-subscription)
+    - [Scan kubernetes gke cluster](#scan-kubernetes-gke-cluster)
+    - [Shell to kubernetes gke cluster](#shell-to-kubernetes-gke-cluster)
+    - [Scan a google cloud project](#scan-a-google-cloud-project)
+    - [Shell to google cloud project](#shell-to-google-cloud-project)
   - [Destroy the cluster](#destroy-the-cluster)
   - [License and Author](#license-and-author)
   - [Disclaimer](#disclaimer)
@@ -43,8 +43,8 @@ This folder contains Terraform automation code to provision the following:
 
 ## Prerequsites
 
-- [Azure Account](https://azure.microsoft.com/en-us/free/)
-- [AZ CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+- [Google GCP Account](https://cloud.google.com/free/)
+- [gcloud CLI](https://cloud.google.com/sdk/docs/install)
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) 
 - [`kubectl`]() - Kubectl must be installed on the host that you run `terraform` from.
 
@@ -59,7 +59,7 @@ git clone git@github.com:Lunalectric/container-escape.git
 2. cd into the terraform folder
 
 ```
-cd container-escape/azure
+cd container-escape/gke
 ```
 
 3. Initialize the project (download modules)
@@ -68,16 +68,16 @@ cd container-escape/azure
 terraform init
 ```
 
-4. Check that everything is ready
+4. Check that everything is ready (and safe plan to a local file)
 
 ```
-terraform plan
+terraform plan -out plan.out
 ```
 
 5. Apply the configuration
 
 ```
-terraform apply -auto-approve
+terraform apply plan.out -auto-approve
 ```
 
 Once the provisioning completes you will see something like this:
