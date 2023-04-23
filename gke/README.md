@@ -147,9 +147,9 @@ aks-default-41472297-vmss000000   Ready    agent   24m   v1.22.11
 aks-default-41472297-vmss000001   Ready    agent   24m   v1.22.11
 ```
 
-## Deploy Mondoo Operator to AKS
+## Deploy Mondoo Operator to GKE
 
-Deploy the Mondoo Operator to the AKS cluster according the manual [https://mondoo.com/docs/platform/cloud/kubernetes/scan-kubernetes-with-operator/](https://mondoo.com/docs/platform/cloud/kubernetes/scan-kubernetes-with-operator/)
+Deploy the Mondoo Operator to the GKE cluster according the manual [https://mondoo.com/docs/platform/cloud/kubernetes/scan-kubernetes-with-operator/](https://mondoo.com/docs/platform/cloud/kubernetes/scan-kubernetes-with-operator/)
 
 ### Deploy cert-manager
 
@@ -266,43 +266,31 @@ Next, open three command line terminals and continue the setup process.
 
 ## Setup Attacker Linux Instance
 
-The Attacker Linux instance has all of the binaries and scripts you will need to hack the AKS deployment. Create your ssh-rsa key to access the Attacker instance:
+The Attacker Linux instance has all of the binaries and scripts you will need to hack the GKE deployment. Connect the to the Attacker instance via the `gcloud` command provided in the output:
 
 ```bash
-terraform output -raw tls_private_key > id_rsa
-```
-
-Connect the to the Attacker instance via ssh command:
-
-```bash
-ssh -o StrictHostKeyChecking=no -i id_rsa azureuser@13.92.179.31
-Welcome to Ubuntu 18.04.6 LTS (GNU/Linux 5.4.0-1089-azure x86_64)
+gcloud container clusters get-credentials lunalectric-gke-cluster-ua3k --region us-central1
+No zone specified. Using zone [us-central1-a] for instance: [lunalectric-attacker-vm-ua3k].
+Welcome to Ubuntu 22.10 (GNU/Linux 5.19.0-1015-gcp x86_64)
 
  * Documentation:  https://help.ubuntu.com
  * Management:     https://landscape.canonical.com
  * Support:        https://ubuntu.com/advantage
 
-  System information as of Mon Aug 15 18:23:09 UTC 2022
 
-  System load:  0.0               Processes:           108
-  Usage of /:   9.2% of 28.89GB   Users logged in:     0
-  Memory usage: 9%                IP address for eth0: 10.0.1.4
-  Swap usage:   0%
+This system has been minimized by removing packages and content that are
+not required on a system that users do not log into.
 
-0 updates can be applied immediately.
+To restore this content, you can run the 'unminimize' command.
 
-The programs included with the Ubuntu system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
+39 updates can be applied immediately.
+25 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
 
-Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
-applicable law.
+Last login: Thu Apr 20 22:06:52 2023 from 185.168.9.28
 
-To run a command as administrator (user "root"), use "sudo <command>".
-See "man sudo_root" for details.
-
-azureuser@attacker:~$ sudo -i
-root@attacker:~#
+gcp-user-name@@lunalectric-attacker-vm-ua3k:~$ sudo -i
+root@lunalectric-attacker-vm-ua3k:~#
 ```
 
 Once you have ssh'd on to the host you will find a `/root/container-escape` directory with the following files:
