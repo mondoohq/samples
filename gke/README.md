@@ -374,12 +374,15 @@ You have a shell and are the `www-data` user.
 
 ```bash
 kubectl get nodes
-NAME                              STATUS   ROLES   AGE   VERSION
-aks-default-41472297-vmss000000   Ready    agent   24m   v1.22.11
-aks-default-41472297-vmss000001   Ready    agent   24m   v1.22.11
+NAME                                                  STATUS   ROLES    AGE     VERSION
+gke-lunalectric-gke--lunalectric-pool-061496f8-0460   Ready    <none>   3h43m   v1.23.16-gke.1400
+gke-lunalectric-gke--lunalectric-pool-6831ec86-jks2   Ready    <none>   3h44m   v1.23.16-gke.1400
+gke-lunalectric-gke--lunalectric-pool-69fd8667-flj4   Ready    <none>   3h44m   v1.23.16-gke.1400
+
 ```
 
-### More Priv-Esc from node (google compute instance)
+## More Priv-Esc from node (google compute instance)
+
 
 ## Mondoo scan commands
 

