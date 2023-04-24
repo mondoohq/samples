@@ -39,7 +39,7 @@ module "service_accounts-roles" {
     "${var.project_id}=>roles/logging.logWriter",
     "${var.project_id}=>roles/monitoring.metricWriter",
     "${var.project_id}=>roles/monitoring.viewer",
-    "${var.project_id}=>roles/monitoring.viewer",
+    "${var.project_id}=>roles/iam.serviceAccountUser",
   ]
   generate_keys = false
 }
