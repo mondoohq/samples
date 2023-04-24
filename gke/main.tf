@@ -39,9 +39,7 @@ module "service_accounts-roles" {
     "${var.project_id}=>roles/logging.logWriter",
     "${var.project_id}=>roles/monitoring.metricWriter",
     "${var.project_id}=>roles/monitoring.viewer",
-    "${var.project_id}=>roles/iam.serviceAccountAdmin",
-    "${var.project_id}=>roles/compute.admin",
-    "${var.project_id}=>roles/iam.serviceAccountUser",
+    "${var.project_id}=>roles/monitoring.viewer",
   ]
   generate_keys = false
 }
@@ -344,9 +342,9 @@ resource "google_container_cluster" "primary" {
             enable_secure_boot          = false
           }
 
-          workload_metadata_config {
-            mode = "GKE_METADATA"
-          }
+          #workload_metadata_config {
+          #  mode = "GKE_METADATA"
+          #}
         }
       }
 
@@ -366,9 +364,9 @@ resource "google_container_cluster" "primary" {
         enabled = false
       }
 
-      workload_identity_config {
-        workload_pool = "${var.project_id}.svc.id.goog"
-      }
+      #workload_identity_config {
+      #  workload_pool = "${var.project_id}.svc.id.goog"
+      #}
   depends_on = [
     module.network,
     module.service_accounts-roles,
