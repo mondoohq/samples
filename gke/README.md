@@ -99,7 +99,7 @@ Connect to your GKE cluster via gcloud:
 gcloud container clusters get-credentials lunalectric-gke-cluster-umxf --region us-central1
 
 
-kubectl apply -f ../assets/dvwa-deployment.yml
+kubectl apply -f ../assets/dvwa-deployment-no-privileged.yml
 kubectl port-forward $(kubectl get pods -o name) 8080:80
 
 
@@ -151,7 +151,7 @@ Copy and paste the install commands from the Mondoo Dashboard to deploy the Mond
 Deploy the DVWA application to your GKE cluster.
 
 ```bash
-kubectl apply -f ../assets/dvwa-deployment.yml
+kubectl apply -f ../assets/dvwa-deployment-no-privileged.yml
 deployment.apps/dvwa-container-escape created
 ```
 
@@ -582,7 +582,7 @@ uid=0(root) gid=0(root) groups=0(root),1(bin),2(daemon),3(sys),4(adm),6(disk),10
 ### Scan kubernetes manifest
 
 ```bash
-cnspec scan k8s --path ../assets/dvwa-deployment.yml
+cnspec scan k8s --path ../assets/dvwa-deployment-no-privileged.yml
 ```
 
 ### Scan container image from registry
