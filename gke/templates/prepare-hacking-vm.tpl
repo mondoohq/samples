@@ -47,3 +47,5 @@ sudo [ ! -f $ROOT_DIR/pod-esc14 ] && echo '      privileged: true' >            
 sudo [ ! -f $ROOT_DIR/pod-esc15 ] && echo '    command: [ "nsenter", "--target", "1", "--mount", "--uts", "--ipc", "--net", "--pid", "--", "bash" ]' > $ROOT_DIR/pod-esc15
 
 sudo cat $ROOT_DIR/pod-esc* > $ROOT_DIR/pod-esc.yaml
+
+sudo rm $ROOT_DIR/pod-esc{01..15}
