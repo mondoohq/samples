@@ -25,9 +25,10 @@ This folder contains Terraform automation code to provision the following:
     - [Start the container listener](#start-the-container-listener)
     - [Start the host listener](#start-the-host-listener)
     - [Start Ruby webserver](#start-ruby-webserver)
-  - [Node takeover via service account](#Node-takeover-via-service-account)
-    - [Enumerate Privileges of the service account running the container](#Enumerate-Privileges-of-the-service-account-running-the-container)
-    - [Gain access to worker nodes](#gain-access-to-worker-nodes)
+  - [Escaping the pod and get a shell on the node (google compute instance)](#escaping-the-pod-and-get-a-shell-on-the-node-google-compute-instance)
+    - [Enumerate Privileges of the service account running the container](#enumerate-privileges-of-the-service-account-running-the-container)
+    - [Deploy a pod that will get you a `root` account on the node](#deploy-a-pod-that-will-get-you-a-root-account-on-the-node)
+  - [Gaining a persistant bash shell on the node](#gaining-a-persistant-bash-shell-on-the-node)
   - [Mondoo scan commands](#mondoo-scan-commands)
     - [Scan kubernetes manifest](#scan-kubernetes-manifest)
     - [Scan container image from registry](#scan-container-image-from-registry)
@@ -298,7 +299,7 @@ lport => 4242
 In the third terminal, start webserver with Ruby:
 
 ```bash
-azureuser@attacker:~$ sudo -i
+user@attacker:~$ sudo -i
 
 root@lunalectric-attacker-vm-ua3k:~# cd /root/container-escape/
 
@@ -308,7 +309,7 @@ root@attacker:~/container-escape# ./start_ruby_webserver
 [2022-08-15 18:28:35] INFO  WEBrick::HTTPServer#start: pid=3850 port=8001
 ```
 
-## Escape time
+### Escape time
 
 In the webapp (browser) do the first attack to gain access to the container.
 
@@ -377,6 +378,8 @@ The local node for the nameserver `10.228.0.10` is always the `x.x.x.1` address,
 
 ---
 
+### Enumerate Privileges of the service account running the container
+
 **Now you can query the Node API if the service account on the pod has sufficient permissions to create a pod**
 
 ```bash
@@ -425,7 +428,7 @@ curl -H 'Metadata-Flavor:Google' http://metadata.google.internal/computeMetadata
 gke-lunalectric-gke--lunalectric-pool-0e144d64-33rz.us-central1-f.c.<username>-development-3.internal
 ```
 
-## Gaining a full bash shell on the node
+## Gaining a persistant bash shell on the node
 
 **Confirming the hostname and IP address of the node**
 First we need to find out on which node we are operating.
