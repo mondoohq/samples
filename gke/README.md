@@ -463,7 +463,39 @@ gke-lunalectric-gke--lunalectric-pool-24ac192f-x1gh  us-central1-f  e2-medium   
 ```
 
 **Generating a ssh-key on the node**
-Usually we
+
+There should be a user on the node that mimics your local username you are connected to with `gcloud`. To find it use the following command:
+```
+cat /etc/passwd
+```
+```
+sshd:!:204:204:ssh daemon:/dev/null:/bin/false
+ntp:!:203:203:network time protocol daemon:/dev/null:/bin/false
+traced:!:20160:20160:Perfetto system tracing service:/dev/null:/bin/false
+traced-probes:!:20161:20161:Perfetto system tracing probes using debugfs, procfs and sysfs.:/dev/null:/bin/false
+systemd-network:!:274:274:systemd-networkd daemon:/dev/null:/bin/false
+systemd-resolve:!:275:275:systemd-resolved daemon:/dev/null:/bin/false
+systemd-timesync:!:271:271:systemd-timesyncd daemon:/dev/null:/bin/false
+root:x:0:0:root:/root:/bin/bash
+bin:!:1:1:bin:/bin:/bin/false
+daemon:!:2:2:daemon:/sbin:/bin/false
+adm:!:3:4:adm:/var/adm:/bin/false
+lp:!:4:7:lp:/var/spool/lpd:/bin/false
+news:!:9:13:news:/var/spool/news:/bin/false
+uucp:!:10:14:uucp:/var/spool/uucp:/bin/false
+portage:!:250:250:portage:/var/tmp/portage:/bin/false
+nobody:!:65534:65534:nobody:/dev/null:/bin/false
+input:!:222:222:dev/input/event access:/dev/null:/bin/false
+messagebus:!:201:201:dbus-daemon:/dev/null:/bin/false
+chronos:!:1000:1000:unused stub account:/dev/null:/bin/false
+chronos-access:!:1001:1001:non-chronos user with access to chronos data:/dev/null:/bin/false
+metrics:!:20140:20140:user for metrics_daemon to run its services in sandboxed environment:/dev/null:/bin/false
+crash:!:20137:20137:Crash reporter daemon.:/dev/null:/bin/false
+syslog:!:202:202:rsyslog:/dev/null:/bin/false
+debugfs-access:!:605:605:access to debugfs:/dev/null:/bin/false
+<username>:x:20162:20166::/home/<username>:/bin/bash
+
+```
 
 Then we switch to the context of that user.
 ```bash
