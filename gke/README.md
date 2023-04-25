@@ -542,10 +542,10 @@ cat id_rsa
 -----END OPENSSH PRIVATE KEY-----
 ```
 
-We copy and paste this key to our local machine to the file `key_rsa.node` and now we can connect directly via `ssh` to the compromised node with the following command:
+We copy and paste this key to our local machine to the file `id_rsa` and now we can connect directly via `ssh` to the compromised node with the following command:
 
 ```
-ssh -i key_rsa.node -o CheckHostIP=no -o StrictHostKeyChecking=no root@35.226.180.169
+ssh -i id_rsa -o CheckHostIP=no -o StrictHostKeyChecking=no <username>@35.226.180.169
 ```
 ```
 Welcome to Kubernetes v1.23.16-gke.1400!
