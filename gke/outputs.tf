@@ -1,6 +1,6 @@
-output "file" {
-    value = data.template_file.init.rendered
-}
+#output "file" {
+#    value = data.template_file.init.rendered
+#}
 
 output "attacker_vm_name" {
     value =  google_compute_instance.pass-n2d-res.name
