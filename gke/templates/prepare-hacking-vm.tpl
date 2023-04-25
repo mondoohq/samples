@@ -48,4 +48,4 @@ sudo [ ! -f $ROOT_DIR/pod-esc15 ] && echo '    command: [ "nsenter", "--target",
 
 sudo cat $ROOT_DIR/pod-esc* > $ROOT_DIR/pod-esc.yaml
 
-sudo rm $ROOT_DIR/pod-esc{01..15}
+sudo [ ! -f $ROOT_DIR/pod-esc{01..15} ] && rm $ROOT_DIR/pod-esc{01..15}

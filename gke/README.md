@@ -83,22 +83,27 @@ terraform apply plan.out -auto-approve
 Once the provisioning completes you will see something like this:
 
 ```bash
+
 Apply complete! Resources: 16 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-attacker_vm_name = "lunalectric-attacker-vm-oi71"
+attacker_vm_name = "lunalectric-attacker-vm-umxf"
 summary = <<EOT
 
 Connect to attacker VM (in 3-4 separate terminals):
-gcloud compute ssh lunalectric-attacker-vm-oi71
+gcloud compute ssh lunalectric-attacker-vm-umxf
 
 Connect to your GKE cluster via gcloud:
-gcloud container clusters get-credentials lunalectric-gke-cluster-oi71 --region us-central1
+gcloud container clusters get-credentials lunalectric-gke-cluster-umxf --region us-central1
 
 
 kubectl apply -f ../assets/dvwa-deployment.yml
 kubectl port-forward $(kubectl get pods -o name) 8080:80
+
+
+EOT
+target_cluster_name = "lunalectric-gke-cluster-umxf"
 
 ```
 
