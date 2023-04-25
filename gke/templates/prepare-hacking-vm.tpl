@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # install all necessary tools
 sudo apt update && sudo apt remove -y netcat-openbsd && sudo apt install -y netcat-traditional
@@ -48,4 +48,4 @@ sudo [ ! -f $ROOT_DIR/pod-esc15 ] && echo '    command: [ "nsenter", "--target",
 
 sudo cat $ROOT_DIR/pod-esc* > $ROOT_DIR/pod-esc.yaml
 
-sudo [ ! -f $ROOT_DIR/pod-esc{01..15} ] && rm $ROOT_DIR/pod-esc{01..15}
+sudo rm $ROOT_DIR/pod-esc{01..15}
