@@ -160,24 +160,24 @@ Check if the deployment and pod is working.
 ```bash
 kubectl get deployments
 NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
-dvwa-container-escape   1/1     1            1           47s
+dvwa-container-escape-via-service-account   1/1     1            1           47s
 ```
 
 ```bash
 kubectl describe pods
-Name:         dvwa-container-escape-9f5694b84-4rmqp
+Name:         dvwa-container-escape-via-service-account-86cb94f64b-q2rdm
 Namespace:    default
 Priority:     0
 Node:         gke-lunalectric-gke--lunalectric-pool-b7d2d926-t991/10.10.10.4
 Start Time:   Mon, 24 Apr 2023 23:32:42 +0200
-Labels:       app=dvwa-container-escape
+Labels:       app=dvwa-container-escape-via-service-account
               pod-template-hash=9f5694b84
 Annotations:  <none>
 Status:       Running
 IP:           10.224.1.4
 IPs:
   IP:           10.224.1.4
-Controlled By:  ReplicaSet/dvwa-container-escape-9f5694b84
+Controlled By:  ReplicaSet/dvwa-container-escape-via-service-account-86cb94f64b
 Containers:
   dvwa:
     Container ID:   containerd://7f2dfdaf3433fe1de07d19b92b9179792be66e3f3d7fe745b3f8992df1dd652d
