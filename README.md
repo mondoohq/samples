@@ -6,9 +6,10 @@ This Repo contains Demo-Hacks for AKS and EKS to have some nice Mondoo demos.
 
 - **[aws](aws)**: Terraform template to deploy a eks kubernetes cluster in aws with the dvwa container escape demo
 - **[azure](azure)**: Terraform template to deploy a aks kubernetes cluster in azure with the dvwa container escape demo
+- **[gcp](gcp)**: Terraform template to deploy a gke kubernetes cluster in azure with the dvwa container escape demo
 - **[minikube](minikube)**: Terraform template to deploy a minikube cluster with the dvwa container escape demo
 
-The hacking-Demo in aks and eks have the following hacking procedure
+The hacking-Demo in aks, eks and gke have the following hacking procedure
 
 - hack the web application with a command injection vulnerability
 - do a privilege escalation to gain root rights within the container
@@ -23,6 +24,7 @@ The hacking-Demo in aks and eks have the following hacking procedure
 * Dominik Richter [arlimus](https://github.com/arlimus)
 * Christoph Hartmann [chris-rock](https://github.com/chris-rock)
 * Patrick Münch [atomic111](https://github.com/atomic111)
+* Manuel Weber [mm-weber](https://github.com/mm-weber)
 
 Thanks to all of you!!
 

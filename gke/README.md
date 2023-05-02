@@ -47,7 +47,7 @@ This folder contains Terraform automation code to provision the following:
 - [Google GCP Account](https://cloud.google.com/free/)
 - [gcloud CLI](https://cloud.google.com/sdk/docs/install)
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) 
-- [`kubectl`]() - Kubectl must be installed on the host that you run `terraform` from.
+- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) - Kubectl must be installed on the host that you run `terraform` from.
 
 ## Provision the cluster
 
@@ -519,7 +519,7 @@ Enter same passphrase again:
 Your identification has been saved in /home/<username>/.ssh/id_rsa
 Your public key has been saved in /home/<username>/.ssh/id_rsa.pub
 The key fingerprint is:
-SHA256:jwu7j87FFn3n4facOuCkxomnqjrDvfTyTwKYkqseV0k <username>@gke-lunalectric-gke--lunalectric-pool-06b8ea4c-hnlj
+SHA256:aTa7xaFFn3n4facOuCkxomxaarDvfTyTwKyybseV0k <username>@gke-lunalectric-gke--lunalectric-pool-06b8ea4c-hnlj
 The key's randomart image is:
 +---[RSA 3072]----+
 |                 |
