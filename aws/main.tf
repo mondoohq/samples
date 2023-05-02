@@ -139,6 +139,11 @@ module "eks" {
   }
   iam_role_additional_policies = {
     additional = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+    additional = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+    additional = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+    AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    additional = "arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy"
+    additional = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
   }
 
   eks_managed_node_group_defaults = {
@@ -216,10 +221,10 @@ module "eks" {
         Purpose = "Protector of the kubelet"
       }
       iam_role_additional_policies = {
+        AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
         additional = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
         additional = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
         additional = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-        additional = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
         additional = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
       }
 
@@ -282,6 +287,40 @@ data "aws_ami" "kali_linux" {
   }
 }
 
+################################################################################
+# SSM IAM role
+################################################################################
+
+resource "aws_iam_instance_profile" "dev-resources-iam-profile" {
+  name = "ec2_ssm_profile-${local.name}-${random_string.suffix.result}"
+  role = aws_iam_role.dev-resources-iam-role.name
+}
+
+resource "aws_iam_role" "dev-resources-iam-role" {
+  name        = "SSM-role-${local.name}-${random_string.suffix.result}"
+  description = "The SSM role for Mondoo Hacklab"
+  assume_role_policy = <<EOF
+  {
+  "Version": "2012-10-17",
+  "Statement": {
+  "Effect": "Allow",
+  "Principal": {"Service": "ec2.amazonaws.com"},
+  "Action": "sts:AssumeRole"
+  }
+  }
+  EOF
+  tags = merge(
+    local.default_tags, {
+      "Name" = "${random_string.suffix.result}-minikube-demo"
+    },
+  )
+}
+
+resource "aws_iam_role_policy_attachment" "dev-resources-ssm-policy" {
+  role       = aws_iam_role.dev-resources-iam-role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
 module "ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 4.1.4"
@@ -291,6 +330,7 @@ module "ec2_instance" {
   ami                    = data.aws_ami.kali_linux.id
   instance_type          = "t2.medium"
   key_name               = var.ssh_key
+  iam_instance_profile   = aws_iam_instance_profile.dev-resources-iam-profile.name
   monitoring             = true
   vpc_security_group_ids = [aws_security_group.kali_linux_access.id]
   subnet_id              = element(module.vpc.public_subnets, 0)
