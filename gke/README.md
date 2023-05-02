@@ -343,19 +343,6 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 You have a shell and are the `www-data` user.
 
-
-
-```bash
-kubectl get nodes
-```
-```
-NAME                                                  STATUS   ROLES    AGE     VERSION
-gke-lunalectric-gke--lunalectric-pool-061496f8-0460   Ready    <none>   3h43m   v1.23.16-gke.1400
-gke-lunalectric-gke--lunalectric-pool-6831ec86-jks2   Ready    <none>   3h44m   v1.23.16-gke.1400
-gke-lunalectric-gke--lunalectric-pool-69fd8667-flj4   Ready    <none>   3h44m   v1.23.16-gke.1400
-
-```
-
 ## Escaping the pod and get a shell on the node (google compute instance)
 
 **Get the `kubectl` binary**
