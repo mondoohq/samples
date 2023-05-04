@@ -136,7 +136,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "Lunalectric-${random_string.suffix.result}"
-  kubernetes_version  = "1.23"
+  #kubernetes_version  = "1.27"
 
   default_node_pool {
     name       = "default"
