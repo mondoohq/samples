@@ -267,16 +267,15 @@ root@lunalectric-attacker-vm-ua3k:~#
 Once you have ssh'd on to the host you will find a `/root/container-escape` directory with the following files:
 
 ```bash
-root@lunalectric-attacker-vm-ua3k:~# cd /root/container-escape/
-root@attacker:~/container-escape# ls -la
-total 1108
-drwxr-xr-x 2 root root    4096 Aug 15 18:14 .
-drwx------ 5 root root    4096 Aug 15 18:14 ..
--rwxr-xr-x 1 root root 1106792 Aug 15 18:14 met-container
--rwxr-xr-x 1 root root     207 Aug 15 18:14 met-host
--rwxr-xr-x 1 root root     129 Aug 15 18:14 msfconsole1
--rwxr-xr-x 1 root root     123 Aug 15 18:14 msfconsole2
--rwxr-xr-x 1 root root      27 Aug 15 18:14 start_ruby_webserver
+root@lunalectric-attacker-vm-3v0c:~# ls -l container-escape/
+total 1136
+-rwxr-xr-x 1 root root 1137112 May  4 11:33 met-container
+-rwxr-xr-x 1 root root     207 May  4 11:33 met-host
+-rwxr-xr-x 1 root root     129 May  4 11:33 msfconsole1
+-rwxr-xr-x 1 root root     123 May  4 11:33 msfconsole2
+-rw-r--r-- 1 root root     353 May  4 11:33 pod-esc.yaml
+-rw-r--r-- 1 root root      13 May  4 11:33 pub-ip
+-rwxr-xr-x 1 root root      27 May  4 11:33 start_ruby_webserver
 ```
 
 ### Start the container listener
@@ -307,6 +306,12 @@ root@attacker:~/container-escape# ./start_ruby_webserver
 [2022-08-15 18:28:35] INFO  WEBrick 1.4.2
 [2022-08-15 18:28:35] INFO  ruby 2.5.1 (2018-03-29) [x86_64-linux-gnu]
 [2022-08-15 18:28:35] INFO  WEBrick::HTTPServer#start: pid=3850 port=8001
+```
+
+### Find out the attacker machines public IP:
+```bash
+root@lunalectric-attacker-vm-3v0c:~# cat container-escape/pub-ip
+34.70.139.37
 ```
 
 ### Escape time
