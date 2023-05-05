@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: priv-and-hostpid-exec-pod
+  namespace: default
   labels:
     app: container-escape
 spec:
