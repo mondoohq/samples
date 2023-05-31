@@ -88,6 +88,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges-1
   ip_cidr_range = "10.10.10.0/24"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
+  project = var.project_id
   secondary_ip_range {
     range_name    = "lunalectric-subnet-01-secondary-01-pods-${random_string.suffix.result}"
     ip_cidr_range = "192.168.64.0/24"
@@ -104,6 +105,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges-2
   ip_cidr_range = "10.10.11.0/24"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
+  project = var.project_id
 }
 
 resource "google_compute_network" "custom-test" {
@@ -115,12 +117,17 @@ resource "google_compute_network" "custom-test" {
 resource "google_compute_firewall" "default" {
   name    = "firewall-lunalectric-gke-${random_string.suffix.result}"
   network = "lunalectric-gke-${random_string.suffix.result}"
+  project = var.project_id
 
   allow {
     protocol = "tcp"
     ports    = ["22","80","443", "4242", "4243", "8001"]
   }
 
+  source_tags = ["web"]
+  source_service_accounts = null
+  target_tags             = null
+  target_service_accounts = null
 }
 
 ####
