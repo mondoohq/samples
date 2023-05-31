@@ -98,15 +98,12 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges-1
   }
 }
 
+## Test Subnet 2
 resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges-1" {
   name          = "lunalectric-subnet-02-${random_string.suffix.result}"
   ip_cidr_range = "10.10.11.0/24"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
-  secondary_ip_range {
-    range_name    = "lunalectric-subnet-01-secondary-01-pods-${random_string.suffix.result}"
-    ip_cidr_range = "192.168.64.0/24"
-  }
 }
 
 resource "google_compute_network" "custom-test" {
@@ -115,66 +112,76 @@ resource "google_compute_network" "custom-test" {
   project = var.project_id
 }
 
+resource "google_compute_firewall" "default" {
+  name    = "lunalectric-gke-${random_string.suffix.result}"
+  network = google_compute_network.default.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22","80","443", "4242", "4243", "8001"]
+  }
+
+}
 
 ####
 
 # Network VPC -> # Create virtual network
-module "network" {
-  source  = "terraform-google-modules/network/google"
-  version = "6.0.1"
-  # insert the 3 required variables here
-  project_id   = var.project_id
-  network_name = "lunalectric-gke-${random_string.suffix.result}"
-  # Create subnet
-  subnets = [
-        {
-            subnet_name           = "lunalectric-subnet-01"
-            subnet_ip             = "10.10.10.0/24"
-            subnet_region         = "us-central1"
-        },
-        {
-            subnet_name           = "lunalectric-subnet-02"
-            subnet_ip             = "10.10.11.0/24"
-            subnet_region         = "us-central1"
-        },
-    ]
-  secondary_ranges = {
-        lunalectric-subnet-01 = [
-            {
-                range_name    = "lunalectric-subnet-01-secondary-01-pods"
-                ip_cidr_range = "192.168.64.0/24"
-            },
-            {
-                range_name    = "lunalectric-subnet-01-secondary-01-services"
-                ip_cidr_range = "192.168.65.0/24"
-            },
-        ]
-
-        lunalectric-subnet-02 = []
-    }
-  firewall_rules = [
-    {
-      name                    = "lunalectric-allow-ssh"
-      description             = null
-      direction               = "INGRESS"
-      priority                = null
-      ranges                  = ["0.0.0.0/0"]
-      source_tags             = null
-      source_service_accounts = null
-      target_tags             = null
-      target_service_accounts = null
-      allow = [{
-        protocol = "tcp"
-        ports    = ["22","80","443", "4242", "4243", "8001"]
-      }]
-      deny = []
-      log_config = {
-        metadata = "INCLUDE_ALL_METADATA"
-      }
-    },
-  ]
-} 
-
+#module "network" {
+#  source  = "terraform-google-modules/network/google"
+#  version = "6.0.1"
+#  # insert the 3 required variables here
+#  project_id   = var.project_id
+#  network_name = "lunalectric-gke-${random_string.suffix.result}"
+#  # Create subnet
+#  subnets = [
+#        {
+#            subnet_name           = "lunalectric-subnet-01"
+#            subnet_ip             = "10.10.10.0/24"
+#            subnet_region         = "us-central1"
+#        },
+#        {
+#            subnet_name           = "lunalectric-subnet-02"
+#            subnet_ip             = "10.10.11.0/24"
+#            subnet_region         = "us-central1"
+#        },
+#    ]
+#  secondary_ranges = {
+#        lunalectric-subnet-01 = [
+#            {
+#                range_name    = "lunalectric-subnet-01-secondary-01-pods"
+#                ip_cidr_range = "192.168.64.0/24"
+#            },
+#            {
+#                range_name    = "lunalectric-subnet-01-secondary-01-services"
+#                ip_cidr_range = "192.168.65.0/24"
+#            },
+#        ]
+#
+#        lunalectric-subnet-02 = []
+#    }
+#  firewall_rules = [
+#    {
+#      name                    = "lunalectric-allow-ssh"
+#      description             = null
+#      direction               = "INGRESS"
+#      priority                = null
+#      ranges                  = ["0.0.0.0/0"]
+#      source_tags             = null
+#      source_service_accounts = null
+#      target_tags             = null
+#      target_service_accounts = null
+#      allow = [{
+#        protocol = "tcp"
+#        ports    = ["22","80","443", "4242", "4243", "8001"]
+#      }]
+#      deny = []
+#      log_config = {
+#        metadata = "INCLUDE_ALL_METADATA"
+#      }
+#    },
+#  ]
+#}
+#
 # Create public IPs
 
 # Create Network Security Group and rule
