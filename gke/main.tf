@@ -129,7 +129,7 @@ resource "google_compute_firewall" "default" {
   target_service_accounts = null
 
   depends_on = [
-    google_compute_network.custom-test.id,
+    google_compute_network.custom-test,
   ]
 }
 
