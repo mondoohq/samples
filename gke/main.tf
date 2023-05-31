@@ -129,7 +129,7 @@ resource "google_compute_firewall" "default" {
   target_service_accounts = null
 
   depends_on = [
-    google_compute_network.google_compute_network.custom-test,
+    google_compute_network.custom-test.id,
   ]
 }
 
@@ -421,7 +421,7 @@ resource "google_container_cluster" "primary" {
       #  workload_pool = "${var.project_id}.svc.id.goog"
       #}
   depends_on = [
-    google_compute_network.google_compute_network.custom-test,
+    google_compute_network.custom-test,
     module.service_accounts-roles,
     google_kms_crypto_key_iam_binding.crypto_key,
     time_sleep.wait_120_seconds,
@@ -469,7 +469,7 @@ resource "google_compute_instance" "pass-n2d-res" {
 
   depends_on = [
     module.service_accounts-roles,
-    google_compute_network.google_compute_network.custom-test,
+    google_compute_network.custom-test,
     data.template_file.init,
   ]
 }
