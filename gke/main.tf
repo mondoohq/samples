@@ -123,7 +123,7 @@ resource "google_compute_firewall" "default" {
     ports    = ["22","80","443", "4242", "4243", "8001"]
   }
 
-  source_ranges = "0.0.0.0/0"
+  source_ranges = ["0.0.0.0/0",]
   source_tags = null
   source_service_accounts = null
   target_tags             = null
