@@ -99,7 +99,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges-1
 }
 
 ## Test Subnet 2
-resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges-1" {
+resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges-2" {
   name          = "lunalectric-subnet-02-${random_string.suffix.result}"
   ip_cidr_range = "10.10.11.0/24"
   region        = "us-central1"
