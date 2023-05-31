@@ -80,6 +80,22 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key" {
   ]
 }
 
+## Test subnet
+resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
+  name          = "test-subnetwork-${random_string.suffix.result}"
+  ip_cidr_range = "10.2.0.0/16"
+  region        = "us-central1"
+  network       = "lunalectric-gke-${random_string.suffix.result}"
+  secondary_ip_range {
+    range_name    = "tf-test-secondary-range-update1-${random_string.suffix.result}"
+    ip_cidr_range = "192.168.10.0/24"
+  }
+}
+
+resource "google_compute_network" "custom-test" {
+  name                    = "test-network"
+  auto_create_subnetworks = false
+}
 
 
 # Network VPC -> # Create virtual network
