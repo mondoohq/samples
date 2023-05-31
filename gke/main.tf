@@ -5,15 +5,15 @@ resource "random_string" "suffix" {
   upper   = false
 }
 
-data "template_file" "init" {
-  template = "${file("${path.module}/templates/prepare-hacking-vm.tpl")}"
-  vars = {
-    project = var.project_id
-    region = var.region
-    zone = var.zone
-    instance = "lunalectric-attacker-vm-${random_string.suffix.result}"
-  }
-}
+#data "template_file" "init" {
+#  template = "${file("${path.module}/templates/prepare-hacking-vm.tpl")}"
+#  vars = {
+#    project = var.project_id
+#    region = var.region
+#    zone = var.zone
+#    instance = "lunalectric-attacker-vm-${random_string.suffix.result}"
+#  }
+#}
 
 resource "time_sleep" "wait_120_seconds" {
   #depends_on = [null_resource.previous]
@@ -44,29 +44,29 @@ module "service_accounts-roles" {
   generate_keys = false
 }
 
-resource "google_kms_key_ring" "pass" {
-  name = "pass-keyring-${random_string.suffix.result}"
-  location = var.region
-  project  = var.project_id
-}
-
-resource "google_kms_crypto_key" "key" {
-  name = "pass-key-${random_string.suffix.result}"
-  key_ring = google_kms_key_ring.pass.id
-  rotation_period = "2592000s"
-
-  version_template {
-    algorithm = "GOOGLE_SYMMETRIC_ENCRYPTION"
-  }
-
-  lifecycle {
-    prevent_destroy = false
-  }
-
-  depends_on = [
-    google_kms_key_ring.pass,
-  ]
-}
+#resource "google_kms_key_ring" "pass" {
+#  name = "pass-keyring-${random_string.suffix.result}"
+#  location = var.region
+#  project  = var.project_id
+#}
+#
+#resource "google_kms_crypto_key" "key" {
+#  name = "pass-key-${random_string.suffix.result}"
+#  key_ring = google_kms_key_ring.pass.id
+#  rotation_period = "2592000s"
+#
+#  version_template {
+#    algorithm = "GOOGLE_SYMMETRIC_ENCRYPTION"
+#  }
+#
+#  lifecycle {
+#    prevent_destroy = false
+#  }
+#
+#  depends_on = [
+#    google_kms_key_ring.pass,
+#  ]
+#}
 
 #resource "google_kms_crypto_key_iam_binding" "crypto_key" {
 #  crypto_key_id = google_kms_crypto_key.key.id
@@ -113,8 +113,8 @@ resource "google_compute_network" "custom-test" {
 }
 
 resource "google_compute_firewall" "default" {
-  name    = "lunalectric-gke-${random_string.suffix.result}"
-  network = google_compute_network.default.name
+  name    = "firewall-lunalectric-gke-${random_string.suffix.result}"
+  network = "lunalectric-gke-${random_string.suffix.result}"
 
   allow {
     protocol = "tcp"
