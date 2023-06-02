@@ -45,7 +45,29 @@ This folder contains Terraform automation code to provision the following:
 ## Prerequsites
 
 - [Google GCP Account](https://cloud.google.com/free/)
+  - make sure you to give the account your login in with the following IAM role [here](https://console.cloud.google.com/iam-admin):
+  ```
+  Access Approval Config Editor
+  Access Transparency Admin
+  Cloud KMS Admin
+  DNS Administrator
+  Essential Contacts Admin
+  Owner
+  ```
 - [gcloud CLI](https://cloud.google.com/sdk/docs/install)
+  - make sure to install the [gke-gcloud-auth-plugin](https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke), usually via the command:
+  ```
+  gcloud components install gke-gcloud-auth-plugin
+  ```
+  - make sure to login to you Google Cloud Account account via:
+  ```
+  gcloud auth application-default login
+  ```
+  - make sure to set gcloud CLI to the right project
+  ```
+  gcloud config set project <your-project-id> #e.g. my-test-project
+  ```
+
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) - Kubectl must be installed on the host that you run `terraform` from.
 
