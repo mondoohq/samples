@@ -678,10 +678,13 @@ gcp.project.kms.keyrings {*}
 ```
 
 ## Destroy the cluster
+**NOTE: This command has to be run twice to remove all assets created!**
 
 ```bash
 terraform destroy -auto-approve
 ```
+
+
 
 ## License and Author
 
