@@ -5,15 +5,15 @@ resource "random_string" "suffix" {
   upper   = false
 }
 
-data "template_file" "init" {
-  template = "${file("${path.module}/templates/prepare-hacking-vm.tpl")}"
-  vars = {
-    project = var.project_id
-    region = var.region
-    zone = var.zone
-    instance = "lunalectric-attacker-vm-${random_string.suffix.result}"
-  }
-}
+#data "template_file" "init" {
+#  template = "${file("${path.module}/templates/prepare-hacking-vm.tpl")}"
+#  vars = {
+#    project = var.project_id
+#    region = var.region
+#    zone = var.zone
+#    instance = "lunalectric-attacker-vm-${random_string.suffix.result}"
+#  }
+#}
 
 resource "time_sleep" "wait_120_seconds" {
   #depends_on = [null_resource.previous]
@@ -397,11 +397,23 @@ resource "google_compute_instance" "pass-n2d-res" {
     scopes = ["cloud-platform"]
   }
 
-  metadata_startup_script = data.template_file.init.rendered
+#  metadata_startup_script = data.template_file.init.rendered
+  metadata_startup_script = templatefile("${path.module}/templates/prepare-hacking-vm.tpl", {project = var.project_id, region = var.region, zone = var.zone, instance = "lunalectric-attacker-vm-${random_string.suffix.result}"})
+
+#data "template_file" "init" {
+#  template = "${file("${path.module}/templates/prepare-hacking-vm.tpl")}"
+#  vars = {
+#    project = var.project_id
+#    region = var.region
+#    zone = var.zone
+#    instance = "lunalectric-attacker-vm-${random_string.suffix.result}"
+#  }
+#}
+
 
   depends_on = [
     module.service_accounts-roles,
     google_compute_network.custom-test,
-    data.template_file.init,
+    #data.template_file.init,
   ]
 }

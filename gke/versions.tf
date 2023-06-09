@@ -15,10 +15,10 @@ terraform {
       version = "3.5.1"
     }
 
-    template = {
-      source = "hashicorp/template"
-      version = "2.2.0"
-    }
+    #template = {
+    #  source = "hashicorp/template"
+    #  version = "2.2.0"
+    #}
 
     time = {
       source = "hashicorp/time"
