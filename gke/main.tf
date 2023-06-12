@@ -130,7 +130,7 @@ resource "google_compute_firewall" "default" {
 # GKE Cluster -> create aks cluster
 resource "google_container_cluster" "primary" {
   provider = google-beta
-  node_version = "1.24.12-gke.500"
+  node_version = "1.25.8-gke.1000"
   release_channel {
     channel = "STABLE"
   }
@@ -145,7 +145,7 @@ resource "google_container_cluster" "primary" {
   enable_tpu                  = false
   location                    = var.region
   logging_service             = "logging.googleapis.com/kubernetes"
-  min_master_version          = "1.24.12-gke.500"
+  min_master_version          = "1.25.8-gke.1000"
   monitoring_service          = "monitoring.googleapis.com/kubernetes"
   name                        = "lunalectric-gke-cluster-${random_string.suffix.result}"
   network                     = "lunalectric-gke-${random_string.suffix.result}"
