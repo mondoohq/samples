@@ -9,8 +9,8 @@ Set MarginFill "#9147FF"
 Set BorderRadius 10
 
 # set output
-Output aws-public-s3.gif
-Output aws-public-s3.mp4
+Output github-supply-chain.gif
+Output github-supply-chain.mp4
 
 # load environment variables
 Hide
@@ -22,7 +22,7 @@ Sleep 1s
 Show
 
 # run commands
-Type "cnspec scan aws --discover s3-buckets"
+Type "cnspec scan github org lunalectric --discover organization"
 Sleep 500ms
 Enter
-Sleep 30s
+Sleep 65s
