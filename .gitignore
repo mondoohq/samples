@@ -39,3 +39,5 @@ eks-demo-config
 # Ignore Azure demo credentials
 aks-kubeconfig
 id_rsa
+
+**/.env
