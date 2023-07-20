@@ -20,8 +20,12 @@ Each example is structured to provide a clear overview, pre-requisites, step-by-
 
 We hope that these examples provide a helpful starting point for your own security scanning needs.
 
-- [AWS](#aws)
-- [GitHub](#github)
+| Platform | Sample                                                                                                                                                                              |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AWS      | [Scanning AWS Account with CIS Amazon Web Services Foundations Benchmark Using `cnspec`](#aws-scanning-aws-account-with-cis-amazon-web-services-foundations-benchmark-using-cnspec) |
+| AWS      | [S3 Bucket Public Exposure Check](#aws-s3-bucket-public-exposure-check)                                                                                                             |
+| AWS      | [Checking MFA Status for AWS IAM Users](#aws-checking-mfa-status-for-aws-iam-users)                                                                                                 |
+| GitHub   | [Running the CIS GitHub Benchmark with cnspe](#github-running-the-cis-github-benchmark-with-cnspec)                                                                                 |
 
 ## AWS
 
@@ -40,6 +44,14 @@ This example uses `cnspec` to check for publicly exposed AWS S3 buckets within y
 ![cnspec running a AWS S3 bucket scan](./aws-public-s3/aws-public-s3.gif)
 
 - [Instructions](./aws-public-s3/)
+
+### AWS: Checking MFA Status for AWS IAM Users
+
+This guide demonstrates how to verify that all AWS IAM users have Multi-Factor Authentication (MFA) enabled. Ensuring MFA is crucial in securing your AWS resources as it offers an additional layer of protection by requiring users to provide at least two forms of identification.
+
+![cnspec running a AWS IAM scan](./aws-iam-mfa/aws-iam-mfa.gif)
+
+- [Instructions](./aws-iam-mfa/)
 
 ## GitHub
 
