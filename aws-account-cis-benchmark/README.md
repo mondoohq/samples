@@ -18,11 +18,11 @@ To perform the CIS AWS Foundations Benchmark, you can use the following command 
 cnspec scan aws --policy mondoo-cis-aws-foundations-benchmark
 ```
 
-This command instructs `cnspec` to scan your AWS environment using the `mondoo-cis-aws-foundations-benchmark` policy, discovering all the resources in your account.
+This command instructs `cnspec` to scan your AWS environment using the CIS Amazon Web Services Foundations Benchmark, discovering all the resources and security issues in your account.
 
 ## Results
 
-`cnspec` will generate a report detailing the security status of your AWS account according to the CIS AWS Foundations Benchmark. The report will identify any security vulnerabilities or misconfigurations and recommend potential areas for improvement.
+`cnspec` generates a report detailing the security status of your AWS account according to the CIS AWS Foundations Benchmark. The report will identify any security vulnerabilities or misconfigurations and recommend potential areas for improvement.
 
 ![cnspec running a CIS AWS Foundation Benchmark](./aws-account-cis-benchmark.gif)
 
