@@ -20,12 +20,13 @@ Each example is structured to provide a clear overview, pre-requisites, step-by-
 
 We hope that these examples provide a helpful starting point for your own security scanning needs.
 
-| Platform | Sample                                                                                                                                                                              |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AWS      | [Scanning AWS Account with CIS Amazon Web Services Foundations Benchmark Using `cnspec`](#aws-scanning-aws-account-with-cis-amazon-web-services-foundations-benchmark-using-cnspec) |
-| AWS      | [S3 Bucket Public Exposure Check](#aws-s3-bucket-public-exposure-check)                                                                                                             |
-| AWS      | [Checking MFA Status for AWS IAM Users](#aws-checking-mfa-status-for-aws-iam-users)                                                                                                 |
-| GitHub   | [Running the CIS GitHub Benchmark with cnspe](#github-running-the-cis-github-benchmark-with-cnspec)                                                                                 |
+| Platform | Sample                                                                                                                                                                            |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AWS      | [Scanning AWS Account with CIS Amazon Web Services Foundations Benchmark Using cnspec](#aws-scanning-aws-account-with-cis-amazon-web-services-foundations-benchmark-using-cnspec) |
+| AWS      | [S3 Bucket Public Exposure Check](#aws-s3-bucket-public-exposure-check)                                                                                                           |
+| AWS      | [Checking MFA Status for AWS IAM Users](#aws-checking-mfa-status-for-aws-iam-users)                                                                                               |
+| AWS      | [Scan AWS EC2 Instance using cnspec and EC2 Instance Connect](#aws-scan-aws-ec2-instance-using-cnspec-and-ec2-instance-connect)                                                   |
+| GitHub   | [Scan the GitHub Organization with CIS GitHub Benchmark Using cnspec](#github-running-the-cis-github-benchmark-with-cnspec)                                                       |
 
 ## AWS
 
@@ -52,6 +53,14 @@ This guide demonstrates how to verify that all AWS IAM users have Multi-Factor A
 ![cnspec running a AWS IAM scan](./aws-iam-mfa/aws-iam-mfa.gif)
 
 - [Instructions](./aws-iam-mfa/)
+
+### AWS: Scan AWS EC2 Instance using cnspec and EC2 Instance Connect
+
+This guide walks you through conducting a security scan on an AWS EC2 instance utilizing `cnspec` and EC2 Instance Connect. EC2 Instance Connect provides a secure and auditable means to connect to your instances, thereby eliminating the necessity to have an open public SSH port.
+
+![cnspec running a AWS IAM scan](./aws-ec2-instance/aws-ec2-instance.gif)
+
+- [Instructions](./aws-ec2-instance/)
 
 ## GitHub
 
