@@ -1,24 +1,4 @@
-# Mondoo Hacking Demos
-
-This Repo contains a couple Demo/Hacks to have some nice Mondoo demos
-
-- [container-escape](container-escape): contains two different demos for a container escape within a kubernetes cluster
-  - [dvwa-example](container-escape/dvwa-example/): Damn vulnerable application with container escape in minikube/ eks and gke
-  - [gitlab-example](container-escape/gitlab-example/): Vulnerable gitlab application with container escape in minikube
-  - [terraform to deploy eks with container escape demo](container-escape/terraform/aws/): Terraform template to deploy a eks kubernetes cluster in aws with the dvwa container escape demo
-- [dod](dod-amsterdam-hacklab): Contains terraform template to deploy a vulnerable Windows 2016, ubuntu 20.04 with minikube and a kali machine
-- [mondoo-tf-static-analysis-demo](mondoo-tf-static-analysis-demo): Mondoo Terraform template scanning demo
-- [pwnkit-CVE-2021-4034](pwnkit-CVE-2021-4034): Mondoo Demo for pwnkit vulnerablity
-
-## Contributors + Kudos
-
-* Scott Ford [scottford-io](https://github.com/scottford-io)
-* Yvo Vandoorn [yvovandoorn](https://github.com/yvovandoorn)
-* Dominik Richter [arlimus](https://github.com/arlimus)
-* Christoph Hartmann [chris-rock](https://github.com/chris-rock)
-* Patrick Münch [atomic111](https://github.com/atomic111)
-
-Thanks to all of you!!
+# Samples
 
 ## License and Author
 
