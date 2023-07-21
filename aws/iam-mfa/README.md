@@ -1,4 +1,4 @@
-# AWS: Checking MFA Status for AWS IAM Users
+# Verifying MFA Status for AWS IAM Users
 
 ## Overview
 

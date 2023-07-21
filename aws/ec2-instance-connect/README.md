@@ -1,4 +1,4 @@
-# AWS: Scan AWS EC2 Instance using cnspec and EC2 Instance Connect
+# Scanning an AWS EC2 Instance with cnspec using EC2 Instance Connect
 
 ## Overview
 

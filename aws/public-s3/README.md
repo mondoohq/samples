@@ -1,4 +1,4 @@
-# AWS: S3 Bucket Public Exposure Check
+# Checking Public Exposure of AWS S3 Buckets with cnspec
 
 ## Overview
 

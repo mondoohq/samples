@@ -1,4 +1,4 @@
-# AWS: Scanning AWS Account with CIS Amazon Web Services Foundations Benchmark Using `cnspec`
+# Performing CIS AWS Foundations Benchmark with cnspec
 
 ## Overview
 
