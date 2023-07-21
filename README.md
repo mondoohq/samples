@@ -8,6 +8,7 @@ Welcome to our comprehensive security scanning repository! In our ongoing effort
   - [Checking Public Exposure of AWS S3 Buckets with cnspec](#checking-public-exposure-of-aws-s3-buckets-with-cnspec)
   - [Verifying MFA Status for AWS IAM Users](#verifying-mfa-status-for-aws-iam-users)
   - [Scanning an AWS EC2 Instance with cnspec using EC2 Instance Connect](#scanning-an-aws-ec2-instance-with-cnspec-using-ec2-instance-connect)
+  - [Playing with AWS EC2 Instances](#playing-with-aws-ec2-instances)
 - [GitHub](#github)
   - [Performing CIS GitHub Supply Chain Benchmark with cnspec](#performing-cis-github-supply-chain-benchmark-with-cnspec)
 - [Hack Lab](#hack-lab)
@@ -77,6 +78,12 @@ The Hack Lab is a collection of vulnerable systems that can be used to learn and
 This houses demonstration scenarios showcasing container escapes in Kubernetes environments, particularly in AKS (Azure Kubernetes Service), EKS (Amazon Elastic Kubernetes Service) and GKE (Google Kontainer Engine). These scenarios can serve as engaging demonstrations using Mondoo.
 
 - [Instructions](./hacklab/container-escape/)
+
+## Playing with AWS EC2 Instances
+
+The AWS EC2 Instances is a terraform to deploy hardend and not hardend Windows as well as Linux systems.
+
+- [Instructions](./aws/ec2-instance/)
 
 ## Contributing
 
