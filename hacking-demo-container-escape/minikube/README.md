@@ -24,7 +24,7 @@ Before provisioning set the following environment variables:
 - `TF_VAR_ssh_key_path` - Path to to local ssh key for connecting to Kali Linux instance.
 - `TF_VAR_publicIP` - IP address of your home network to be applied to the security group for the Kali Linux, Ubuntu and Windows instance. example: `1.1.1.1/32`
 
-### Example configuration 
+### Example configuration
 
 Open a terminal and run the following commands:
 
@@ -99,7 +99,7 @@ terraform apply -destroy -auto-approve
 
 ## License and Author
 
-* Author:: Mondoo Inc
+- Author:: Mondoo Inc
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

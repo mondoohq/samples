@@ -19,18 +19,18 @@ The hacking-Demo in aks, eks and gke have the following hacking procedure
 
 ## Contributors + Kudos
 
-* Scott Ford [scottford-io](https://github.com/scottford-io)
-* Yvo Vandoorn [yvovandoorn](https://github.com/yvovandoorn)
-* Dominik Richter [arlimus](https://github.com/arlimus)
-* Christoph Hartmann [chris-rock](https://github.com/chris-rock)
-* Patrick Münch [atomic111](https://github.com/atomic111)
-* Manuel Weber [mm-weber](https://github.com/mm-weber)
+- Scott Ford [scottford-io](https://github.com/scottford-io)
+- Yvo Vandoorn [yvovandoorn](https://github.com/yvovandoorn)
+- Dominik Richter [arlimus](https://github.com/arlimus)
+- Christoph Hartmann [chris-rock](https://github.com/chris-rock)
+- Patrick Münch [atomic111](https://github.com/atomic111)
+- Manuel Weber [mm-weber](https://github.com/mm-weber)
 
 Thanks to all of you!!
 
 ## License and Author
 
-* Author:: Mondoo Inc
+- Author:: Mondoo Inc
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

