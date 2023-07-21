@@ -1,19 +1,18 @@
-# Security Scanning with cnspec, cnquery, and Mondoo Platform
+# Security Scanning with cnspec, cnquery, and Mondoo Platform <!-- omit from toc -->
 
 Welcome to our comprehensive security scanning repository! In our ongoing effort to empower the highest standards of security, we've gathered a variety of examples and guides to help you conduct thorough security audits on your resources using `cnspec`, `cnquery`, and the Mondoo Platform. Our examples, ranging from AWS services to GitHub repositories, are structured with a clear overview, prerequisites, step-by-step instructions, expected results, and troubleshooting tips. We trust these will serve as a beneficial starting point for your own security scanning needs.
 
-- [Security Scanning with cnspec, cnquery, and Mondoo Platform](#security-scanning-with-cnspec-cnquery-and-mondoo-platform)
-  - [What are cnspec, cnquery, and Mondoo Platform?](#what-are-cnspec-cnquery-and-mondoo-platform)
-  - [AWS](#aws)
-    - [Performing CIS AWS Foundations Benchmark with cnspec](#performing-cis-aws-foundations-benchmark-with-cnspec)
-    - [Checking Public Exposure of AWS S3 Buckets with cnspec](#checking-public-exposure-of-aws-s3-buckets-with-cnspec)
-    - [Verifying MFA Status for AWS IAM Users](#verifying-mfa-status-for-aws-iam-users)
-    - [Scanning an AWS EC2 Instance with cnspec using EC2 Instance Connect](#scanning-an-aws-ec2-instance-with-cnspec-using-ec2-instance-connect)
-  - [GitHub](#github)
-    - [Performing CIS GitHub Supply Chain Benchmark with cnspec](#performing-cis-github-supply-chain-benchmark-with-cnspec)
-  - [Hack Lab](#hack-lab)
-    - [Demonstrating Container Escape in Kubernetes](#demonstrating-container-escape-in-kubernetes)
-  - [Contributing](#contributing)
+- [What are cnspec, cnquery, and Mondoo Platform?](#what-are-cnspec-cnquery-and-mondoo-platform)
+- [AWS](#aws)
+  - [Performing CIS AWS Foundations Benchmark with cnspec](#performing-cis-aws-foundations-benchmark-with-cnspec)
+  - [Checking Public Exposure of AWS S3 Buckets with cnspec](#checking-public-exposure-of-aws-s3-buckets-with-cnspec)
+  - [Verifying MFA Status for AWS IAM Users](#verifying-mfa-status-for-aws-iam-users)
+  - [Scanning an AWS EC2 Instance with cnspec using EC2 Instance Connect](#scanning-an-aws-ec2-instance-with-cnspec-using-ec2-instance-connect)
+- [GitHub](#github)
+  - [Performing CIS GitHub Supply Chain Benchmark with cnspec](#performing-cis-github-supply-chain-benchmark-with-cnspec)
+- [Hack Lab](#hack-lab)
+  - [Demonstrating Container Escape in Kubernetes](#demonstrating-container-escape-in-kubernetes)
+- [Contributing](#contributing)
 
 ## What are cnspec, cnquery, and Mondoo Platform?
 
@@ -65,9 +64,9 @@ This guide walks you through conducting a security scan on an AWS EC2 instance u
 
 This guide provides an example on how to execute the CIS (Center for Internet Security) GitHub Benchmark on GitHub repositories and organizations using the `cnspec` and Mondoo platform. These benchmarks offer a standardized set of procedures to assess the security posture of GitHub repositories and organizations, helping to identify vulnerabilities or potential areas for security enhancements.
 
-![cnspec running a GitHub organization scan](./github/supply-chain/github-supply-chain.gif)
+![cnspec running a GitHub organization scan](./github/cis-supply-chain/github-supply-chain.gif)
 
-- [Instructions](./github/supply-chain/)
+- [Instructions](./github/cis-supply-chain/)
 
 ## Hack Lab
 
