@@ -1,0 +1,166 @@
+name: Okta Provisioning
+on:
+  push:
+    paths:
+        - okta/okta-provisioning/**
+  workflow_dispatch:
+
+env:
+    MONDOO_CONFIG_BASE64: ${{ secrets.MONDOO_CONFIG_BASE64 }}
+    TF_VAR_api_token: ${{ secrets.OKTA_API_TOKEN }}
+    TF_VAR_base_url: ${{ vars.OKTA_BASE_URL }}
+    TF_VAR_org_name: ${{ vars.OKTA_ORG_NAME }}
+
+jobs:
+  terraform-pre-plan-validation:
+    name: "Terraform Validate"
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    defaults:
+      run:
+          working-directory: ./terraform
+    steps:
+    - uses: 'actions/checkout@v3'
+
+    - id: 'google-cloud-auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+
+    - uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_wrapper: false
+
+    - name: Terraform Init
+      id: init
+      run: terraform init -reconfigure
+
+    - name: Terraform Format
+      id: fmt
+      run: terraform fmt -check  
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+  cnspec-scan-terraform-hcl:
+    name: "Scan Terraform (pre-plan)"
+    runs-on: ubuntu-latest
+    container: mondoo/cnspec:8
+    needs: terraform-pre-plan-validation 
+    permissions:
+      pull-requests: write
+      contents: write
+
+    steps:
+      - uses: 'actions/checkout@v3'
+
+      - name: Scan ${{ vars.OKTA_ORG_NAME }} Terraform HCL (pre-plan)
+        run: |
+          echo "### ${{ vars.OKTA_ORG_NAME }} Terraform pre-plan security scan :shield:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cnspec scan terraform ./terraform --asset-name ${{ vars.OKTA_ORG_NAME }}-terraform-hcl >> $GITHUB_STEP_SUMMARY
+          echo "CNSPEC_PRE_SCAN=$GITHUB_STEP_SUMMARY" >> $GITHUB_ENV
+
+  terraform-plan:
+    name: Generate Terraform Plan
+    runs-on: ubuntu-latest
+    container: hashicorp/terraform:1.4
+    needs: cnspec-scan-terraform-hcl 
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - id: 'google-cloud-auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+
+      - name: Mitigate that fancy action/cache@v3 does not work with busybox tar on alpine
+        run: apk add --no-cache tar
+
+      - name: Use cache to share files between jobs
+        uses: actions/cache@v3
+        id: terraform-plan
+        with:
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/terraform/**') }}
+          path: terraform/plan.json          
+
+      - name: Terraform init
+        run: terraform -chdir="./terraform" init
+
+      - name: Terraform plan
+        run: terraform -chdir="./terraform" plan -out=plan.out
+
+      - name: Terraform show
+        run: terraform -chdir="./terraform" show -json plan.out > terraform/plan.json
+
+  post-plan-scan:
+    name: Scan Terraform (post-plan)
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    container: mondoo/cnspec:latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Use cache to share files between jobs
+        uses: actions/cache@v3
+        id: terraform-plan
+        with:
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/terraform/**') }}
+          path: terraform/plan.json
+        
+      - name: Scan ${{ vars.OKTA_ORG_NAME }} Terraform Plan (post-plan)
+        run: |
+          echo "### ${{ vars.OKTA_ORG_NAME }} Terraform post-plan security scan :shield:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cnspec scan terraform plan ./terraform/plan.json --asset-name ${{ vars.OKTA_ORG_NAME }}-terraform-plan >> $GITHUB_STEP_SUMMARY
+          echo "CNSPEC_PRE_SCAN=$GITHUB_STEP_SUMMARY" >> $GITHUB_ENV
+        env:
+          MONDOO_DETECT_CICD: false
+
+  terraform-apply:
+    name: Terraform Apply 
+    runs-on: ubuntu-latest
+    container: hashicorp/terraform:1.4
+    needs: post-plan-scan
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - id: 'google-cloud-auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+
+      - name: Terraform init
+        run: terraform -chdir="./terraform" init 
+
+      - name: Terraform Apply
+        run: terraform -chdir="./terraform" apply -auto-approve
+
+  post-apply-scan:
+    name: Scan Okta Org (Post-Apply)
+    needs: terraform-apply
+    runs-on: ubuntu-latest
+    container: mondoo/cnspec:latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        
+      - name: Scan ${{ vars.OKTA_ORG_NAME }}.okta.com 
+        run: |
+          echo "### ${{ vars.OKTA_ORG_NAME }}.okta.com security scan (post-apply) :shield:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cnspec scan okta --organization ${{ vars.OKTA_ORG_NAME }}.okta.com --token ${{ secrets.OKTA_API_TOKEN }} --asset-name ${{ vars.OKTA_ORG_NAME }}.okta.com >> $GITHUB_STEP_SUMMARY
+          echo "CNSPEC_PRE_SCAN=$GITHUB_STEP_SUMMARY" >> $GITHUB_ENV
