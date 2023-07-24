@@ -20,7 +20,7 @@ jobs:
       contents: write
     defaults:
       run:
-          working-directory: ./terraform
+          working-directory: ./okta/okta-provisioning
     steps:
     - uses: 'actions/checkout@v3'
 
