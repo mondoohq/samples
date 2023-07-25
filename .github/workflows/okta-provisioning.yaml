@@ -20,7 +20,7 @@ jobs:
       contents: write
     defaults:
       run:
-          working-directory: ./okta/okta-provisioning
+          working-directory: ./okta/okta-terraform-provisioning
     steps:
     - uses: 'actions/checkout@v3'
 
@@ -62,7 +62,7 @@ jobs:
         run: |
           echo "### ${{ vars.OKTA_ORG_NAME }} Terraform pre-plan security scan :shield:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          cnspec scan terraform ./terraform --asset-name ${{ vars.OKTA_ORG_NAME }}-terraform-hcl >> $GITHUB_STEP_SUMMARY
+          cnspec scan terraform ./okta/okta-terraform-provisioning --asset-name ${{ vars.OKTA_ORG_NAME }}-terraform-hcl >> $GITHUB_STEP_SUMMARY
           echo "CNSPEC_PRE_SCAN=$GITHUB_STEP_SUMMARY" >> $GITHUB_ENV
 
   terraform-plan:
@@ -88,17 +88,17 @@ jobs:
         uses: actions/cache@v3
         id: terraform-plan
         with:
-          key: ${{ runner.os }}-terraform-${{ hashFiles('**/terraform/**') }}
-          path: terraform/plan.json          
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/okta/okta-terraform-provisioning/**') }}
+          path: ./okta/okta-terraform-provisioning/plan.json          
 
       - name: Terraform init
-        run: terraform -chdir="./terraform" init
+        run: terraform -chdir="./okta/okta-terraform-provisioning" init
 
       - name: Terraform plan
-        run: terraform -chdir="./terraform" plan -out=plan.out
+        run: terraform -chdir="./okta/okta-terraform-provisioning" plan -out=plan.out
 
       - name: Terraform show
-        run: terraform -chdir="./terraform" show -json plan.out > terraform/plan.json
+        run: terraform -chdir="./okta/okta-terraform-provisioning" show -json plan.out > ./okta/okta-terraform-provisioning/plan.json
 
   post-plan-scan:
     name: Scan Terraform (post-plan)
@@ -114,14 +114,14 @@ jobs:
         uses: actions/cache@v3
         id: terraform-plan
         with:
-          key: ${{ runner.os }}-terraform-${{ hashFiles('**/terraform/**') }}
-          path: terraform/plan.json
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/okta/okta-terraform-provisioning/**') }}
+          path: ./okta/okta-terraform-provisioning/plan.json
         
       - name: Scan ${{ vars.OKTA_ORG_NAME }} Terraform Plan (post-plan)
         run: |
           echo "### ${{ vars.OKTA_ORG_NAME }} Terraform post-plan security scan :shield:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          cnspec scan terraform plan ./terraform/plan.json --asset-name ${{ vars.OKTA_ORG_NAME }}-terraform-plan >> $GITHUB_STEP_SUMMARY
+          cnspec scan terraform plan ./okta/okta-terraform-provisioning/plan.json --asset-name ${{ vars.OKTA_ORG_NAME }}-terraform-plan >> $GITHUB_STEP_SUMMARY
           echo "CNSPEC_PRE_SCAN=$GITHUB_STEP_SUMMARY" >> $GITHUB_ENV
         env:
           MONDOO_DETECT_CICD: false
@@ -143,10 +143,10 @@ jobs:
           credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
       - name: Terraform init
-        run: terraform -chdir="./terraform" init 
+        run: terraform -chdir="./okta/okta-terraform-provisioning" init 
 
       - name: Terraform Apply
-        run: terraform -chdir="./terraform" apply -auto-approve
+        run: terraform -chdir="./okta/okta-terraform-provisioning" apply -auto-approve
 
   post-apply-scan:
     name: Scan Okta Org (Post-Apply)
