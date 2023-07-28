@@ -29,7 +29,7 @@ prefix = "ec2-secops-test"
 
 aws_key_pair_name = "scottford"
 
-publicIP="92.206.212.114/32"
+publicIP="1.1.1.1/32"
 
 linux_instance_type = "t2.medium"
 
