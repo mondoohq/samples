@@ -43,6 +43,11 @@ output "debian11_cis" {
   value = module.debian11_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11_cis.public_ip}"
 }
 
+# debian12
+output "debian12" {
+  value = module.debian12.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian12.public_ip}"
+}
+
 # suse15
 output "suse15" {
   value = module.suse15.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.suse15.public_ip}"
@@ -52,6 +57,15 @@ output "suse15_cis" {
   value = module.suse15_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.suse15_cis.public_ip}"
 }
 
+# oracle8
+output "oracle8" {
+  value = module.oracle8.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle8.public_ip}"
+}
+
+output "oracle8_cis" {
+  value = module.oracle8_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle8_cis.public_ip}"
+}
+
 # windows2022
 output "windows2022" {
   value = module.windows2022.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2022.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"
@@ -59,4 +73,4 @@ output "windows2022" {
 
 output "windows2022_cis" {
   value = module.windows2022_cis.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2022_cis.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"
-} 
+}

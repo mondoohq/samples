@@ -209,6 +209,22 @@ data "aws_ami" "debian11_cis" {
   owners = ["679593333241"]
 }
 
+data "aws_ami" "debian12" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["debian-12-amd64-2023*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["136693071363"]
+}
+
 data "aws_ami" "suse15" {
   most_recent = true
 
@@ -231,6 +247,40 @@ data "aws_ami" "suse15_cis" {
   filter {
     name   = "name"
     values = ["CIS SUSE Linux Enterprise 15 Benchmark*Level*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
+
+
+data "aws_ami" "oracle8" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["*SupportedImages OL8.8*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
+data "aws_ami" "oracle8_cis" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["CIS Oracle Linux 8 Benchmark*"]
   }
 
   filter {

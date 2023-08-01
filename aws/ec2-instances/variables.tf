@@ -125,11 +125,23 @@ variable "create_debian11_cis" {
   default = false
 }
 
+variable "create_debian12" {
+  default = false
+}
+
 variable "create_suse15" {
   default = false
 }
 
 variable "create_suse15_cis" {
+  default = false
+}
+
+variable "create_oracle8" {
+  default = false
+}
+
+variable "create_oracle8_cis" {
   default = false
 }
 

@@ -222,6 +222,22 @@ module "debian11_cis" {
   user_data_replace_on_change = true
 }
 
+module "debian12" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_debian12
+  name                        = "${var.prefix}-debian12"
+  ami                         = data.aws_ami.debian12.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
 module "suse15" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
@@ -245,6 +261,38 @@ module "suse15_cis" {
   create                      = var.create_suse15_cis
   name                        = "${var.prefix}-suse15-cis"
   ami                         = data.aws_ami.suse15_cis.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
+module "oracle8" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_oracle8
+  name                        = "${var.prefix}-oracle8"
+  ami                         = data.aws_ami.oracle8.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
+module "oracle8_cis" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_oracle8_cis
+  name                        = "${var.prefix}-oracle8-cis"
+  ami                         = data.aws_ami.oracle8_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
