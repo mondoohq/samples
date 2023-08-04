@@ -33,6 +33,12 @@ variable "mondoo_registration_token" {
   default     = ""
 }
 
+variable "ssh_key" {
+  description = "ssh rsa key to decrypt windows password"
+  type        = string
+  default     = ""
+}
+
 ////////////////////////////////
 // VPC Settings
 
@@ -210,6 +216,10 @@ variable "create_suse15_cis_cnspec" {
 }
 
 variable "create_oracle8" {
+  default = false
+}
+
+variable "create_oracle8_cnspec" {
   default = false
 }
 
