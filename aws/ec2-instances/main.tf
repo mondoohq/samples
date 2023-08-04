@@ -10,7 +10,7 @@ locals {
     cnspec scan local --config /etc/opt/mondoo/mondoo.yml --asset-name $(uname -r)
   EOT
 
-  windows_user_data = <<-EOT
+  windows_user_data_cnspec = <<-EOT
     <powershell>
     Set-ExecutionPolicy Unrestricted -Scope Process -Force;
     Add-WindowsCapability -Online -Name OpenSSH.Server
@@ -23,6 +23,18 @@ locals {
     iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'));
     Install-Mondoo;
     cnspec scan local --config C:\ProgramData\Mondoo\mondoo.yml --asset-name $(Get-ComputerInfo | Select-Object OSName, OSVersion, OsHardwareAbstractionLayer)
+    </powershell>
+  EOT
+
+  windows_user_data = <<-EOT
+    <powershell>
+    Set-ExecutionPolicy Unrestricted -Scope Process -Force;
+    Add-WindowsCapability -Online -Name OpenSSH.Server
+    New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
+    Start-Service sshd
+    Set-Service -Name sshd -StartupType 'Automatic'
+    $NewPassword = ConvertTo-SecureString "${var.windows_admin_password}" -AsPlainText -Force
+    Set-LocalUser -Name Administrator -Password $NewPassword
     </powershell>
   EOT
 }
@@ -574,6 +586,8 @@ module "windows2022" {
   subnet_id                   = module.vpc.public_subnets[0]
   key_name                    = var.aws_key_pair_name
   associate_public_ip_address = true
+  user_data                   = base64encode(local.windows_user_data)
+  user_data_replace_on_change = true
 }
 
 module "windows2022_cnspec" {
@@ -588,7 +602,7 @@ module "windows2022_cnspec" {
   subnet_id                   = module.vpc.public_subnets[0]
   key_name                    = var.aws_key_pair_name
   associate_public_ip_address = true
-  user_data                   = base64encode(local.windows_user_data)
+  user_data                   = base64encode(local.windows_user_data_cnspec)
   user_data_replace_on_change = true
 }
 
@@ -604,20 +618,7 @@ module "windows2022_cis" {
   subnet_id                   = module.vpc.public_subnets[0]
   key_name                    = var.aws_key_pair_name
   associate_public_ip_address = true
-  user_data = <<EOF
-<powershell>
-Set-ExecutionPolicy Unrestricted -Scope Process -Force;
-Add-WindowsCapability -Online -Name OpenSSH.Server
-New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
-Start-Service sshd
-Set-Service -Name sshd -StartupType 'Automatic'
-$NewPassword = ConvertTo-SecureString "${var.windows_admin_password}" -AsPlainText -Force
-Set-LocalUser -Name Administrator -Password $NewPassword
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
-iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'));
-Install-Mondoo;
-cnspec scan local --config C:\ProgramData\Mondoo\mondoo.yml --asset-name $(Get-ComputerInfo | Select-Object OSName, OSVersion, OsHardwareAbstractionLayer)
-</powershell>
-EOF
+  user_data                   = base64encode(local.windows_user_data)
   user_data_replace_on_change = true
+  get_password_data           = true
 }
