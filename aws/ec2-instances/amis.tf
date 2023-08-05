@@ -353,6 +353,22 @@ data "aws_ami" "winserver2016" {
   owners = ["801119661308"]
 }
 
+data "aws_ami" "winserver2016_cis" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["CIS Microsoft Windows Server 2019 Benchmark v2*Level 2*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
 data "aws_ami" "winserver2019" {
   most_recent = true
 
@@ -369,12 +385,28 @@ data "aws_ami" "winserver2019" {
   owners = ["801119661308"]
 }
 
+data "aws_ami" "winserver2019_cis" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["CIS Microsoft Windows Server 2019 Benchmark v2*Level 2*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
 data "aws_ami" "winserver2022" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["Windows_Server-2022-English-Full-Base-2023*"]
+    values = ["Windows_Server-2022-English-Full-Base-*"]
   }
 
   filter {

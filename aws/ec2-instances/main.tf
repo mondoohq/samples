@@ -90,6 +90,8 @@ module "linux_sg" {
 ////////////////////////////////
 // Linux Instances
 
+// Amazon Linux 2023
+
 module "amazon2023" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
@@ -119,6 +121,8 @@ module "amazon2023_cnspec" {
   user_data                   = base64encode(local.linux_user_data)
   user_data_replace_on_change = true
 }
+
+// Amazon Linux 2
 
 module "amazon2" {
   source  = "terraform-aws-modules/ec2-instance/aws"
@@ -180,6 +184,8 @@ module "amazon2_cis_cnspec" {
   user_data_replace_on_change = true
 }
 
+// Debian 11
+
 module "debian11" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
@@ -240,6 +246,8 @@ module "debian11_cis_cnspec" {
   user_data_replace_on_change = true
 }
 
+// Debian 12
+
 module "debian12" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
@@ -269,6 +277,8 @@ module "debian12_cnspec" {
   user_data                   = base64encode(local.linux_user_data)
   user_data_replace_on_change = true
 }
+
+// Oracle 7
 
 module "oracle7" {
   source  = "terraform-aws-modules/ec2-instance/aws"
@@ -330,6 +340,8 @@ module "oracle7_cis_cnspec" {
   user_data_replace_on_change = true
 }
 
+// Oracle 8
+
 module "oracle8" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
@@ -390,6 +402,8 @@ module "oracle8_cis_cnspec" {
   user_data_replace_on_change = true
 }
 
+// Red Hat Linux 9
+
 module "rhel9" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
@@ -419,6 +433,8 @@ module "rhel9_cnspec" {
   user_data                   = base64encode(local.linux_user_data)
   user_data_replace_on_change = true
 }
+
+// Red Hat Linux 8
 
 module "rhel8" {
   source  = "terraform-aws-modules/ec2-instance/aws"
@@ -480,6 +496,8 @@ module "rhel8_cis_cnspec" {
   user_data_replace_on_change = true
 }
 
+// Ubuntu 22.04
+
 module "ubuntu2204" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
@@ -539,6 +557,8 @@ module "ubuntu2204_cis_cnspec" {
   user_data                   = base64encode(local.linux_user_data)
   user_data_replace_on_change = true
 }
+
+// SuSe Enterprise 15
 
 module "suse15" {
   source  = "terraform-aws-modules/ec2-instance/aws"
@@ -633,6 +653,144 @@ module "windows_sg" {
 
 # ////////////////////////////////
 # // Windows Instances
+
+// Windows 2016
+
+module "windows2016" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_windows2016
+  name                        = "${var.prefix}-windows2016-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.winserver2016.id
+  instance_type               = var.windows_instance_type
+  vpc_security_group_ids      = [module.windows_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.windows_user_data)
+  user_data_replace_on_change = true
+}
+
+module "windows2016_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_windows2016_cnspec
+  name                        = "${var.prefix}-windows2016-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.winserver2016.id
+  instance_type               = var.windows_instance_type
+  vpc_security_group_ids      = [module.windows_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.windows_user_data_cnspec)
+  user_data_replace_on_change = true
+}
+
+module "windows2016_cis" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_windows2016_cis
+  name                        = "${var.prefix}-windows2016-cis-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.winserver2016_cis.id
+  instance_type               = var.windows_instance_type
+  vpc_security_group_ids      = [module.windows_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.windows_user_data)
+  user_data_replace_on_change = true
+  get_password_data           = true
+}
+
+module "windows2016_cis_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_windows2016_cis_cnspec
+  name                        = "${var.prefix}-windows2016-cis-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.winserver2016_cis.id
+  instance_type               = var.windows_instance_type
+  vpc_security_group_ids      = [module.windows_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.windows_user_data_cnspec)
+  user_data_replace_on_change = true
+  get_password_data           = true
+}
+
+// Windows 2019
+
+module "windows2019" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_windows2019
+  name                        = "${var.prefix}-windows2019-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.winserver2019.id
+  instance_type               = var.windows_instance_type
+  vpc_security_group_ids      = [module.windows_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.windows_user_data)
+  user_data_replace_on_change = true
+}
+
+module "windows2019_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_windows2019_cnspec
+  name                        = "${var.prefix}-windows2019-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.winserver2019.id
+  instance_type               = var.windows_instance_type
+  vpc_security_group_ids      = [module.windows_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.windows_user_data_cnspec)
+  user_data_replace_on_change = true
+}
+
+module "windows2019_cis" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_windows2019_cis
+  name                        = "${var.prefix}-windows2019-cis-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.winserver2019_cis.id
+  instance_type               = var.windows_instance_type
+  vpc_security_group_ids      = [module.windows_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.windows_user_data)
+  user_data_replace_on_change = true
+  get_password_data           = true
+}
+
+module "windows2019_cis_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_windows2019_cis_cnspec
+  name                        = "${var.prefix}-windows2019-cis-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.winserver2019_cis.id
+  instance_type               = var.windows_instance_type
+  vpc_security_group_ids      = [module.windows_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.windows_user_data_cnspec)
+  user_data_replace_on_change = true
+  get_password_data           = true
+}
+
+// Windows 2022
 
 module "windows2022" {
   source  = "terraform-aws-modules/ec2-instance/aws"

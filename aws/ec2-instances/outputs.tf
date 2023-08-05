@@ -149,6 +149,40 @@ output "oracle8_cis_cnspec" {
   value = module.oracle8_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle8_cis_cnspec.public_ip}"
 }
 
+# windows2016
+output "windows2016" {
+  value = module.windows2016.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2016.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"
+}
+
+output "windows2016_cnspec" {
+  value = module.windows2016_cnspec.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2016_cnspec.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"
+}
+
+output "windows2016_cis" {
+  value = module.windows2016_cis.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2016_cis.public_ip}:3389 /h:2048 /w:2048 /p:'${rsadecrypt(module.windows2016_cis.password_data, file(var.ssh_key))}'"
+}
+
+output "windows2016_cis_cnspec" {
+  value = module.windows2016_cis_cnspec.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2016_cis_cnspec.public_ip}:3389 /h:2048 /w:2048 /p:'${rsadecrypt(module.windows2016_cis_cnspec.password_data, file(var.ssh_key))}'"
+}
+
+# windows2019
+output "windows2019" {
+  value = module.windows2019.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2019.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"
+}
+
+output "windows2019_cnspec" {
+  value = module.windows2019_cnspec.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2019_cnspec.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"
+}
+
+output "windows2019_cis" {
+  value = module.windows2019_cis.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2019_cis.public_ip}:3389 /h:2048 /w:2048 /p:'${rsadecrypt(module.windows2019_cis.password_data, file(var.ssh_key))}'"
+}
+
+output "windows2019_cis_cnspec" {
+  value = module.windows2019_cis_cnspec.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2019_cis_cnspec.public_ip}:3389 /h:2048 /w:2048 /p:'${rsadecrypt(module.windows2019_cis_cnspec.password_data, file(var.ssh_key))}'"
+}
+
 # windows2022
 output "windows2022" {
   value = module.windows2022.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2022.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"
