@@ -215,6 +215,22 @@ variable "create_suse15_cis_cnspec" {
   default = false
 }
 
+variable "create_oracle7" {
+  default = false
+}
+
+variable "create_oracle7_cnspec" {
+  default = false
+}
+
+variable "create_oracle7_cis" {
+  default = false
+}
+
+variable "create_oracle7_cis_cnspec" {
+  default = false
+}
+
 variable "create_oracle8" {
   default = false
 }

@@ -114,6 +114,24 @@ output "suse15_cis_cnspec" {
   value = module.suse15_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.suse15_cis_cnspec.public_ip}"
 }
 
+# oracle7
+# oracle7
+output "oracle7" {
+  value = module.oracle7.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle7.public_ip}"
+}
+
+output "oracle7_cnspec" {
+  value = module.oracle7_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle7_cnspec.public_ip}"
+}
+
+output "oracle7_cis" {
+  value = module.oracle7_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle7_cis.public_ip}"
+}
+
+output "oracle7_cis_cnspec" {
+  value = module.oracle7_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle7_cis_cnspec.public_ip}"
+}
+
 # oracle8
 output "oracle8" {
   value = module.oracle8.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle8.public_ip}"
@@ -142,4 +160,8 @@ output "windows2022_cnspec" {
 
 output "windows2022_cis" {
   value = module.windows2022_cis.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2022_cis.public_ip}:3389 /h:2048 /w:2048 /p:'${rsadecrypt(module.windows2022_cis.password_data, file(var.ssh_key))}'"
+}
+
+output "windows2022_cis_cnspec" {
+  value = module.windows2022_cis_cnspec.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2022_cis_cnspec.public_ip}:3389 /h:2048 /w:2048 /p:'${rsadecrypt(module.windows2022_cis_cnspec.password_data, file(var.ssh_key))}'"
 }

@@ -95,7 +95,7 @@ module "amazon2023" {
   version = "~> 5.2.1"
 
   create                      = var.create_amazon2023
-  name                        = "${var.prefix}-amazon2023"
+  name                        = "${var.prefix}-amazon2023-${random_id.instance_id.id}"
   ami                         = data.aws_ami.amazon2023.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -109,7 +109,7 @@ module "amazon2023_cnspec" {
   version = "~> 5.2.1"
 
   create                      = var.create_amazon2023_cnspec
-  name                        = "${var.prefix}-amazon2023-cnspec"
+  name                        = "${var.prefix}-amazon2023-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.amazon2023.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -125,7 +125,7 @@ module "amazon2" {
   version = "~> 5.2.1"
 
   create                      = var.create_amazon2
-  name                        = "${var.prefix}-amazon2"
+  name                        = "${var.prefix}-amazon2-${random_id.instance_id.id}"
   ami                         = data.aws_ami.amazon2.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -139,7 +139,7 @@ module "amazon2_cnspec" {
   version = "~> 5.2.1"
 
   create                      = var.create_amazon2_cnspec
-  name                        = "${var.prefix}-amazon2-cnspec"
+  name                        = "${var.prefix}-amazon2-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.amazon2.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -155,7 +155,7 @@ module "amazon2_cis" {
   version = "~> 5.2.1"
 
   create                      = var.create_amazon2_cis
-  name                        = "${var.prefix}-amazon2-cis"
+  name                        = "${var.prefix}-amazon2-cis-${random_id.instance_id.id}"
   ami                         = data.aws_ami.amazon2_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -169,7 +169,7 @@ module "amazon2_cis_cnspec" {
   version = "~> 5.2.1"
 
   create                      = var.create_amazon2_cis_cnspec
-  name                        = "${var.prefix}-amazon2-cis-cnspec"
+  name                        = "${var.prefix}-amazon2-cis-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.amazon2_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -185,7 +185,7 @@ module "debian11" {
   version = "~> 5.2.1"
 
   create                      = var.create_debian11
-  name                        = "${var.prefix}-debian11"
+  name                        = "${var.prefix}-debian11-${random_id.instance_id.id}"
   ami                         = data.aws_ami.debian11.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -199,7 +199,7 @@ module "debian11_cnspec" {
   version = "~> 5.2.1"
 
   create                      = var.create_debian11
-  name                        = "${var.prefix}-debian11-cnspec"
+  name                        = "${var.prefix}-debian11-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.debian11.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -215,7 +215,7 @@ module "debian11_cis" {
   version = "~> 5.2.1"
 
   create                      = var.create_debian11_cis
-  name                        = "${var.prefix}-debian11-cis"
+  name                        = "${var.prefix}-debian11-cis-${random_id.instance_id.id}"
   ami                         = data.aws_ami.debian11_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -229,7 +229,7 @@ module "debian11_cis_cnspec" {
   version = "~> 5.2.1"
 
   create                      = var.create_debian11_cis_cnspec
-  name                        = "${var.prefix}-debian11-cis-cnspec"
+  name                        = "${var.prefix}-debian11-cis-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.debian11_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -245,7 +245,7 @@ module "debian12" {
   version = "~> 5.2.1"
 
   create                      = var.create_debian12
-  name                        = "${var.prefix}-debian12"
+  name                        = "${var.prefix}-debian12-${random_id.instance_id.id}"
   ami                         = data.aws_ami.debian12.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -259,8 +259,68 @@ module "debian12_cnspec" {
   version = "~> 5.2.1"
 
   create                      = var.create_debian12_cnspec
-  name                        = "${var.prefix}-debian12"
+  name                        = "${var.prefix}-debian12-${random_id.instance_id.id}"
   ami                         = data.aws_ami.debian12.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
+module "oracle7" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_oracle7
+  name                        = "${var.prefix}-oracle7-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.oracle7.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+module "oracle7_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_oracle7_cnspec
+  name                        = "${var.prefix}-oracle7-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.oracle7.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
+module "oracle7_cis" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_oracle7_cis
+  name                        = "${var.prefix}-oracle7-cis-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.oracle7_cis.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+module "oracle7_cis_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_oracle7_cis_cnspec
+  name                        = "${var.prefix}-oracle7-cis-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.oracle7_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
@@ -275,7 +335,7 @@ module "oracle8" {
   version = "~> 5.2.1"
 
   create                      = var.create_oracle8
-  name                        = "${var.prefix}-oracle8"
+  name                        = "${var.prefix}-oracle8-${random_id.instance_id.id}"
   ami                         = data.aws_ami.oracle8.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -289,7 +349,7 @@ module "oracle8_cnspec" {
   version = "~> 5.2.1"
 
   create                      = var.create_oracle8_cnspec
-  name                        = "${var.prefix}-oracle8-cnspec"
+  name                        = "${var.prefix}-oracle8-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.oracle8.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -305,7 +365,7 @@ module "oracle8_cis" {
   version = "~> 5.2.1"
 
   create                      = var.create_oracle8_cis
-  name                        = "${var.prefix}-oracle8-cis"
+  name                        = "${var.prefix}-oracle8-cis-${random_id.instance_id.id}"
   ami                         = data.aws_ami.oracle8_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -319,7 +379,7 @@ module "oracle8_cis_cnspec" {
   version = "~> 5.2.1"
 
   create                      = var.create_oracle8_cis_cnspec
-  name                        = "${var.prefix}-oracle8-cis-cnspec"
+  name                        = "${var.prefix}-oracle8-cis-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.oracle8_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -335,7 +395,7 @@ module "rhel9" {
   version = "~> 5.2.1"
   
   create                      = var.create_rhel9
-  name                        = "${var.prefix}-rhel9"
+  name                        = "${var.prefix}-rhel9-${random_id.instance_id.id}"
   ami                         = data.aws_ami.rhel9.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -349,7 +409,7 @@ module "rhel9_cnspec" {
   version = "~> 5.2.1"
   
   create                      = var.create_rhel9
-  name                        = "${var.prefix}-rhel9-cnspec"
+  name                        = "${var.prefix}-rhel9-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.rhel9.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -365,7 +425,7 @@ module "rhel8" {
   version = "~> 5.2.1"
   
   create                      = var.create_rhel8
-  name                        = "${var.prefix}-rhel8"
+  name                        = "${var.prefix}-rhel8-${random_id.instance_id.id}"
   ami                         = data.aws_ami.rhel8.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -379,7 +439,7 @@ module "rhel8_cnspec" {
   version = "~> 5.2.1"
   
   create                      = var.create_rhel8_cnspec
-  name                        = "${var.prefix}-rhel8-cnspec"
+  name                        = "${var.prefix}-rhel8-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.rhel8.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -395,7 +455,7 @@ module "rhel8_cis" {
   version = "~> 5.2.1"
   
   create                      = var.create_rhel8_cis
-  name                        = "${var.prefix}-rhel8-cis"
+  name                        = "${var.prefix}-rhel8-cis-${random_id.instance_id.id}"
   ami                         = data.aws_ami.rhel8_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -425,7 +485,7 @@ module "ubuntu2204" {
   version = "~> 5.2.1"
 
   create                      = var.create_ubuntu2204
-  name                        = "${var.prefix}-ubuntu2204"
+  name                        = "${var.prefix}-ubuntu2204-${random_id.instance_id.id}"
   ami                         = data.aws_ami.ubuntu2204.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -439,7 +499,7 @@ module "ubuntu2204_cnspec" {
   version = "~> 5.2.1"
 
   create                      = var.create_ubuntu2204_cnspec
-  name                        = "${var.prefix}-ubuntu2204-cnspec"
+  name                        = "${var.prefix}-ubuntu2204-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.ubuntu2204.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -455,7 +515,7 @@ module "ubuntu2204_cis" {
   version = "~> 5.2.1"
 
   create                      = var.create_ubuntu2204_cis
-  name                        = "${var.prefix}-ubuntu2204-cis"
+  name                        = "${var.prefix}-ubuntu2204-cis-${random_id.instance_id.id}"
   ami                         = data.aws_ami.ubuntu2204_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -469,7 +529,7 @@ module "ubuntu2204_cis_cnspec" {
   version = "~> 5.2.1"
 
   create                      = var.create_ubuntu2204_cis_cnspec
-  name                        = "${var.prefix}-ubuntu2204-cis-cnspec"
+  name                        = "${var.prefix}-ubuntu2204-cis-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.ubuntu2204_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -515,7 +575,7 @@ module "suse15_cis" {
   version = "~> 5.2.1"
 
   create                      = var.create_suse15_cis
-  name                        = "${var.prefix}-suse15-cis"
+  name                        = "${var.prefix}-suse15-cis-${random_id.instance_id.id}"
   ami                         = data.aws_ami.suse15_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -529,7 +589,7 @@ module "suse15_cis_cnspec" {
   version = "~> 5.2.1"
 
   create                      = var.create_suse15_cis_cnspec
-  name                        = "${var.prefix}-suse15-cis-cnspec"
+  name                        = "${var.prefix}-suse15-cis-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.suse15_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -619,6 +679,23 @@ module "windows2022_cis" {
   key_name                    = var.aws_key_pair_name
   associate_public_ip_address = true
   user_data                   = base64encode(local.windows_user_data)
+  user_data_replace_on_change = true
+  get_password_data           = true
+}
+
+module "windows2022_cis_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_windows2022_cis_cnspec
+  name                        = "${var.prefix}-windows2022-cis-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.winserver2022_cis.id
+  instance_type               = var.windows_instance_type
+  vpc_security_group_ids      = [module.windows_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.windows_user_data_cnspec)
   user_data_replace_on_change = true
   get_password_data           = true
 }
