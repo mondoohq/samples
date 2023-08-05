@@ -41,3 +41,9 @@ aks-kubeconfig
 id_rsa
 
 **/.env
+
+# Terraform plan
+*tfplan*
+
+# Terraform Lock
+.terraform.lock*

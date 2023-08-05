@@ -1,12 +1,28 @@
 ////////////////////////////////
 // AMIs
 
-data "aws_ami" "amazon2" {
+data "aws_ami" "amazon2023" {
   most_recent = true
 
   filter {
     name   = "name"
     values = ["al2023-ami-2023.1.2023*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["137112412989"]
+}
+
+data "aws_ami" "amazon2" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-kernel-5.10-hvm-2.0.2023*"]
   }
 
   filter {

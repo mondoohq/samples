@@ -33,6 +33,12 @@ variable "mondoo_registration_token" {
   default     = ""
 }
 
+variable "ssh_key" {
+  description = "ssh rsa key to decrypt windows password"
+  type        = string
+  default     = ""
+}
+
 ////////////////////////////////
 // VPC Settings
 
@@ -77,7 +83,23 @@ variable "create_amazon2" {
   default = false
 }
 
+variable "create_amazon2_cnspec" {
+  default = false
+}
+
 variable "create_amazon2_cis" {
+  default = false
+}
+
+variable "create_amazon2_cis_cnspec" {
+  default = false
+}
+
+variable "create_amazon2023" {
+  default = false
+}
+
+variable "create_amazon2023_cnspec" {
   default = false
 }
 
@@ -85,7 +107,15 @@ variable "create_ubuntu2204" {
   default = false
 }
 
+variable "create_ubuntu2204_cnspec" {
+  default = false
+}
+
 variable "create_ubuntu2204_cis" {
+  default = false
+}
+
+variable "create_ubuntu2204_cis_cnspec" {
   default = false
 }
 
@@ -93,7 +123,15 @@ variable "create_ubuntu2004" {
   default = false
 }
 
+variable "create_ubuntu2004_cnspec" {
+  default = false
+}
+
 variable "create_ubuntu1804" {
+  default = false
+}
+
+variable "create_ubuntu1804_cnspec" {
   default = false
 }
 
@@ -101,7 +139,15 @@ variable "create_ubuntu1604" {
   default = false
 }
 
+variable "create_ubuntu1604_cnspec" {
+  default = false
+}
+
 variable "create_rhel9" {
+  default = false
+}
+
+variable "create_rhel9_cnspec" {
   default = false
 }
 
@@ -109,7 +155,15 @@ variable "create_rhel8" {
   default = false
 }
 
+variable "create_rhel8_cnspec" {
+  default = false
+}
+
 variable "create_rhel8_cis" {
+  default = false
+}
+
+variable "create_rhel8_cis_cnspec" {
   default = false
 }
 
@@ -117,7 +171,15 @@ variable "create_debian10" {
   default = false
 }
 
+variable "create_debian10_cnspec" {
+  default = false
+}
+
 variable "create_debian11" {
+  default = false
+}
+
+variable "create_debian11_cnspec" {
   default = false
 }
 
@@ -125,7 +187,15 @@ variable "create_debian11_cis" {
   default = false
 }
 
+variable "create_debian11_cis_cnspec" {
+  default = false
+}
+
 variable "create_debian12" {
+  default = false
+}
+
+variable "create_debian12_cnspec" {
   default = false
 }
 
@@ -133,7 +203,15 @@ variable "create_suse15" {
   default = false
 }
 
+variable "create_suse15_cnspec" {
+  default = false
+}
+
 variable "create_suse15_cis" {
+  default = false
+}
+
+variable "create_suse15_cis_cnspec" {
   default = false
 }
 
@@ -141,7 +219,15 @@ variable "create_oracle8" {
   default = false
 }
 
+variable "create_oracle8_cnspec" {
+  default = false
+}
+
 variable "create_oracle8_cis" {
+  default = false
+}
+
+variable "create_oracle8_cis_cnspec" {
   default = false
 }
 
@@ -149,7 +235,15 @@ variable "create_windows2022" {
   default = false
 }
 
+variable "create_windows2022_cnspec" {
+  default = false
+}
+
 variable "create_windows2022_cis" {
+  default = false
+}
+
+variable "create_windows2022_cis_cnspec" {
   default = false
 }
 
@@ -157,7 +251,15 @@ variable "create_windows2019" {
   default = false
 }
 
+variable "create_windows2019_cnspec" {
+  default = false
+}
+
 variable "create_windows2016" {
+  default = false
+}
+
+variable "create_windows2016_cnspec" {
   default = false
 }
 
