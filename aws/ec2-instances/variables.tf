@@ -215,6 +215,22 @@ variable "create_suse15_cis_cnspec" {
   default = false
 }
 
+variable "create_oracle7" {
+  default = false
+}
+
+variable "create_oracle7_cnspec" {
+  default = false
+}
+
+variable "create_oracle7_cis" {
+  default = false
+}
+
+variable "create_oracle7_cis_cnspec" {
+  default = false
+}
+
 variable "create_oracle8" {
   default = false
 }
@@ -251,7 +267,15 @@ variable "create_windows2019" {
   default = false
 }
 
+variable "create_windows2019_cis" {
+  default = false
+}
+
 variable "create_windows2019_cnspec" {
+  default = false
+}
+
+variable "create_windows2019_cis_cnspec" {
   default = false
 }
 
@@ -259,7 +283,15 @@ variable "create_windows2016" {
   default = false
 }
 
+variable "create_windows2016_cis" {
+  default = false
+}
+
 variable "create_windows2016_cnspec" {
+  default = false
+}
+
+variable "create_windows2016_cis_cnspec" {
   default = false
 }
 
