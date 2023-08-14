@@ -812,7 +812,7 @@ module "windows2022_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
 
-  create                      = var.create_windows2022
+  create                      = var.create_windows2022_cnspec
   name                        = "${var.prefix}-windows2022-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.winserver2022.id
   instance_type               = var.windows_instance_type
