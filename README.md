@@ -1,5 +1,8 @@
 # Security Scanning with cnspec, cnquery, and Mondoo Platform <!-- omit from toc -->
 
+![samples light-mode illustration](.github/social/preview_light.jpg#gh-light-mode-only)
+![samples dark-mode illustration](.github/social/preview_dark.jpg#gh-dark-mode-only)
+
 Welcome to our comprehensive security scanning repository! In our ongoing effort to empower the highest standards of security, we've gathered a variety of examples and guides to help you conduct thorough security audits on your resources using `cnspec`, `cnquery`, and the Mondoo Platform. Our examples, ranging from AWS services to GitHub repositories, are structured with a clear overview, prerequisites, step-by-step instructions, expected results, and troubleshooting tips. We trust these will serve as a beneficial starting point for your own security scanning needs.
 
 - [What are cnspec, cnquery, and Mondoo Platform?](#what-are-cnspec-cnquery-and-mondoo-platform)
