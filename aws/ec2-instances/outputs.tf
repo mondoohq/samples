@@ -70,6 +70,10 @@ output "ubuntu2204_cis" {
 output "ubuntu2204_cis_cnspec" {
   value = module.ubuntu2204_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ubuntu@${module.ubuntu2204_cis_cnspec.public_ip}"
 }
+# debian10
+output "debian10_cis_cnspec" {
+  value = module.debian10_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian10_cis_cnspec.public_ip}"
+}
 
 # debian11
 output "debian11" {
