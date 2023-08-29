@@ -440,7 +440,7 @@ module "rhel9_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
   
-  create                      = var.create_rhel9
+  create                      = var.create_rhel9_cnspec
   name                        = "${var.prefix}-rhel9-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.rhel9.id
   instance_type               = var.linux_instance_type
