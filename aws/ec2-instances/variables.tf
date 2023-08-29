@@ -251,6 +251,22 @@ variable "create_oracle8_cis_cnspec" {
   default = false
 }
 
+variable "create_rocky9" {
+  default = false
+}
+
+variable "create_rocky9_cnspec" {
+  default = false
+}
+
+variable "create_rocky9_cis" {
+  default = false
+}
+
+variable "create_rocky9_cis_cnspec" {
+  default = false
+}
+
 variable "create_windows2022" {
   default = false
 }

@@ -354,6 +354,37 @@ data "aws_ami" "oracle8_cis" {
 
   owners = ["679593333241"]
 }
+data "aws_ami" "rocky9" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["Rocky-9-EC2-Base*x86_64*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["792107900819"]
+}
+
+data "aws_ami" "rocky9_cis" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["CIS Rocky Linux 9 Benchmark*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
 
 data "aws_ami" "winserver2016" {
   most_recent = true

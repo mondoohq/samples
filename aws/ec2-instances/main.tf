@@ -597,7 +597,7 @@ module "suse15_cnspec" {
   version = "~> 5.2.1"
 
   create                      = var.create_suse15_cnspec
-  name                        = "${var.prefix}-suse15-${random_id.instance_id.id}"
+  name                        = "${var.prefix}-suse15-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.suse15.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
@@ -629,6 +629,68 @@ module "suse15_cis_cnspec" {
   create                      = var.create_suse15_cis_cnspec
   name                        = "${var.prefix}-suse15-cis-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.suse15_cis.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
+// Rocky 9
+
+module "rocky9" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_rocky9
+  name                        = "${var.prefix}-rocky9-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.rocky9.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+module "rocky9_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_rocky9_cnspec
+  name                        = "${var.prefix}-rocky9-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.rocky9.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
+module "rocky9_cis" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_rocky9_cis
+  name                        = "${var.prefix}-rocky9-cis-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.rocky9_cis.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+module "rocky9_cis_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_rocky9_cis_cnspec
+  name                        = "${var.prefix}-rocky9-cis-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.rocky9_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
