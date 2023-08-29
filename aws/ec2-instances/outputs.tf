@@ -153,6 +153,23 @@ output "oracle8_cis_cnspec" {
   value = module.oracle8_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle8_cis_cnspec.public_ip}"
 }
 
+# rocky9
+output "rocky9" {
+  value = module.rocky9.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} rocky@${module.rocky9.public_ip}"
+}
+
+output "rocky9_cnspec" {
+  value = module.rocky9_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} rocky@${module.rocky9_cnspec.public_ip}"
+}
+
+output "rocky9_cis" {
+  value = module.rocky9_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} rocky@${module.rocky9_cis.public_ip}"
+}
+
+output "rocky9_cis_cnspec" {
+  value = module.rocky9_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} rocky@${module.rocky9_cis_cnspec.public_ip}"
+}
+
 # windows2016
 output "windows2016" {
   value = module.windows2016.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2016.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"
