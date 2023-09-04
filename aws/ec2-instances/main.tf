@@ -222,7 +222,7 @@ module "debian11_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
 
-  create                      = var.create_debian11
+  create                      = var.create_debian11_cnspec
   name                        = "${var.prefix}-debian11-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.debian11.id
   instance_type               = var.linux_instance_type
