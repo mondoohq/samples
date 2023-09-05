@@ -54,6 +54,16 @@ output "rhel9_cnspec" {
   value = module.rhel9_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel9_cnspec.public_ip}"
 }
 
+# ubuntu2004
+output "ubuntu2004" {
+  value = module.ubuntu2004.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ubuntu@${module.ubuntu2004.public_ip}"
+}
+
+output "ubuntu2004_cnspec" {
+  value = module.ubuntu2004_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ubuntu@${module.ubuntu2004_cnspec.public_ip}"
+}
+
+
 # ubuntu2204
 output "ubuntu2204" {
   value = module.ubuntu2204.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ubuntu@${module.ubuntu2204.public_ip}"
