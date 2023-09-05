@@ -552,7 +552,7 @@ module "ubuntu2004_cis_cnspec" {
 
   create                      = var.create_ubuntu2004_cis_cnspec
   name                        = "${var.prefix}-ubuntu2004-cis-cnspec-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.ubuntu2004_cis.id
+  ami                         = data.aws_ami.ubuntu2004_cis_cnspec.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
