@@ -145,7 +145,7 @@ data "aws_ami" "ubuntu2004" {
   owners = ["099720109477"]
 }
 
-data "aws_ami" "ubuntu2004_cis" {
+data "aws_ami" "ubuntu2004_cis_cnspec" {
   most_recent = true
 
   filter {
