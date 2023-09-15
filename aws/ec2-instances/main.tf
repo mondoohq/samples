@@ -72,7 +72,7 @@ module "linux_sg" {
       to_port     = 0
       protocol    = "-1"
       description = "Allow all from my ip"
-      cidr_blocks = "10.10.0.0/16,${var.publicIP}"
+      cidr_blocks = "10.0.0.0/8,${var.publicIP}"
     }
   ]
 
