@@ -184,6 +184,56 @@ module "amazon2_cis_cnspec" {
   user_data_replace_on_change = true
 }
 // Debian 10
+
+module "debian10" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_debian10
+  name                        = "${var.prefix}-debian10-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.debian10.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+module "debian10_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_debian10_cnspec
+  name                        = "${var.prefix}-debian10-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.debian10.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
+
+module "debian10_cis" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+
+
+  create                      = var.create_debian10_cis
+  name                        = "${var.prefix}-debian10-cis-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.debian10_cis.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
 module "debian10_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
@@ -199,8 +249,6 @@ module "debian10_cis_cnspec" {
   user_data                   = base64encode(local.linux_user_data)
   user_data_replace_on_change = true
 }
-
-
 
 // Debian 11
 

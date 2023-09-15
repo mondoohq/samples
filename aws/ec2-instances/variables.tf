@@ -183,6 +183,10 @@ variable "create_debian10_cnspec" {
   default = false
 }
 
+variable "create_debian10_cis" {
+  default = false
+}
+
 variable "create_debian10_cis_cnspec" {
   default = false
 }
