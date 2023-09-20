@@ -145,6 +145,22 @@ data "aws_ami" "ubuntu2004" {
   owners = ["099720109477"]
 }
 
+data "aws_ami" "ubuntu2004_cis" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["CIS Ubuntu Linux 20.04 LTS Benchmark*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
 data "aws_ami" "ubuntu2204" {
   most_recent = true
 

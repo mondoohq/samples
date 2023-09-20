@@ -127,6 +127,14 @@ variable "create_ubuntu2004_cnspec" {
   default = false
 }
 
+variable "create_ubuntu2004_cis" {
+  default = false
+}
+
+variable "create_ubuntu2004_cis_cnspec" {
+  default = false
+}
+
 variable "create_ubuntu1804" {
   default = false
 }
