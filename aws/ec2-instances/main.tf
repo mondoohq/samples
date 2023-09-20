@@ -21,8 +21,8 @@ locals {
     Set-LocalUser -Name Administrator -Password $NewPassword
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
     iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'));
-    Install-Mondoo;
-    cnspec scan local --config C:\ProgramData\Mondoo\mondoo.yml --asset-name $(Get-ComputerInfo | Select-Object OSName, OSVersion, OsHardwareAbstractionLayer)
+    Install-Mondoo -RegistrationToken '${var.mondoo_registration_token}' -Service enable -UpdateTask enable -Time 12:00 -Interval 3;
+    cnspec scan local --config C:\ProgramData\Mondoo\mondoo.yml;
     </powershell>
   EOT
 
