@@ -186,6 +186,11 @@ data "aws_ami" "ubuntu2204_cis" {
   }
 
   filter {
+    name = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
     name   = "virtualization-type"
     values = ["hvm"]
   }
