@@ -423,7 +423,7 @@ data "aws_ami" "winserver2016_cis" {
 
   filter {
     name   = "name"
-    values = ["CIS Microsoft Windows Server 2019 Benchmark v2*Level 2*"]
+    values = ["CIS Microsoft Windows Server 2016 Benchmark*Level 2*"]
   }
 
   filter {
