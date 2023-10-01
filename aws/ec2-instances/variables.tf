@@ -143,14 +143,6 @@ variable "create_ubuntu1804_cnspec" {
   default = false
 }
 
-variable "create_ubuntu1604" {
-  default = false
-}
-
-variable "create_ubuntu1604_cnspec" {
-  default = false
-}
-
 variable "create_rhel9" {
   default = false
 }
