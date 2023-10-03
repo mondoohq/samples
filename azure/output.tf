@@ -3,7 +3,7 @@ output "resource_group_name" {
 }
 
 output "public_ip_address" {
-  value = azurerm_linux_virtual_machine.attacker_vm.public_ip_address
+  value = azurerm_windows_virtual_machine.attacker_vm.public_ip_address
 }
 
 output "tls_private_key" {
@@ -14,10 +14,10 @@ output "tls_private_key" {
 output "summary" {
   value = <<EOT
 
-attacker vm public ip: ${azurerm_linux_virtual_machine.attacker_vm.public_ip_address}
+attacker vm public ip: ${azurerm_windows_virtual_machine.attacker_vm.public_ip_address}
 
 terraform output -raw tls_private_key > id_rsa
-ssh -o StrictHostKeyChecking=no -i id_rsa azureuser@${azurerm_linux_virtual_machine.attacker_vm.public_ip_address}
+ssh -o StrictHostKeyChecking=no -i id_rsa azureuser@${azurerm_windows_virtual_machine.attacker_vm.public_ip_address}
 
 EOT
 }
