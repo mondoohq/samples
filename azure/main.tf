@@ -99,7 +99,7 @@ resource "azurerm_windows_virtual_machine" "attacker_vm" {
   location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.attacker_vm-nic.id]
-  size                  = "Standard_DS2_v3"
+  size                  = "Standard_DS2_v2"
   admin_username      = "adminuser"
   admin_password      = "P@$$w0rd1234!"
 
