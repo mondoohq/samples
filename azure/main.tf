@@ -11,7 +11,7 @@ resource "azurerm_resource_group" "rg" {
 
 # Create virtual network
 resource "azurerm_virtual_network" "attacker_vm-network" {
-  name                = "Hacking-VM-Vnet-${random_string.suffix.result}"
+  name                = "Windows-VM-Vnet-${random_string.suffix.result}"
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -20,7 +20,7 @@ resource "azurerm_virtual_network" "attacker_vm-network" {
 
 # Create subnet
 resource "azurerm_subnet" "attacker_vm-subnet" {
-  name                 = "Hacking-VM-Subnet-${random_string.suffix.result}"
+  name                 = "Windows-VM-Subnet-${random_string.suffix.result}"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.attacker_vm-network.name
   address_prefixes     = ["10.0.1.0/24"]
@@ -29,7 +29,7 @@ resource "azurerm_subnet" "attacker_vm-subnet" {
 
 # Create public IPs
 resource "azurerm_public_ip" "attacker_vm-publicip" {
-  name                = "Hacking-VM-PublicIP-${random_string.suffix.result}"
+  name                = "Windows-VM-PublicIP-${random_string.suffix.result}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Dynamic"
@@ -38,7 +38,7 @@ resource "azurerm_public_ip" "attacker_vm-publicip" {
 
 # Create Network Security Group and rule
 resource "azurerm_network_security_group" "attacker_vm-nsg" {
-  name                = "Hacking-VM-NetworkSecurityGroup-${random_string.suffix.result}"
+  name                = "Windows-VM-NetworkSecurityGroup-${random_string.suffix.result}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -58,12 +58,12 @@ resource "azurerm_network_security_group" "attacker_vm-nsg" {
 
 # Create network interface
 resource "azurerm_network_interface" "attacker_vm-nic" {
-  name                = "Hacking-VM-NIC-${random_string.suffix.result}"
+  name                = "Windows-VM-NIC-${random_string.suffix.result}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
   ip_configuration {
-    name                          = "Hacking-VM-NicConfiguration-${random_string.suffix.result}"
+    name                          = "Windows-VM-NicConfiguration-${random_string.suffix.result}"
     subnet_id                     = azurerm_subnet.attacker_vm-subnet.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.attacker_vm-publicip.id
@@ -94,77 +94,74 @@ resource "tls_private_key" "attacker_vm_ssh" {
 }
 
 # Create virtual machine
-resource "azurerm_linux_virtual_machine" "attacker_vm" {
-  name                  = "Hacking-VM-${random_string.suffix.result}"
+resource "azurerm_windows_virtual_machine" "example" {
+  name                  = "Windows-VM-${random_string.suffix.result}"
   location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.attacker_vm-nic.id]
-  size                  = "Standard_DS1_v2"
-  custom_data           = base64encode(templatefile("${path.module}/templates/prepare-hacking-vm.tpl", {}))
+  size                  = "Standard_DS2_v3"
+  admin_username      = "adminuser"
+  admin_password      = "P@$$w0rd1234!"
 
   os_disk {
-    name                 = "Hacking-VM-OsDisk-${random_string.suffix.result}"
+    name                 = "Windows-VM-OsDisk-${random_string.suffix.result}"
     caching              = "ReadWrite"
     storage_account_type = "Premium_LRS"
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
+    publisher = "center-for-internet-security-inc"
+    offer     = "cis-windows-11-l1"
+    sku       = "cis-windows-11-l1"
     version   = "latest"
   }
 
-  computer_name                   = "attacker-${random_string.suffix.result}"
-  admin_username                  = "azureuser"
-  disable_password_authentication = true
-
-  admin_ssh_key {
-    username   = "azureuser"
-    public_key = tls_private_key.attacker_vm_ssh.public_key_openssh
-  }
+  computer_name                   = "windows-${random_string.suffix.result}"
+  #admin_username                  = "azureuser"
+  #disable_password_authentication = true
 
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.mystorageaccount.primary_blob_endpoint
   }
   depends_on = [azurerm_storage_account.mystorageaccount, azurerm_network_interface_security_group_association.attacker_vm-nic-nsg]
+
+
 }
 
-# create aks cluster
-resource "azurerm_kubernetes_cluster" "cluster" {
-  name                = "Lunalectric-${random_string.suffix.result}"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "Lunalectric-${random_string.suffix.result}"
-  #kubernetes_version  = "1.27"
-
-  default_node_pool {
-    name       = "default"
-    node_count = "1"
-    vm_size    = "standard_d2_v2"
-    enable_node_public_ip = true
-    tags = {
-      keyvault = "keyvaultLunalectric-${random_string.suffix.result}"
-    }
-  }
-
-  linux_profile {
-    admin_username = "ubuntu"
-
-    ssh_key {
-        key_data = tls_private_key.attacker_vm_ssh.public_key_openssh
-    }
-  }
-
-  identity {
-    type = "SystemAssigned"
-  }
-
-  tags = {
-    Environment = "Mondoo Hacking Demo"
-  }
-  depends_on = [azurerm_resource_group.rg]
-}
+#resource "azurerm_linux_virtual_machine" "attacker_vm" {
+#  name                  = "Windows-VM-${random_string.suffix.result}"
+#  location              = azurerm_resource_group.rg.location
+#  resource_group_name   = azurerm_resource_group.rg.name
+#  network_interface_ids = [azurerm_network_interface.attacker_vm-nic.id]
+#  size                  = "Standard_DS2_v3"
+#
+#  os_disk {
+#    name                 = "Windows-VM-OsDisk-${random_string.suffix.result}"
+#    caching              = "ReadWrite"
+#    storage_account_type = "Premium_LRS"
+#  }
+#
+#  source_image_reference {
+#    publisher = "Canonical"
+#    offer     = "UbuntuServer"
+#    sku       = "18.04-LTS"
+#    version   = "latest"
+#  }
+#
+#  computer_name                   = "windows-${random_string.suffix.result}"
+#  admin_username                  = "azureuser"
+#  disable_password_authentication = true
+#
+#  admin_ssh_key {
+#    username   = "azureuser"
+#    public_key = tls_private_key.attacker_vm_ssh.public_key_openssh
+#  }
+#
+#  boot_diagnostics {
+#    storage_account_uri = azurerm_storage_account.mystorageaccount.primary_blob_endpoint
+#  }
+#  depends_on = [azurerm_storage_account.mystorageaccount, azurerm_network_interface_security_group_association.attacker_vm-nic-nsg]
+#}
 
 # configure keyvault
 data "azurerm_client_config" "current"{}
