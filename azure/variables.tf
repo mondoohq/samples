@@ -12,3 +12,8 @@ variable "tenant_id" {
   type = string
   description = "The tenant to use"
 }
+
+variable "subscription_id" {
+  type = string
+  description = "The subscription to use."
+}
