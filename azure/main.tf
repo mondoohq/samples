@@ -116,6 +116,12 @@ resource "azurerm_windows_virtual_machine" "attacker_vm" {
     version   = "latest"
   }
 
+  plan {
+    name = "cis-windows-11-l1"
+    product = "cis-windows-11-l1"
+    publisher = "center-for-internet-security-inc"
+  }
+
   computer_name                   = "windows-${random_string.suffix.result}"
   #admin_username                  = "azureuser"
   #disable_password_authentication = true
