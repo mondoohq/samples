@@ -97,31 +97,31 @@ resource "azurerm_storage_account" "mystorageaccount" {
   account_replication_type = "LRS"
 }
 
-module "windows11" {
-  source                            = "Azure/compute/azurerm"
-  version                           = "5.3.0"
-
-  create                            = var.create_windows11
-
-  vnet_subnet_id                    = azurerm_subnet.attacker_vm-subnet.id
-  resource_group_name               = azurerm_resource_group.rg.name
-
-  network_security_group            = azurerm_network_security_group.attacker_vm-nsg
-
-  name                              = "${var.prefix}-windows11-${random_string.suffix.result}"
-  location                          = azurerm_resource_group.rg.location
-  #network_interface_ids             = [azurerm_network_interface.attacker_vm-nic.id]
-  size                              = "Standard_DS2_v2"
-  admin_username                    = "adminusercis"
-  admin_password                    = random_password.password.result
-
-  # disk
-  delete_data_disks_on_termination  = true
-  delete_os_disk_on_termination     = true
-  data_sa_type                      = "Premium_LRS"
-
-
-}
+#module "windows11" {
+#  source                            = "Azure/compute/azurerm"
+#  version                           = "5.3.0"
+#
+#  create                            = var.create_windows11
+#
+#  vnet_subnet_id                    = azurerm_subnet.attacker_vm-subnet.id
+#  resource_group_name               = azurerm_resource_group.rg.name
+#
+#  network_security_group            = azurerm_network_security_group.attacker_vm-nsg
+#
+#  name                              = "${var.prefix}-windows11-${random_string.suffix.result}"
+#  location                          = azurerm_resource_group.rg.location
+#  #network_interface_ids             = [azurerm_network_interface.attacker_vm-nic.id]
+#  size                              = "Standard_DS2_v2"
+#  admin_username                    = "adminusercis"
+#  admin_password                    = random_password.password.result
+#
+#  # disk
+#  delete_data_disks_on_termination  = true
+#  delete_os_disk_on_termination     = true
+#  data_sa_type                      = "Premium_LRS"
+#
+#  boot_diagnostics                  = true
+#}
 
 
 # Create virtual machine
