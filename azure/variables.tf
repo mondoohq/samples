@@ -17,3 +17,9 @@ variable "subscription_id" {
   type = string
   description = "The subscription to use."
 }
+
+variable "prefix" {
+  description = "Prefix for resource names"
+  type        = string
+  default     = "mondoo"
+}
