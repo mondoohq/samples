@@ -23,3 +23,9 @@ variable "prefix" {
   type        = string
   default     = "mondoo"
 }
+
+variable "mondoo_registration_token" {
+  description = "cnspec registration key"
+  type        = string
+  default     = ""
+}
