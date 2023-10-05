@@ -4,6 +4,16 @@ resource "random_string" "suffix" {
   upper   = false
 }
 
+resource "random_password" "password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+  min_lower = 1
+  min_numeric = 1
+  min_special = 1
+  min_upper = 1
+}
+
 resource "azurerm_resource_group" "rg" {
   name      = "rg-Lunalectric-container-escape-${random_string.suffix.result}"
   location  = var.resource_group_location
@@ -100,8 +110,8 @@ resource "azurerm_windows_virtual_machine" "attacker_vm" {
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.attacker_vm-nic.id]
   size                  = "Standard_DS2_v2"
-  admin_username      = "adminuser"
-  admin_password      = "P@$$w0rd1234!"
+  admin_username      = "adminusercis"
+  admin_password      = random_password.password.result
 
   os_disk {
     name                 = "Windows-VM-OsDisk-${random_string.suffix.result}"
@@ -111,14 +121,14 @@ resource "azurerm_windows_virtual_machine" "attacker_vm" {
 
   source_image_reference {
     publisher = "center-for-internet-security-inc"
-    offer     = "cis-windows-11-l1"
-    sku       = "cis-windows-11-l1"
+    offer     = "cis-windows-10-l1"
+    sku       = "cis-windows-10-l1"
     version   = "latest"
   }
 
   plan {
-    name = "cis-windows-11-l1"
-    product = "cis-windows-11-l1"
+    name = "cis-windows-10-l1"
+    product = "cis-windows-10-l1"
     publisher = "center-for-internet-security-inc"
   }
 
