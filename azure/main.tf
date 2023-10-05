@@ -97,12 +97,6 @@ resource "azurerm_storage_account" "mystorageaccount" {
   account_replication_type = "LRS"
 }
 
-# Create (and display) an SSH key
-resource "tls_private_key" "attacker_vm_ssh" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
 # Create virtual machine
 resource "azurerm_windows_virtual_machine" "attacker_vm" {
   name                  = "Windows-VM-${random_string.suffix.result}"
@@ -133,8 +127,6 @@ resource "azurerm_windows_virtual_machine" "attacker_vm" {
   }
 
   computer_name                   = "windows-${random_string.suffix.result}"
-  #admin_username                  = "azureuser"
-  #disable_password_authentication = true
 
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.mystorageaccount.primary_blob_endpoint
@@ -144,128 +136,4 @@ resource "azurerm_windows_virtual_machine" "attacker_vm" {
 
 }
 
-#resource "azurerm_linux_virtual_machine" "attacker_vm" {
-#  name                  = "Windows-VM-${random_string.suffix.result}"
-#  location              = azurerm_resource_group.rg.location
-#  resource_group_name   = azurerm_resource_group.rg.name
-#  network_interface_ids = [azurerm_network_interface.attacker_vm-nic.id]
-#  size                  = "Standard_DS2_v3"
-#
-#  os_disk {
-#    name                 = "Windows-VM-OsDisk-${random_string.suffix.result}"
-#    caching              = "ReadWrite"
-#    storage_account_type = "Premium_LRS"
-#  }
-#
-#  source_image_reference {
-#    publisher = "Canonical"
-#    offer     = "UbuntuServer"
-#    sku       = "18.04-LTS"
-#    version   = "latest"
-#  }
-#
-#  computer_name                   = "windows-${random_string.suffix.result}"
-#  admin_username                  = "azureuser"
-#  disable_password_authentication = true
-#
-#  admin_ssh_key {
-#    username   = "azureuser"
-#    public_key = tls_private_key.attacker_vm_ssh.public_key_openssh
-#  }
-#
-#  boot_diagnostics {
-#    storage_account_uri = azurerm_storage_account.mystorageaccount.primary_blob_endpoint
-#  }
-#  depends_on = [azurerm_storage_account.mystorageaccount, azurerm_network_interface_security_group_association.attacker_vm-nic-nsg]
-#}
-
-# configure keyvault
 data "azurerm_client_config" "current"{}
-
-#resource "azurerm_key_vault" "keyvault" {
-#  name = "keyvaultLunalectric-${random_string.suffix.result}"
-#  location            = azurerm_resource_group.rg.location
-#  resource_group_name = azurerm_resource_group.rg.name
-#  sku_name = "standard"
-#  tags = {
-#    "createdBy"   = "hello@mondoo.com"
-#  }
-#
-#  tenant_id = data.azurerm_client_config.current.tenant_id
-#  access_policy {
-#    tenant_id = data.azurerm_client_config.current.tenant_id
-#    object_id = data.azurerm_client_config.current.object_id
-#
-#    key_permissions = [
-#      "Create",
-#      "Get",
-#      "List",
-#    ]
-#
-#    secret_permissions = [
-#      "Set",
-#      "Get",
-#      "Delete",
-#      "Purge",
-#      "Recover",
-#      "List"
-#    ]
-#  }
-#  access_policy {
-#    object_id = azurerm_kubernetes_cluster.cluster.kubelet_identity[0].object_id
-#    tenant_id = azurerm_kubernetes_cluster.cluster.identity[0].tenant_id
-#    secret_permissions = ["Get","List"]
-#    key_permissions = [
-#      "Create",
-#      "Get",
-#      "List",
-#    ]
-#  }
-#
-#  depends_on = [azurerm_kubernetes_cluster.cluster]
-#}
-#
-#resource "azurerm_key_vault_secret" "example-secret" {
-#  name         = "secret-sauce"
-#  value        = "example-pass"
-#  key_vault_id = azurerm_key_vault.keyvault.id
-#}
-#
-#resource "azurerm_key_vault_secret" "ssh-key" {
-#  name         = "private-ssh-key"
-#  value        = tls_private_key.attacker_vm_ssh.private_key_pem
-#  key_vault_id = azurerm_key_vault.keyvault.id
-#}
-#
-## configure aks nsg
-## ISSUE https://github.com/hashicorp/terraform-provider-azurerm/issues/10233
-## have to wait 15 min to get from azurerm_resources the node_resource_group of the cluster
-#
-##data "azurerm_resources" "cluster" {
-##  resource_group_name = azurerm_kubernetes_cluster.cluster.node_resource_group
-##
-##  type = "Microsoft.Network/networkSecurityGroups"
-##  depends_on = [azurerm_kubernetes_cluster.cluster]
-##}
-##
-##resource "time_sleep" "wait_20_min" {
-##  depends_on = [data.azurerm_resources.cluster]
-##
-##  create_duration = "20m"
-##}
-##
-##resource "azurerm_network_security_rule" "nsg-cluster" {
-##  name                        = "aks-ssh-inbound"
-##  priority                    = 100
-##  direction                   = "Inbound"
-##  access                      = "Allow"
-##  protocol                    = "Tcp"
-##  source_port_range           = "*"
-##  destination_port_range      = "22"
-##  source_address_prefix       = "*"
-##  destination_address_prefix  = "*"
-##  resource_group_name         = azurerm_kubernetes_cluster.cluster.node_resource_group
-##  network_security_group_name = data.azurerm_resources.cluster.resources.0.name
-##  depends_on = [time_sleep.wait_20_min]
-##}
-#
