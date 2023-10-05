@@ -17,6 +17,7 @@ output "random_password" {
 }
 
 output "summary" {
+  sensitive = true
   value = <<EOT
 
 Windows VM Public IP: ${azurerm_windows_virtual_machine.attacker_vm.public_ip_address}
