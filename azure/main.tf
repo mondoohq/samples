@@ -25,19 +25,19 @@ locals {
     cnspec scan local --config C:\ProgramData\Mondoo\mondoo.yml;
     </powershell>
   EOT
-
-  windows_user_data = <<-EOT
-    <powershell>
-    Set-ExecutionPolicy Unrestricted -Scope Process -Force;
-    Add-WindowsCapability -Online -Name OpenSSH.Server
-    New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
-    Start-Service sshd
-    Set-Service -Name sshd -StartupType 'Automatic'
-    $NewPassword = ConvertTo-SecureString "${var.windows_admin_password}" -AsPlainText -Force
-    Set-LocalUser -Name Administrator -Password $NewPassword
-    </powershell>
-  EOT
 }
+  #windows_user_data = <<-EOT
+  #  <powershell>
+  #  Set-ExecutionPolicy Unrestricted -Scope Process -Force;
+  #  Add-WindowsCapability -Online -Name OpenSSH.Server
+  #  New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
+  #  Start-Service sshd
+  #  Set-Service -Name sshd -StartupType 'Automatic'
+  #  $NewPassword = ConvertTo-SecureString "${var.windows_admin_password}" -AsPlainText -Force
+  #  Set-LocalUser -Name Administrator -Password $NewPassword
+  #  </powershell>
+  #EOT
+#}
 
 
 
@@ -169,8 +169,8 @@ resource "azurerm_windows_virtual_machine" "attacker_vm" {
 
   source_image_reference {
     publisher = "MicrosoftWindowsDesktop"
-    offer     = "windows-11"
-    sku       = "win11-22h2-entn"
+    offer     = "windows-10"
+    sku       = "win10-22h2-entn-g2"
     version   = "latest"
   }
 
