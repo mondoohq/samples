@@ -137,7 +137,8 @@ module "windows11" {
   source                            = "Azure/compute/azurerm"
   version                           = "5.3.0"
 
-  vm_hostname                              = "${var.prefix}-windows11-${random_string.suffix.result}"
+  vm_hostname                       = "${var.prefix}-windows11-${random_string.suffix.result}"
+  is_windows_image                  = true
 
   vnet_subnet_id                    = azurerm_subnet.attacker_vm-subnet.id
   resource_group_name               = azurerm_resource_group.rg.name

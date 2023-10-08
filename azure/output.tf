@@ -20,11 +20,11 @@ output "summary" {
   sensitive = true
   value = <<EOT
 
-Windows VM Public IP: ${module.windows11.public_ip_address}
+Windows VM Public IP: ${module.windows11.public_ip_address[0]}
 
 Password: ${random_password.password.result}
 
-Connection: xfreerdp /u:adminusercis /v:${module.windows11.public_ip_address}:3389 /h:1048 /w:1920 /p:'${random_password.password.result}' +clipboard
+Connection: xfreerdp /u:adminusercis /v:${module.windows11.public_ip_address[0]}:3389 /h:1048 /w:1920 /p:'${random_password.password.result}' +clipboard
 
 Debugging local.windows_user_data_cnspec:\n ${local.windows_user_data_cnspec}
 
