@@ -137,7 +137,7 @@ module "windows11" {
   source                            = "Azure/compute/azurerm"
   version                           = "5.3.0"
 
-  vm_hostname                       = "${var.prefix}-windows11-${random_string.suffix.result}"
+  #vm_hostname                       = "windows11-${random_string.suffix.result}"
   is_windows_image                  = true
 
   vnet_subnet_id                    = azurerm_subnet.attacker_vm-subnet.id
@@ -163,6 +163,8 @@ module "windows11" {
   vm_os_offer     = "windows-10"
   vm_os_sku       = "win10-22h2-entn-g2"
   vm_os_version   = "latest"
+
+  custom_data = base64encode(local.windows_user_data_cnspec)
 
 }
 
