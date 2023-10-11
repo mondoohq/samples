@@ -168,17 +168,17 @@ resource "azurerm_windows_virtual_machine" "attacker_vm" {
   }
 
   source_image_reference {
-    publisher = "MicrosoftWindowsDesktop"
-    offer     = "windows-10"
-    sku       = "win10-22h2-entn-g2"
+    publisher = "center-for-internet-security-inc"
+    offer     = "cis-windows-10-l1"
+    sku       = "cis-windows-10-l1"
     version   = "latest"
   }
 
-  #plan {
-  #  name = "win11-22h2-entn"
-  #  product = "win11-22h2-entn"
-  #  publisher = "MicrosoftWindowsDesktop"
-  #}
+  plan {
+    name = "cis-windows-10-l1"
+    product = "cis-windows-10-l1"
+    publisher = "center-for-internet-security-inc"
+  }
 
   computer_name                   = "windows-${random_string.suffix.result}"
 
