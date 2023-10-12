@@ -169,14 +169,14 @@ resource "azurerm_windows_virtual_machine" "attacker_vm" {
 
   source_image_reference {
     publisher = "center-for-internet-security-inc"
-    offer     = "cis-windows-10-l1"
-    sku       = "cis-windows-10-l1"
+    offer     = "cis-windows-11-l1"
+    sku       = "cis-windows-11-l1"
     version   = "latest"
   }
 
   plan {
-    name = "cis-windows-10-l1"
-    product = "cis-windows-10-l1"
+    name = "cis-windows-11-l1"
+    product = "cis-windows-11-l1"
     publisher = "center-for-internet-security-inc"
   }
 
