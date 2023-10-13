@@ -17,20 +17,24 @@ resource "random_password" "password" {
 locals {
   windows_user_data_cnspec = <<-EOT
     <powershell>
-    Set-ExecutionPolicy Unrestricted -Scope Process -Force;
-    Add-WindowsCapability -Online -Name OpenSSH.Server
-    New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
-    Start-Service sshd
-    Set-Service -Name sshd -StartupType 'Automatic'
-    $NewPassword = ConvertTo-SecureString "${random_password.password.result}" -AsPlainText -Force
-    Set-LocalUser -Name Administrator -Password $NewPassword
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
-    iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'));
-    Install-Mondoo -RegistrationToken '${var.mondoo_registration_token}' -Service enable -UpdateTask enable -Time 12:00 -Interval 3;
-    cnspec scan local --config C:\ProgramData\Mondoo\mondoo.yml;
+    $hello = "Hello World"
+    $hello | Out-File C:\debug.txt
     </powershell>
   EOT
 }
+#    Set-ExecutionPolicy Unrestricted -Scope Process -Force;
+#    Add-WindowsCapability -Online -Name OpenSSH.Server
+#    New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
+#    Start-Service sshd
+#    Set-Service -Name sshd -StartupType 'Automatic'
+#    $NewPassword = ConvertTo-SecureString "${random_password.password.result}" -AsPlainText -Force
+#    Set-LocalUser -Name Administrator -Password $NewPassword
+#    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
+#    iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'));
+#    Install-Mondoo -RegistrationToken '${var.mondoo_registration_token}' -Service enable -UpdateTask enable -Time 12:00 -Interval 3;
+#    cnspec scan local --config C:\ProgramData\Mondoo\mondoo.yml;
+#
+#
   #windows_user_data = <<-EOT
   #  <powershell>
   #  Set-ExecutionPolicy Unrestricted -Scope Process -Force;
@@ -192,7 +196,7 @@ resource "azurerm_windows_virtual_machine" "attacker_vm" {
   }
   depends_on = [azurerm_storage_account.mystorageaccount, azurerm_network_interface_security_group_association.attacker_vm-nic-nsg]
 
-  user_data = base64encode(local.windows_user_data_cnspec)
+  custom_data = base64encode(local.windows_user_data_cnspec)
 
 }
 
