@@ -487,3 +487,18 @@ data "aws_ami" "winserver2022_cis" {
   owners = ["679593333241"]
 }
 
+data "aws_ami" "macos13" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["CIS Apple macOS 13 Ventura Benchmark*Level*1*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}

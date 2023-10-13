@@ -71,6 +71,10 @@ variable "vpc_enable_nat_gateway" {
 
 variable "aws_key_pair_name" {}
 
+variable "macos_instance_type" {
+  default = "t2.micro"
+}
+
 variable "linux_instance_type" {
   default = "t2.micro"
 }
