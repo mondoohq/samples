@@ -2,6 +2,7 @@ name: Okta Provisioning
 on:
   push:
     paths:
+        - .github/workflows/okta-provisioning.yaml
         - okta/okta-provisioning/**
   workflow_dispatch:
 
@@ -49,7 +50,7 @@ jobs:
   cnspec-scan-terraform-hcl:
     name: "Scan Terraform (pre-plan)"
     runs-on: ubuntu-latest
-    container: mondoo/cnspec:8
+    container: mondoo/cnspec:9
     needs: terraform-pre-plan-validation 
     permissions:
       pull-requests: write
@@ -104,7 +105,7 @@ jobs:
     name: Scan Terraform (post-plan)
     needs: terraform-plan
     runs-on: ubuntu-latest
-    container: mondoo/cnspec:latest
+    container: mondoo/cnspec:9
 
     steps:
       - name: Check out repository code
@@ -152,7 +153,7 @@ jobs:
     name: Scan Okta Org (Post-Apply)
     needs: terraform-apply
     runs-on: ubuntu-latest
-    container: mondoo/cnspec:latest
+    container: mondoo/cnspec:9
 
     steps:
       - name: Check out repository code
