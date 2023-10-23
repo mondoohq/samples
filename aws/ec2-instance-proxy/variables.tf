@@ -75,6 +75,14 @@ variable "linux_instance_type" {
   default = "t2.micro"
 }
 
+variable "windows_instance_type" {
+  default = "t2.micro"
+}
+
 variable "publicIP" {
   description = "Your home PublicIP to configure access to ec2 instances"
+}
+
+variable "windows_admin_password" {
+  default = "MondooSPM1!"
 }
