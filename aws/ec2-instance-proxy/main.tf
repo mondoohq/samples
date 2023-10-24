@@ -46,6 +46,16 @@ locals {
     sudo iptables -P INPUT DROP
   EOT
 
+  windows_data = <<-EOT
+    <powershell>
+    $NewPassword = ConvertTo-SecureString "${var.windows_admin_password}" -AsPlainText -Force
+    Set-LocalUser -Name Administrator -Password $NewPassword
+    New-NetFirewallRule -DisplayName “AllowRDP” -Direction Inbound -Protocol TCP -LocalPort 3389 -Action Allow
+    Set-NetFirewallProfile -Name Public -DefaultOutboundAction Block
+    New-NetFirewallRule -DisplayName “AllowDNS” -Direction Outbound -Protocol ANY -RemotePort 53 -Action Allow
+    New-NetFirewallRule -Name Allow10.0.0.0 -DisplayName 'Allow from 10.0.0.0/8' -Enabled True -Direction Outbound -Protocol ANY -Action Allow -Profile ANY -RemoteAddress 10.0.0.0/8
+    </powershell>
+  EOT
 }
 
 ////////////////////////////////
@@ -65,14 +75,14 @@ module "vpc" {
 }
 
 ////////////////////////////////
-// Linux Security Groups
+// Proxy Security Groups
 
-module "linux_sg" {
+module "proxy_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 4.3"
 
-  name        = "${var.prefix}-${random_id.instance_id.id}-linux-sg"
-  description = "Security group for linux instances"
+  name        = "${var.prefix}-${random_id.instance_id.id}-proxy-sg"
+  description = "Security group for Proxy instances"
   vpc_id      = module.vpc.vpc_id
 
   ingress_with_cidr_blocks = [
@@ -105,7 +115,7 @@ module "debian12_proxy" {
   name                        = "${var.prefix}-debian12-proxy-${random_id.instance_id.id}"
   ami                         = data.aws_ami.debian12.id
   instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  vpc_security_group_ids      = [module.proxy_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
   key_name                    = var.aws_key_pair_name
   user_data                   = base64encode(local.linux_proxy_data)
@@ -122,10 +132,28 @@ module "debian12" {
   name                        = "${var.prefix}-debian12-${random_id.instance_id.id}"
   ami                         = data.aws_ami.debian12.id
   instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  vpc_security_group_ids      = [module.proxy_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
   key_name                    = var.aws_key_pair_name
   user_data                   = base64encode(local.linux_data)
   user_data_replace_on_change = true
   associate_public_ip_address = true
+}
+
+// Windows 2022
+
+module "windows2022" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  name                        = "${var.prefix}-windows2022-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.winserver2022.id
+  instance_type               = var.windows_instance_type
+  vpc_security_group_ids      = [module.proxy_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.windows_data)
+  user_data_replace_on_change = true
+  get_password_data           = true
 }

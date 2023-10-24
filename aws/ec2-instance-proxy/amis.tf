@@ -16,3 +16,19 @@ data "aws_ami" "debian12" {
 
   owners = ["136693071363"]
 }
+
+data "aws_ami" "winserver2022" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["Windows_Server-2022-English-Full-Base-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["801119661308"]
+}
