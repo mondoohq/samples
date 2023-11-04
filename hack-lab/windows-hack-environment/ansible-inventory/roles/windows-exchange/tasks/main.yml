@@ -1,0 +1,112 @@
+---
+- name: Install Windows features for exchange
+  ansible.windows.win_feature:
+    name:
+    - NET-Framework-45-Features
+    - NET-WCF-HTTP-Activation45
+    - RPC-over-HTTP-proxy
+    - RSAT-ADDS
+    - RSAT-ADDS-Tools
+    - RSAT-Clustering
+    - RSAT-Clustering-CmdInterface
+    - RSAT-Clustering-Mgmt
+    - RSAT-Clustering-PowerShell
+    - Web-ASP-NET45
+    - Web-Digest-Auth
+    - Web-Mgmt-Console
+    - Web-Mgmt-Service
+    - Web-Net-Ext45
+    - Web-WMI
+    - WAS-Process-Model
+    - Web-Basic-Auth
+    - Web-Client-Auth
+    - Web-Dir-Browsing
+    - Web-Dyn-Compression
+    - Web-Http-Errors
+    - Web-Http-Logging
+    - Web-Http-Redirect
+    - Web-Http-Tracing
+    - Web-ISAPI-Ext
+    - Web-ISAPI-Filter
+    - Web-Lgcy-Mgmt-Console
+    - Web-Metabase
+    - Web-Request-Monitor
+    - Web-Server
+    - Web-Stat-Compression
+    - Web-Static-Content
+    - Web-Windows-Auth
+    - Web-WMI
+    - Windows-Identity-Foundation
+    state: present
+  register: feature_install
+
+- name: reboot if Tools feature requires it
+  ansible.windows.win_reboot:
+  when: feature_install.reboot_required
+
+- name: Install ucma, netfx and vcredist2013 via choco
+  chocolatey.chocolatey.win_chocolatey:
+    name:
+      - ucma4
+      - netfx-4.8
+      - vcredist2013
+    state: present
+
+- name: reboot after choco installations
+  ansible.windows.win_reboot:
+
+- name: Check if exchange iso exists
+  ansible.windows.win_stat:
+    path: C:\Tools\ExchangeServer2016-x64-cu12.iso
+  register: stat_result
+
+- name: Download Exchange 2016 ISO
+  ansible.windows.win_get_url:
+    url: "{{ exchange_url }}"
+    dest: "{{ exchange_iso }}"
+  when: not stat_result.stat.exists
+
+- name: Ensure Exchange ISO is mounted
+  community.windows.win_disk_image:
+    image_path: "{{ exchange_iso }}"
+    state: present
+  register: iso_mount
+
+- name: Prepare Schema
+  ansible.windows.win_powershell:
+    script: |
+      D:\\Setup.exe /IAcceptExchangeServerLicenseTerms /PrepareSchema
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ domain_name }}\\{{ domain_admin }}"
+    ansible_become_password: "{{ domain_admin_password }}"
+  register: prepare_schema
+
+- name: Prepare AD
+  ansible.windows.win_powershell:
+    script: |
+      D:\\Setup.exe /IAcceptExchangeServerLicenseTerms /PrepareAD /OrganizationName: mondoo
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ domain_name }}\\{{ domain_admin }}"
+    ansible_become_password: "{{ domain_admin_password }}"
+  register: prepare_ad
+
+- name: Install Exchange
+  ansible.windows.win_powershell:
+    script: |
+      D:\\Setup.exe /IAcceptExchangeServerLicenseTerms /Mode:Install /Role:Mailbox /OrganizationName: mondoo
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ domain_name }}\\{{ domain_admin }}"
+    ansible_become_password: "{{ domain_admin_password }}"
+  register: install_exchange
+
+- name: reboot after exchange installation
+  ansible.windows.win_reboot:
+    pre_reboot_delay: 5
+    reboot_timeout: 600
+    post_reboot_delay: 60

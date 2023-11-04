@@ -1,0 +1,22 @@
+- name: Deploy Exchange
+  hosts: exchange
+  gather_facts: yes
+  become: no
+
+  tasks:
+    - name: Configure DNS Client
+      import_role:
+        name: windows-ad
+        tasks_from: dns-config
+    - name: Prepare System
+      import_role:
+        name: windows-ad
+        tasks_from: prepare-system
+    - name: Join to domain
+      import_role:
+        name: windows-ad
+        tasks_from: join-to-domain
+    - name: install exchange
+      import_role:
+        name: windows-exchange
+        tasks_from: main

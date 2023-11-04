@@ -1,0 +1,159 @@
+---
+# tasks file for windows-common
+
+- name: Install RSAT Tools
+  ansible.windows.win_feature:
+    name:
+    - RSAT-AD-PowerShell
+    - RSAT-AD-AdminCenter
+    state: present
+  register: rsat_install
+
+# disable ipv6
+- name: Run PowerShell to disable ipv6
+  ansible.windows.win_powershell:
+    script: |
+      Get-NetAdapterBinding -ComponentID ms_tcpip6 | ForEach-Object {Disable-NetAdapterBinding -Name $_.Name -ComponentID ms_tcpip6}
+      Get-NetAdapterBinding -ComponentID ms_tcpip6
+
+- name: set registry key to disable ipv6
+  ansible.windows.win_regedit:
+    path: HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters
+    name: "DisabledComponents"
+    data: "255"
+    type: dword
+
+# disable windows firewall
+- name: Run PowerShell to disable Firewall
+  ansible.windows.win_powershell:
+    script: |
+      netsh advfirewall set allprofiles state off
+
+# disable windows defender
+- name: Uninstall Windows Defender
+  ansible.windows.win_feature:
+    name:
+      - Windows-Defender
+    state: absent
+- name: Run PowerShell to disable defender
+  ansible.windows.win_powershell:
+    script: |
+      Set-MpPreference -DisableArchiveScanning 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableBehaviorMonitoring 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableIntrusionPreventionSystem 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableIOAVProtection 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableRemovableDriveScanning 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableBlockAtFirstSeen 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableScanningMappedNetworkDrivesForFullScan 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableScanningNetworkFiles 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableScriptScanning 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableRealtimeMonitoring 1 -ErrorAction SilentlyContinue
+
+# disable windows password complexity
+- name: Run PowerShell to disable password complexity
+  ansible.windows.win_powershell:
+    script: |
+      secedit /export /cfg C:\secpol.cfg
+      (gc C:\secpol.cfg).replace("PasswordComplexity = 1", "PasswordComplexity = 0") | Out-File C:\secpol.cfg
+      secedit /configure /db C:\Windows\security\local.sdb /cfg C:\secpol.cfg /areas SECURITYPOLICY
+      rm -force C:\secpol.cfg -confirm:$false
+
+- name: Create tools directory
+  ansible.windows.win_file:
+    path: C:\Tools
+    state: directory
+
+- name: Check if atomic red team exists
+  ansible.windows.win_stat:
+    path: C:\Tools\atomic-red-team.zip
+  register: atomic_stat_result
+
+- name: Download atomic red team
+  ansible.windows.win_get_url:
+    url: https://github.com/redcanaryco/invoke-atomicredteam/archive/refs/heads/master.zip
+    dest: C:\Tools\atomic-red-team.zip
+  when: not atomic_stat_result.stat.exists
+
+- name: decompress atomic red team zip
+  community.windows.win_unzip:
+    src: C:\Tools\atomic-red-team.zip
+    dest: C:\Tools\atomic-red-team
+    creates: C:\Tools\atomic-red-team
+
+- name: Check if mimikatz exists
+  ansible.windows.win_stat:
+    path: C:\Tools\mimikatz.zip
+  register: mimikatz_stat_result
+
+- name: Download mimikatz
+  ansible.windows.win_get_url:
+    url: https://github.com/gentilkiwi/mimikatz/archive/refs/heads/master.zip
+    dest: C:\Tools\mimikatz.zip
+  when: not mimikatz_stat_result.stat.exists
+
+- name: decompress mimikatz zip
+  community.windows.win_unzip:
+    src: C:\Tools\mimikatz.zip
+    dest: C:\Tools\mimikatz
+    creates: C:\Tools\mimikatz
+
+- name: Check if powersploit exists
+  ansible.windows.win_stat:
+    path: C:\Tools\powersploit.zip
+  register: powersploit_stat_result
+
+- name: Download powersploit
+  ansible.windows.win_get_url:
+    url: https://github.com/PowerShellMafia/PowerSploit/archive/refs/heads/master.zip
+    dest: C:\Tools\powersploit.zip
+  when: not powersploit_stat_result.stat.exists
+
+- name: decompress powersploit zip
+  community.windows.win_unzip:
+    src: C:\Tools\powersploit.zip
+    dest: C:\Tools\powersploit
+    creates: C:\Tools\powersploit
+
+- name: Check if purplesharp exists
+  ansible.windows.win_stat:
+    path: C:\Tools\PurpleSharp_x64.exe
+  register: purplesharp_stat_result
+
+- name: Download purplesharp
+  ansible.windows.win_get_url:
+    url: https://github.com/mvelazc0/PurpleSharp/releases/download/v1.3/PurpleSharp_x64.exe
+    dest: C:\Tools\PurpleSharp_x64.exe
+  when: not purplesharp_stat_result.stat.exists
+
+- name: Check if badblood exists
+  ansible.windows.win_stat:
+    path: C:\Tools\badblood.zip
+  register: badblood_stat_result
+
+- name: Download badblood
+  ansible.windows.win_get_url:
+    url: https://github.com/davidprowe/BadBlood/archive/master.zip
+    dest: C:\Tools\badblood.zip
+  when: not badblood_stat_result.stat.exists
+
+- name: decompress badblood zip
+  community.windows.win_unzip:
+    src: C:\Tools\badblood.zip
+    dest: C:\Tools\badblood
+    creates: C:\Tools\badblood
+
+#- name: Reboot the server
+#  ansible.windows.win_powershell:
+#    script: Restart-Computer -Force
+#
+#- name: Wait 2 mins for server to reboot
+#  pause:
+#    seconds: 120
+
+# in the vagrant env the win_reboot is not working
+- name: reboot if RSAT Tools feature requires it
+  ansible.windows.win_reboot:
+    #post_reboot_delay: 120
+    test_command: 'exit (Get-Service -Name Netlogon).Status -ne "Running"'
+    #reboot_timeout: 3600
+  when: rsat_install.reboot_required

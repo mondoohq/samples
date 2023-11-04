@@ -1,0 +1,99 @@
+---
+- name: Install domain controller
+  win_feature:
+    name: AD-Domain-Services
+    include_management_tools: yes
+    include_sub_features: yes
+    state: present
+  register: win_feature
+
+- name: Reboot after install AD role
+  ansible.windows.win_reboot:
+    #post_reboot_delay: 120
+    #test_command: 'exit (Get-Service -Name Netlogon).Status -ne "Running"'
+    #reboot_timeout: 3600
+  when: win_feature.reboot_required
+
+- name: Deploy {{ domain_name }} Domain
+  ansible.windows.win_domain:
+    create_dns_delegation: no
+    database_path: C:\Windows\NTDS
+    dns_domain_name: "{{ domain_name }}"
+    domain_mode: "{{ domain_mode }}"
+    d1omain_netbios_name: "{{ netbios_name }}"
+    forest_mode: "{{ domain_mode }}"
+    safe_mode_password: "{{ password }}"
+    sysvol_path: C:\Windows\SYSVOL
+  register: domain_install
+
+- name: Reboot server if required
+  ansible.windows.win_reboot:
+    #post_reboot_delay: 120
+    #test_command: 'exit (Get-Service -Name Netlogon).Status -ne "Running"'
+    #reboot_timeout: 3600
+  when: domain_install.reboot_required
+
+- name: Ensure the server is a domain controller
+  ansible.windows.win_domain_controller:
+    dns_domain_name: "{{ domain_name }}"
+    safe_mode_password: "{{ password }}"
+    domain_admin_user: "{{ domain_name }}\\{{ domain_admin }}"
+    domain_admin_password: "{{ domain_admin_password }}"
+    state: domain_controller
+  register: dc_created
+
+- name: Reboot server if required
+  ansible.windows.win_reboot:
+    #post_reboot_delay: 120
+    #test_command: 'exit (Get-Service -Name Netlogon).Status -ne "Running"'
+    #reboot_timeout: 3600
+  when: dc_created.reboot_required
+
+- name: Wait for domain controller to be ready
+  ansible.windows.win_shell: |
+    Get-ADDomain -Server "{{ domain_name }}"
+  register: dc_ready
+  until: dc_ready is not failed
+  ignore_errors: yes
+  retries: 60
+  delay: 15
+
+- name: check badblood execution
+  ansible.windows.win_stat:
+    path: C:\Tools\badblood\badblood-executed.txt
+  register: badbloodexec
+
+- name: Run PowerShell to execute badblood
+  ansible.windows.win_powershell:
+    script: |
+      C:\Tools\badblood\BadBlood-master\Invoke-BadBlood.ps1 -NonInteractive $True
+  when: not badbloodexec.stat.exists
+
+- name: badblood create file
+  ansible.windows.win_file:
+    path: C:\Tools\badblood\badblood-executed.txt
+    state: touch
+
+- name: Ensure user {{ username }} is present and Domain Admin
+  community.windows.win_domain_user:
+    name: "{{ username }}"
+    description: Domain Account
+    password_never_expires: yes
+    groups:
+      - Domain Admins
+      - Schema Admins
+      - Enterprise Admins
+      - Remote Desktop Users
+    state: present
+
+- name: Remove {{ username }} from Protected Users group
+  win_domain_group_membership:
+    name: Protected Users
+    members:
+      - "{{ username }}"
+      - Administrator
+    state: absent
+
+- name: Reboot server if required
+  ansible.windows.win_reboot:
+    test_command: 'exit (Get-Service -Name Netlogon).Status -ne "Running"'
