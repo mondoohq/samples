@@ -87,7 +87,7 @@
 
 - name: Download mimikatz
   ansible.windows.win_get_url:
-    url: https://github.com/gentilkiwi/mimikatz/archive/refs/heads/master.zip
+    url: https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip
     dest: C:\Tools\mimikatz.zip
   when: not mimikatz_stat_result.stat.exists
 
