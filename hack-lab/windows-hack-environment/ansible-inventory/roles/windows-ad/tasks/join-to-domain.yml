@@ -1,0 +1,12 @@
+---
+- name: Domain Join
+  microsoft.ad.membership:
+    dns_domain_name: '{{ domain_name }}'
+    domain_admin_user: '{{ username }}'
+    domain_admin_password: '{{ password }}'
+    state: domain
+  register: domain_join
+
+- name: reboot Windows
+  ansible.windows.win_reboot:
+    test_command: 'exit (Get-Service -Name Netlogon).Status -ne "Running"'
