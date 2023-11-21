@@ -55,3 +55,29 @@ Run the following command to see the the connection details (including sensitive
 ```
 terraform output -raw summary
 ```
+
+### Issues with provisioning using the `locals` variable.
+
+As of now it wasn't possible to provision the images further by simply adding a `locals` variable block, like that:
+
+```
+locals {
+  windows_user_data_cnspec = <<-EOT
+    <powershell>
+    $hello = "Hello World"
+    $hello | Out-File C:\debug.txt
+    </powershell>
+  EOT
+}
+```
+
+and using the
+```
+custom_data = base64encode(local.windows_user_data_cnspec)
+```
+
+in the
+
+```module"windows11"```
+
+the same we would on AWS.
