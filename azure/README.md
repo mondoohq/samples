@@ -30,9 +30,9 @@ Right now you need to still change those values in `main.tf` to change between W
     publisher = "center-for-internet-security-inc"
   }
 ```
-The command to look-up the values is (takes some time to complete):
+The command to look-up the values is something along the lines of (takes some time to complete):
 ```
-az 
+az vm image list --offer Windows-11  --output table --all
 ```
 
 
