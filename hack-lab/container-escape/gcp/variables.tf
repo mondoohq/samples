@@ -15,3 +15,8 @@ variable "project_id" {
 variable "project_number" {
   type = string
 }
+
+variable "gke_version" {
+  type = string
+  default = "1.25.15-gke.1083000"
+}

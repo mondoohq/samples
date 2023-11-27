@@ -62,7 +62,7 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key" {
   crypto_key_id = google_kms_crypto_key.key.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
   members       = [
-     "serviceAccount:lunalectric-${random_string.suffix.result}-node@manuel-development-3.iam.gserviceaccount.com",
+     "serviceAccount:lunalectric-${random_string.suffix.result}-node@${var.project_id}.iam.gserviceaccount.com",
      "serviceAccount:service-${var.project_number}@container-engine-robot.iam.gserviceaccount.com",
   ]
   depends_on = [
@@ -130,7 +130,7 @@ resource "google_compute_firewall" "default" {
 # GKE Cluster -> create aks cluster
 resource "google_container_cluster" "primary" {
   provider = google-beta
-  node_version = "1.25.9-gke.2300"
+  node_version = var.gke_version
   release_channel {
     channel = "STABLE"
   }
@@ -145,7 +145,7 @@ resource "google_container_cluster" "primary" {
   enable_tpu                  = false
   location                    = var.region
   logging_service             = "logging.googleapis.com/kubernetes"
-  min_master_version          = "1.25.9-gke.2300"
+  min_master_version          = var.gke_version
   monitoring_service          = "monitoring.googleapis.com/kubernetes"
   name                        = "lunalectric-gke-cluster-${random_string.suffix.result}"
   network                     = "lunalectric-gke-${random_string.suffix.result}"

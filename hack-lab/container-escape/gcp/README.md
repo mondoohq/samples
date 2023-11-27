@@ -54,6 +54,16 @@ This folder contains Terraform automation code to provision the following:
   Essential Contacts Admin
   Owner
   ```
+
+- Create a `terraform.tfvars`` file with the following variables
+  ```
+  project_id = "your-project-3" #your gcp project string
+  region = "us-central1"
+  zone = "us-central1-a"
+  project_number = "" #your gcp project number
+  gke_version = "1.25.15-gke.1083000" # built on GKE 1.25, might need to be updated
+  ```
+
 - [gcloud CLI](https://cloud.google.com/sdk/docs/install)
 
   - make sure to install the [gke-gcloud-auth-plugin](https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke), usually via the command:
