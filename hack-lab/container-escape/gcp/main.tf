@@ -62,7 +62,7 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key" {
   crypto_key_id = google_kms_crypto_key.key.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
   members       = [
-     "serviceAccount:lunalectric-${random_string.suffix.result}-node@manuel-development-3.iam.gserviceaccount.com",
+     "serviceAccount:lunalectric-${random_string.suffix.result}-node@${var.project_id}.iam.gserviceaccount.com",
      "serviceAccount:service-${var.project_number}@container-engine-robot.iam.gserviceaccount.com",
   ]
   depends_on = [
