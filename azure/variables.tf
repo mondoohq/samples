@@ -21,11 +21,31 @@ variable "subscription_id" {
 variable "prefix" {
   description = "Prefix for resource names"
   type        = string
-  default     = "mondoo"
+  default     = "mondoo-security"
 }
 
-variable "mondoo_registration_token" {
-  description = "cnspec registration key"
+variable "vnet_address_space" {
+  description = "The address space that is used the virtual network"
   type        = string
-  default     = ""
+  default     = "10.0.0.0/16"
+}
+
+variable "publicIP" {
+  description = "Your home PublicIP to configure access to ec2 instances"
+}
+
+variable "windows_admin_username" {
+  default = "adminuser"
+}
+
+variable "windows_admin_password" {
+  default = "MondooSPM1!"
+}
+
+variable "create_windows10" {
+  default = false
+}
+
+variable "create_windows11" {
+  default = false
 }

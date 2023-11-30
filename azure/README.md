@@ -1,59 +1,63 @@
-## Setup Windows 10/11 VMs in Azure
+# Setup Windows VMs in Azure
 
-## Requirements
+## Prereqs
+
+- Azure Account
+- Terraform
+
+## Supported Platforms
+
+| Platform              | Description                   | Variable           |
+|-----------------------|-------------------------------|--------------------|
+| Windows 10 Enterprise | Latest Azure Windows 10 image | `create_windows10` |
+| Windows 11 Enterprise | Latest Azure Windows 11 image | `create_windows11` |
+
+
+## Provision
+
 - A `terraform.tfvars` file containing those two variables:
-  ```
-  tenant_id = ""
-  subscription_id = ""
-  ```
+
+```coffee
+tenant_id = "xxx"
+subscription_id = "xxxx"
+
+publicIP="0.0.0.0/0"
+create_windows10 = false
+create_windows11 = true
+```
+
 - A login to Azure via `azure-cli`
-  ```
-  az login --use-device-code
-  ```
 
-
-## Setup
-
-### Choosing Windows10/11 (CIS/Vanilla)
-Right now you need to still change those values in `main.tf` to change between Windows10 or Windows11:
-```
-  source_image_reference {
-    publisher = "center-for-internet-security-inc"
-    offer     = "cis-windows-11-l1"
-    sku       = "cis-windows-11-l1"
-    version   = "latest"
-  }
-
-  plan {
-    name = "cis-windows-11-l1"
-    product = "cis-windows-11-l1"
-    publisher = "center-for-internet-security-inc"
-  }
-```
-The command to look-up the values is something along the lines of (takes some time to complete):
-```
-az vm image list --offer Windows-11  --output table --all
+```bash
+az login --use-device-code
 ```
 
-
-### Terraform commands to deploy Azure VM
-```
+```bash
 terraform init --upgrade
 ```
 
-```
+```bash
 terraform plan -out plan.out
 ```
 
-```
-terraform apply plan.out
+```bash
+terraform apply -auto-approve plan.out
 ```
 
 ### Connect to VM using `xfreerdp` from Ubuntu
 
 Run the following command to see the the connection details (including sensitive values)
-```
+
+```bash
 terraform output -raw summary
+```
+
+## Find Azure Image
+
+The command to look-up the values is something along the lines of (takes some time to complete):
+
+```bash
+az vm image list --offer Windows-11  --output table --all
 ```
 
 ### Issues with provisioning using the `locals` variable.
