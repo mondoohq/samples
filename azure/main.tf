@@ -83,7 +83,7 @@ module "windows11" {
   source              = "Azure/compute/azurerm"
   resource_group_name = azurerm_resource_group.rg.name
   is_windows_image    = true
-  vm_hostname         = "win10-${random_string.suffix.result}" // line can be removed if only one VM module per resource group
+  vm_hostname         = "win11-${random_string.suffix.result}" // line can be removed if only one VM module per resource group
   admin_username      = "${var.windows_admin_username}"
   admin_password      = "${var.windows_admin_password}"
   vm_os_publisher     = "MicrosoftWindowsDesktop"
