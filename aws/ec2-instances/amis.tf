@@ -81,6 +81,25 @@ data "aws_ami" "rhel8_cis" {
   owners = ["679593333241"]
 }
 
+
+data "aws_ami" "nginx_rhel9_cis " {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["CIS NGINX on Red Hat Enterprise Linux 9 Benchmark*Level 1*WebServer"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
+
+
 data "aws_ami" "rhel9" {
   most_recent = true
 
