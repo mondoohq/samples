@@ -87,7 +87,7 @@ data "aws_ami" "nginx_rhel9_cis" {
 
   filter {
     name   = "name"
-    values = ["CIS NGINX on Red Hat Enterprise Linux 9 Benchmark*Level 1"]
+    values = ["CIS NGINX on Red Hat Enterprise Linux 9 Benchmark"]
   }
 
   filter {
