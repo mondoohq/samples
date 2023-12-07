@@ -87,7 +87,7 @@ data "aws_ami" "nginx_rhel9_cis" {
 
   filter {
     name   = "name"
-    values = ["CIS NGINX on Red Hat Enterprise Linux 9 Benchmark*Level 1*WebServer"]
+    values = ["CIS NGINX on Red Hat Enterprise Linux 9 Benchmark*Level 1"]
   }
 
   filter {
@@ -97,7 +97,6 @@ data "aws_ami" "nginx_rhel9_cis" {
 
   owners = ["679593333241"]
 }
-
 
 
 data "aws_ami" "rhel9" {
