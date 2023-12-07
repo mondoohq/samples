@@ -82,7 +82,7 @@ data "aws_ami" "rhel8_cis" {
 }
 
 
-data "aws_ami" "nginx_rhel9_cis " {
+data "aws_ami" "nginx_rhel9_cis" {
   most_recent = true
 
   filter {
