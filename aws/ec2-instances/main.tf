@@ -516,13 +516,13 @@ module "rhel8_cis_cnspec" {
 
 // NGINX on RHEL 9 CIS
 
-module "rhel9_cis" {
+module "nginx_rhel9_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
 
   create                      = var.create_nginx_rhel9_cis
   name                        = "${var.prefix}-nginx-rhel9-cis-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.rhel8_cis.id
+  ami                         = data.aws_ami.nginx_rhel9_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
@@ -530,13 +530,13 @@ module "rhel9_cis" {
   associate_public_ip_address = true
 }
 
-module "rhel9_cis_cnspec" {
+module "nginx_rhel9_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
 
   create                      = var.create_nginx_rhel9_cis_cnspec
   name                        = "${var.prefix}-nginx-rhel9-cis-cnspec-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.rhel8_cis.id
+  ami                         = data.aws_ami.nginx_rhel9_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
