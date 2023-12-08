@@ -167,6 +167,14 @@ variable "create_rhel8_cis_cnspec" {
   default = false
 }
 
+variable "create_nginx_rhel9_cis" {
+  default = false
+}
+
+variable "create_nginx_rhel9_cis_cnspec" {
+  default = false
+}
+
 variable "create_debian10" {
   default = false
 }
