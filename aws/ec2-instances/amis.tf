@@ -291,6 +291,11 @@ data "aws_ami" "suse15" {
   }
 
   filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
     name   = "virtualization-type"
     values = ["hvm"]
   }
