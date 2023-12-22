@@ -15,12 +15,13 @@
   when: win_feature.reboot_required
 
 - name: Deploy {{ domain_name }} Domain
-  ansible.windows.win_domain:
+  microsoft.ad.domain:
     create_dns_delegation: no
     database_path: C:\Windows\NTDS
     dns_domain_name: "{{ domain_name }}"
+    install_dns: true
     domain_mode: "{{ domain_mode }}"
-    d1omain_netbios_name: "{{ netbios_name }}"
+    domain_netbios_name: "{{ netbios_name }}"
     forest_mode: "{{ domain_mode }}"
     safe_mode_password: "{{ password }}"
     sysvol_path: C:\Windows\SYSVOL
@@ -34,7 +35,7 @@
   when: domain_install.reboot_required
 
 - name: Ensure the server is a domain controller
-  ansible.windows.win_domain_controller:
+  microsoft.ad.domain_controller:
     dns_domain_name: "{{ domain_name }}"
     safe_mode_password: "{{ password }}"
     domain_admin_user: "{{ domain_name }}\\{{ domain_admin }}"
@@ -75,11 +76,12 @@
     state: touch
 
 - name: Ensure user {{ username }} is present and Domain Admin
-  community.windows.win_domain_user:
+  microsoft.ad.user:
     name: "{{ username }}"
     description: Domain Account
     password_never_expires: yes
     groups:
+      set:
       - Domain Admins
       - Schema Admins
       - Enterprise Admins
@@ -87,12 +89,13 @@
     state: present
 
 - name: Remove {{ username }} from Protected Users group
-  win_domain_group_membership:
+  microsoft.ad.group:
     name: Protected Users
     members:
+      remove:
       - "{{ username }}"
       - Administrator
-    state: absent
+    state: present
 
 - name: Reboot server if required
   ansible.windows.win_reboot:
