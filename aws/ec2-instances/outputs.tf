@@ -252,5 +252,5 @@ output "windows2022_cis_cnspec" {
 
 # nginx on windows 2016
 output "nginx_win2016_cnspec" {
-  value = module.nginx_win2016_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.nginx_win2016_cnspec.public_ip}"
+  value = module.nginx_win2016_cnspec.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.nginx_win2016_cnspec.public_ip}:3389 /h:1200 /w:1920 /p:'${var.windows_admin_password}'\n(This will take a couple minutes to become available...)"
 }
