@@ -249,3 +249,7 @@ output "windows2022_cis" {
 output "windows2022_cis_cnspec" {
   value = module.windows2022_cis_cnspec.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2022_cis_cnspec.public_ip}:3389 /h:2048 /w:2048 /p:'${rsadecrypt(module.windows2022_cis_cnspec.password_data, file(var.ssh_key))}'"
 }
+
+output "windows2022_german" {
+  value = module.windows2022_german.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2022_german.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"
+}

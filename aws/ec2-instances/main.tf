@@ -1036,3 +1036,19 @@ module "windows2022_cis_cnspec" {
   user_data_replace_on_change = true
   get_password_data           = true
 }
+
+module "windows2022_german" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_windows2022_german
+  name                        = "${var.prefix}-windows2022-german-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.winserver2022_german.id
+  instance_type               = var.windows_instance_type
+  vpc_security_group_ids      = [module.windows_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.windows_user_data)
+  user_data_replace_on_change = true
+}
