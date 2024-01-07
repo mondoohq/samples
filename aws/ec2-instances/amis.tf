@@ -510,3 +510,18 @@ data "aws_ami" "winserver2022_cis" {
   owners = ["679593333241"]
 }
 
+data "aws_ami" "winserver2022_german" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["Windows_Server-2022-German-Full-Base-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["801119661308"]
+}

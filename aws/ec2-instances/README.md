@@ -73,6 +73,7 @@ This repository contains Terraform code for provisioning AWS EC2 instances for t
 | Windows 2022 cnspec       | Latest Windows 2022 Server with latest cnspec                            | `create_windows2022_cnspec`     | N/A                                                                                                                                                                   |
 | Windows 2022 CIS          | CIS Microsoft Windows Server 2022 Benchmark - Level 2                    | `create_windows2022_cis`        | [CIS Microsoft Windows Server 2022 Benchmark - Level 2](https://aws.amazon.com/marketplace/pp/prodview-lhbxwzmvsawbw?sr=0-19&ref_=beagle&applicationId=AWSMPContessa) |
 | Windows 2022 CIS cnspec   | CIS Microsoft Windows Server 2022 Benchmark - Level 2 with latest cnspec | `create_windows2022_cis_cnspec` | [CIS Microsoft Windows Server 2022 Benchmark - Level 2](https://aws.amazon.com/marketplace/pp/prodview-lhbxwzmvsawbw?sr=0-19&ref_=beagle&applicationId=AWSMPContessa) |
+| Windows 2022 German       | Latest Windows 2022 Server German                                        | `create_windows2022_german      | N/A                                                                                                                                                                   |
 
 ## Provision
 

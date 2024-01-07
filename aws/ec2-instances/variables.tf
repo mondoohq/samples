@@ -291,6 +291,10 @@ variable "create_windows2022_cis_cnspec" {
   default = false
 }
 
+variable "create_windows2022_german" {
+  default = false
+}
+
 variable "create_windows2019" {
   default = false
 }
