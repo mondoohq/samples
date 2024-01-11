@@ -253,3 +253,7 @@ output "windows2022_cis_cnspec" {
 output "windows2022_german" {
   value = module.windows2022_german.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2022_german.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"
 }
+
+output "windows2022_italian" {
+  value = module.windows2022_italian.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2022_italian.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"
+}

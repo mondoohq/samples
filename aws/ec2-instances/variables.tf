@@ -295,6 +295,10 @@ variable "create_windows2022_german" {
   default = false
 }
 
+variable "create_windows2022_italian" {
+  default = false
+}
+
 variable "create_windows2019" {
   default = false
 }
