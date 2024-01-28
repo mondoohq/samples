@@ -4,11 +4,11 @@
 
 ## Overview
 
-This guide provides an example on how to execute the CIS (Center for Internet Security) GitHub Benchmark on GitHub repositories and organizations using the `cnspec` and Mondoo platform. These benchmarks offer a standardized set of procedures to assess the security posture of GitHub repositories and organizations, helping to identify vulnerabilities or potential areas for security enhancements.
+This guide provides an example on how to execute the CIS (Center for Internet Security) GitHub Benchmark on GitHub repositories and organizations using the `cnspec` and Mondoo Platform. These benchmarks offer a standardized set of procedures to assess the security posture of GitHub repositories and organizations, helping to identify vulnerabilities or potential areas for security enhancements.
 
 ## Pre-requisites
 
-- Mondoo Space: Create a new space on the Mondoo platform and activate the 'CIS GitHub Benchmark - Level 1' benchmark in the Security Registry.
+- Mondoo Space: Create a new space on Mondoo Platform and activate the 'CIS GitHub Benchmark - Level 1' benchmark in the Security Registry.
 - `cnspec` Login: Authenticate with your newly created Mondoo space using `cnspec login -t <yourtoken>` .
 - Organization Access: Ensure you have access to the target GitHub organization, for example https://github.com/lunalectric.
 - GitHub Token: Generate a GitHub token with Resource owner set to lunalectric and all permissions set to read.
@@ -57,4 +57,4 @@ If you encounter any issues while performing these steps:
 - Permission Issues: Verify that you have the necessary permissions to access and scan the GitHub organization or repositories. This may involve checking the settings of your GitHub token and your role within the organization.
 - Command Execution Issues: If the `cnspec`` commands are not executing as expected, ensure that cnspec is installed and updated to the latest version.
 
-Should you encounter a problem that is not addressed in this guide, feel free to open an issue in this Github repository. For ongoing issues or broader discussions, we invite you to join us over at our [Github discussions](https://github.com/orgs/mondoohq/discussions) page. We're here to help!
+Should you encounter a problem that is not addressed in this guide, feel free to open an issue in this GitHub repository. For ongoing issues or broader discussions, we invite you to join us over at our [GitHub discussions](https://github.com/orgs/mondoohq/discussions) page. We're here to help!

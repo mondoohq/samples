@@ -7,7 +7,7 @@ This example uses `cnspec` to check for publicly exposed AWS S3 buckets within y
 ## Pre-requisites
 
 - You should have an AWS account and the necessary credentials (Access Key ID and Secret Access Key) available.
-- Install cnspec following the instructions provided at the installation page of the cnspec Github repository.
+- Install cnspec following the instructions provided at the installation page of the cnspec GitHub repository.
 
 ## Instructions
 
@@ -35,4 +35,4 @@ If you encounter any issues while running the scan:
 
 - **`cnspec` Installation Issues:** If you have trouble installing cnspec, ensure you're following the instructions on the installation page correctly.
 
-Should you encounter a problem that is not addressed in this guide, feel free to open an issue in this Github repository. For ongoing issues or broader discussions, we invite you to join us over at our [Github discussions](https://github.com/orgs/mondoohq/discussions) page. We're here to help!
+Should you encounter a problem that is not addressed in this guide, feel free to open an issue in this GitHub repository. For ongoing issues or broader discussions, we invite you to join us over at our [GitHub discussions](https://github.com/orgs/mondoohq/discussions) page. We're here to help!

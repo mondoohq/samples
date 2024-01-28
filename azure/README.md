@@ -46,7 +46,7 @@ terraform apply -auto-approve plan.out
 
 ### Connect to VM using `xfreerdp` from Ubuntu
 
-Run the following command to see the the connection details (including sensitive values)
+Run the following command to see the connection details (including sensitive values)
 
 ```bash
 terraform output -raw summary

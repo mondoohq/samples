@@ -13,12 +13,14 @@ This folder contains Terraform automation code to provision the following:
 <!-- code_chunk_output -->
 
 - [EKS container escape demo](#eks-container-escape-demo)
-  - [Prerequsites](#prerequsites)
+  - [Prerequisites](#prerequisites)
   - [Configuration](#configuration)
     - [Example configuration](#example-configuration)
   - [Provision the cluster](#provision-the-cluster)
   - [Connect to the cluster](#connect-to-the-cluster)
-  - [Deploy Mondoo Operator to AKS](#deploy-mondoo-operator-to-aks)
+  - [Deploy Mondoo Operator to EKS](#deploy-mondoo-operator-to-eks)
+    - [Deploy cert-manager](#deploy-cert-manager)
+    - [Deploy Mondoo Operator](#deploy-mondoo-operator)
   - [Deploy and configure DVWA](#deploy-and-configure-dvwa)
     - [Configure Port Forwarding](#configure-port-forwarding)
     - [Login to DVWA](#login-to-dvwa)
@@ -26,15 +28,29 @@ This folder contains Terraform automation code to provision the following:
     - [Start the container listener](#start-the-container-listener)
     - [Start the host listener](#start-the-host-listener)
     - [Start Ruby webserver](#start-ruby-webserver)
-  - [Escape time](#escape-time)
-    - [Escalate Privileges on the container](#escalate-privileges-on-the-container)
+  - [Escape time via privileged container](#escape-time-via-privileged-container)
+    - [Escalate privileges on the container](#escalate-privileges-on-the-container)
     - [Gain access to worker nodes](#gain-access-to-worker-nodes)
+  - [Escape time via service account token](#escape-time-via-service-account-token)
+    - [Start the container listener](#start-the-container-listener-1)
+    - [Start the host listener](#start-the-host-listener-1)
+    - [Start the host listener](#start-the-host-listener-2)
+    - [Start Ruby webserver](#start-ruby-webserver-1)
+    - [Gain access to worker nodes through default service account token](#gain-access-to-worker-nodes-through-default-service-account-token)
   - [Mondoo scan commands](#mondoo-scan-commands)
+    - [Scan kubernetes manifest](#scan-kubernetes-manifest)
+    - [Scan container image from registry](#scan-container-image-from-registry)
+    - [Scan Kubernetes EKS cluster](#scan-kubernetes-eks-cluster)
+    - [Shell to Kubernetes EKS cluster](#shell-to-kubernetes-eks-cluster)
+- [scan/shell kubernetes node via SSM](#scanshell-kubernetes-node-via-ssm)
+- [scan/shell Kubernetes via AWS API](#scanshell-kubernetes-via-aws-api)
   - [Destroy the cluster](#destroy-the-cluster)
+  - [License and Author](#license-and-author)
+  - [Disclaimer](#disclaimer)
 
 <!-- /code_chunk_output -->
 
-## Prerequsites
+## Prerequisites
 
 - [AWS Account](https://aws.amazon.com/free/)
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) - `~> aws-cli/2.4.28`
@@ -269,7 +285,7 @@ Events:
   Normal  Started    23s   kubelet            Started container dvwa
 ```
 
-Deploy also the DVWA WebApp as a none privileged container and the the malicous role binding
+Deploy also the DVWA WebApp as a none privileged container and the malicious role binding
 
 ```bash
 kubectl apply -f ../assets/dvwa-deployment-no-privileged.yml
@@ -310,7 +326,7 @@ Log in to DVWA using `admin` with the password `password`.
 
 ![Reset the Database](../assets/dvwa_db_reset.png)
 
-Once logged in, click on "Create / Reset Database" after which, you will be logged out. Log back in to the web application and click on "Command Injection."
+Once logged in, select "Create / Reset Database" after which, you will be logged out. Log back in to the web application and select "Command Injection."
 
 Next, open three command line terminals and continue the setup process.
 
@@ -444,7 +460,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 You have a shell and are the `www-data` user.
 
-### Escalate Privileges on the container
+### Escalate privileges on the container
 
 Now you need do the privilege escalation within the container to gain root. In the terminal where the container listener and run the following commands:
 
@@ -721,13 +737,13 @@ cnspec scan k8s --path ../assets/dvwa-deployment.yml
 cnspec scan container docker.io/pmuench/dvwa-container-escape:latest
 ```
 
-### Scan kubernetes eks cluster
+### Scan Kubernetes EKS cluster
 
 ```bash
 cnspec scan k8s
 ```
 
-### Shell to kubernetes eks cluster
+### Shell to Kubernetes EKS cluster
 
 ```bash
 cnspec shell k8s
@@ -793,7 +809,7 @@ cnspec scan aws ec2 ssm ssm-user@<AWS Instance ID>
 cnspec shell aws ec2 ssm ssm-user@<AWS Instance ID>
 ```
 
-# scan/shell kubernetes via aws api
+# scan/shell Kubernetes via AWS API
 
 ```bash
 export AWS_REGION=us-east-2

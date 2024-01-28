@@ -5,9 +5,9 @@ This folder contains Terraform automation code to provision the following:
 - **AWS VPC**
 - **Kali Linux AWS EC2 Instance** - This instance is provisioned for the demonstration of the container-escape and windows hack.
 - **Ubuntu 20.04 AWS EC2 Instance** - This instance is provisioned for the minikube and to demonstrate the container escape
-- **Windows 2016** - This instance is provisioned for the demonstration of the Windows Hack and Printnightmare vulnerability. (ami-0808d6a0d91e57fd3 in eu-central-1)
+- **Windows 2016** - This instance is provisioned for the demonstration of the Windows Hack and PrintNightmare vulnerability. (ami-0808d6a0d91e57fd3 in eu-central-1)
 
-### Prerequsites
+### Prerequisites
 
 - [AWS Account](https://aws.amazon.com/free/)
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) - `~> aws-cli/2.4.28`

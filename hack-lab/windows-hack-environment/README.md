@@ -6,10 +6,9 @@ This folder contains Terraform automation code to provision the following:
 - **Kali Linux AWS EC2 Instance** - This instance is provisioned for the demonstration of the Windows hack, it is the attacker vm.
 - **Windows 2022 AD** - This instance is provisioned for the demonstration of Windows Active Directory hacks.
 - **Windows 2016 Exchange** - This instance is provisioned for the demonstration of the Windows Exchange hacks.
-- **Windows 2016 DVWA** - This instance is provisioned for the demonstration of the Windows Hack and Printnightmare vulnerability/ DVWA App hack. (ami-0808d6a0d91e57fd3 in eu-central-1)
+- **Windows 2016 DVWA** - This instance is provisioned for the demonstration of the Windows Hack and PrintNightmare vulnerability/ DVWA App hack. (ami-0808d6a0d91e57fd3 in eu-central-1)
 
-
-### Prerequsites
+### Prerequisites
 
 - [AWS Account](https://aws.amazon.com/free/)
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) - `~> aws-cli/2.4.28`
@@ -38,7 +37,7 @@ Before provisioning set the following environment variables:
 - `TF_VAR_ssh_key_path` - Path to to local ssh key for connecting to Kali Linux instance.
 - `TF_VAR_publicIP` - IP address of your home network to be applied to the security group for the Kali Linux, Ubuntu and Windows instance. example: `1.1.1.1/32`
 
-### Example configuration 
+### Example configuration
 
 Open a terminal and run the following commands:
 
@@ -71,31 +70,32 @@ export TF_VAR_publicIP="1.1.1.1/32"
 ## Provision a single environment
 
 1. Clone the project
+
 ```bash title="Clone the project"
 git clone git@github.com:Lunalectric/windows-hack-environment.git
 ```
 
 2. cd into the windows-hack-demo folder
 
-```
+```bash
 cd windows-hack-environment
 ```
 
 3. Initialize the project (download modules)
 
-```
+```bash
 terraform init
 ```
 
 4. Check that everything is ready
 
-```
+```bash
 terraform plan -out plan.out
 ```
 
 5. Apply the configuration
 
-```
+```bash
 terraform apply -auto-approve plan.out
 ```
 
