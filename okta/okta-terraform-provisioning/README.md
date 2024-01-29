@@ -2,7 +2,7 @@
 
 This repository contains example HashiCorp Terraform code for provisioning an Okta organization.
 
-### Prerequsites
+### Prerequisites
 
 To use try the code in this repository, you will need the following:
 
@@ -12,7 +12,7 @@ To use try the code in this repository, you will need the following:
 
 ## Setup Okta Dev Account
 
-If you do not already have an Okta development environment, sign-up for a free account at [developer.okta.com](https://developer.okta.com). 
+If you do not already have an Okta development environment, sign-up for a free account at [developer.okta.com](https://developer.okta.com).
 
 ### Okta HealthInsights
 
@@ -22,11 +22,11 @@ Okta HealthInsights provides recommended security tasks to improve security for 
 
 ### Create an Okta API token
 
-To manage Okta with Terraform and scan Okta with cnspec, you will need an Okta API token. Visit [Create an API token](https://developer.okta.com/docs/guides/create-an-api-token/main/) to learn how to create an API token. 
+To manage Okta with Terraform and scan Okta with cnspec, you will need an Okta API token. Visit [Create an API token](https://developer.okta.com/docs/guides/create-an-api-token/main/) to learn how to create an API token.
 
 ## Fork and clone this repository
 
-If you want to try this code, first thing you should do is Fork it, then clone it locally. 
+If you want to try this code, first thing you should do is fork it, then clone it locally.
 
 ### Configure Okta Provider for Terraform
 
@@ -47,19 +47,19 @@ This repository is configured to use my own GCP GCS bucket for the Terraform bac
 
 ### Terraform Init
 
-Once the backend is configured, cd into the `terraform` directory in this repo and run `terraform init` to download the modules and initialize the backend. 
+Once the backend is configured, cd into the `terraform` directory in this repo and run `terraform init` to download the modules and initialize the backend.
 
 ### Security scan Terraform HCL with cnspec (pre-plan)
 
 Run the following command from the root directory of this repository to scan the Terraform code in this repository before you apply any changes to your Okta environment:
 
-```typscript
+```typescript
 cnspec scan terraform ./terraform -f policies/okta-security.mql.yaml
 ```
 
 ### Security scan Terraform Plan with cnspec (post-plan)
 
-The policy in this repository also supports scanning of Terraform plan files which provides a deeper level of understanding of the configuration changes to be applied. 
+The policy in this repository also supports scanning of Terraform plan files which provides a deeper level of understanding of the configuration changes to be applied.
 
 #### Generate a Terraform plan.json to scan
 
@@ -71,14 +71,6 @@ terraform show -json tfplan > tfplan.json
 
 #### Scan the Terraform tfplan.json
 
-```typscript
+```typescript
 cnspec scan terraform plan tfplan.json -f policies/okta-security.mql.yaml
 ```
-
-
-
-
-
-
-
-

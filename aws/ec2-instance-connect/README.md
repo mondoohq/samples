@@ -44,4 +44,4 @@ This command executes a security scan on your EC2 instance.
 - **AWS CLI and EC2 Instance Connect**: Ensure the latest AWS CLI is installed and configured correctly. Verify that you are using the correct region, availability zone, and instance ID. If you encounter permission errors, check your AWS IAM role and permissions.
 - **SSH connection issues**: If you cannot connect to your EC2 instance, make sure you are using the correct username (usually "ec2-user" for Amazon Linux instances).
 
-For more complex or ongoing issues, feel free to participate in our [Github discussions](https://github.com/orgs/mondoohq/discussions) page. We're here to help!
+For more complex or ongoing issues, feel free to participate in our [GitHub discussions](https://github.com/orgs/mondoohq/discussions) page. We're here to help!

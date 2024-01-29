@@ -12,7 +12,7 @@ This folder contains Terraform automation code to provision the following:
 <!-- code_chunk_output -->
 
 - [GKE container escape demo](#gke-container-escape-demo)
-  - [Prerequsites](#prerequsites)
+  - [Prerequisites](#prerequisites)
   - [Provision the cluster](#provision-the-cluster)
   - [Connect to the cluster](#connect-to-the-cluster)
   - [Deploy Mondoo Operator to GKE](#deploy-mondoo-operator-to-gke)
@@ -23,26 +23,27 @@ This folder contains Terraform automation code to provision the following:
     - [Login to DVWA](#login-to-dvwa)
   - [Setup Attacker Linux Instance](#setup-attacker-linux-instance)
     - [Start the container listener](#start-the-container-listener)
-    - [Start the host listener](#start-the-host-listener)
     - [Start Ruby webserver](#start-ruby-webserver)
+    - [Determine the attacker machine's public IP](#determine-the-attacker-machines-public-ip)
+    - [Escape time](#escape-time)
   - [Escaping the pod and get a shell on the node (google compute instance)](#escaping-the-pod-and-get-a-shell-on-the-node-google-compute-instance)
     - [Enumerate Privileges of the service account running the container](#enumerate-privileges-of-the-service-account-running-the-container)
     - [Deploy a pod that will get you a `root` account on the node](#deploy-a-pod-that-will-get-you-a-root-account-on-the-node)
-  - [Gaining a persistant bash shell on the node](#gaining-a-persistant-bash-shell-on-the-node)
+  - [Gaining a persistent bash shell on the node](#gaining-a-persistent-bash-shell-on-the-node)
   - [Mondoo scan commands](#mondoo-scan-commands)
     - [Scan kubernetes manifest](#scan-kubernetes-manifest)
     - [Scan container image from registry](#scan-container-image-from-registry)
-    - [Scan kubernetes gke cluster](#scan-kubernetes-gke-cluster)
-    - [Shell to kubernetes gke cluster](#shell-to-kubernetes-gke-cluster)
-    - [Scan a google cloud project](#scan-a-google-cloud-project)
-    - [Shell to google cloud project](#shell-to-google-cloud-project)
+    - [Scan Kubernetes GKE cluster](#scan-kubernetes-gke-cluster)
+    - [Shell to Kubernetes GKE cluster](#shell-to-kubernetes-gke-cluster)
+    - [Scan a Google Cloud project](#scan-a-google-cloud-project)
+    - [Shell to a Google Cloud project](#shell-to-a-google-cloud-project)
   - [Destroy the cluster](#destroy-the-cluster)
   - [License and Author](#license-and-author)
   - [Disclaimer](#disclaimer)
 
 <!-- /code_chunk_output -->
 
-## Prerequsites
+## Prerequisites
 
 - [Google GCP Account](https://cloud.google.com/free/)
   - make sure you to give the account your login in with the following IAM role [here](https://console.cloud.google.com/iam-admin):
@@ -68,19 +69,19 @@ This folder contains Terraform automation code to provision the following:
 
   - make sure to install the [gke-gcloud-auth-plugin](https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke), usually via the command:
 
-  ```
+  ```bash
   gcloud components install gke-gcloud-auth-plugin
   ```
 
-  - make sure to login to you Google Cloud Account account via:
+  - make sure to login to you Google Cloud account via:
 
-  ```
+  ```bash
   gcloud auth application-default login
   ```
 
   - make sure to set gcloud CLI to the right project
 
-  ```
+  ```bash
   gcloud config set project <your-project-id> #e.g. my-test-project
   ```
 
@@ -97,25 +98,25 @@ git clone git@github.com:Lunalectric/container-escape.git
 
 2. cd into the terraform folder
 
-```
+```bash
 cd container-escape/gke
 ```
 
 3. Initialize the project (download modules)
 
-```
+```bash
 terraform init
 ```
 
 4. Check that everything is ready (and safe plan to a local file)
 
-```
+```bash
 terraform plan -out plan.out
 ```
 
 5. Apply the configuration
 
-```
+```bash
 terraform apply plan.out -auto-approve
 ```
 
@@ -269,7 +270,7 @@ Log in to DVWA using `admin` with the password `password`.
 
 ![Reset the Database](../assets/dvwa_db_reset.png)
 
-Once logged in, click on "Create / Reset Database" after which, you will be logged out. Log back in to the web application and click on "Command Injection."
+Once logged in, select "Create / Reset Database" after which, you will be logged out. Log back in to the web application and select "Command Injection."
 
 Next, open three command line terminals and continue the setup process.
 
@@ -346,7 +347,7 @@ root@attacker:~/container-escape# ./start_ruby_webserver
 [2022-08-15 18:28:35] INFO  WEBrick::HTTPServer#start: pid=3850 port=8001
 ```
 
-### Find out the attacker machines public IP:
+### Determine the attacker machine's public IP
 
 ```bash
 root@lunalectric-attacker-vm-3v0c:~# cat container-escape/pub-ip
@@ -472,7 +473,7 @@ curl -H 'Metadata-Flavor:Google' http://metadata.google.internal/computeMetadata
 gke-lunalectric-gke--lunalectric-pool-0e144d64-33rz.us-central1-f.c.<username>-development-3.internal
 ```
 
-## Gaining a persistant bash shell on the node
+## Gaining a persistent bash shell on the node
 
 **Confirming the hostname and IP address of the node**
 First we need to find out on which node we are operating.
@@ -591,7 +592,7 @@ The key's randomart image is:
 
 Now we can display the private key via `cat`:
 
-```
+```bash
 cat id_rsa
 -----BEGIN OPENSSH PRIVATE KEY-----
 <snip>
@@ -600,7 +601,7 @@ cat id_rsa
 
 We copy and paste this key to our local machine to the file `id_rsa` and now we can connect directly via `ssh` to the compromised node with the following command:
 
-```
+```bash
 ssh -i id_rsa -o CheckHostIP=no -o StrictHostKeyChecking=no <username>@35.226.180.169
 ```
 
@@ -650,13 +651,13 @@ cnspec scan k8s --path ../assets/dvwa-deployment-no-privileged.yml
 cnspec scan container docker.io/pmuench/dvwa-container-escape:latest
 ```
 
-### Scan kubernetes gke cluster
+### Scan Kubernetes GKE cluster
 
 ```bash
 cnspec scan k8s
 ```
 
-### Shell to kubernetes gke cluster
+### Shell to Kubernetes GKE cluster
 
 ```bash
 cnspec shell k8s

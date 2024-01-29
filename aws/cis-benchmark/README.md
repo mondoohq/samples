@@ -32,4 +32,4 @@ This command instructs `cnspec` to scan your AWS environment using the CIS Amazo
 - **AWS CLI**: Ensure that AWS CLI is installed and configured correctly. Verify that you are using the correct AWS credentials. If you encounter permission errors, check your AWS IAM role and permissions.
 - **Benchmark execution issues**: If the benchmark does not execute as expected, ensure that you have the necessary permissions to access all resources in your AWS account.
 
-If you encounter a problem that is not addressed in this guide, feel free to raise an issue in this GitHub repository. For more complex or ongoing issues, consider participating in our [Github discussions](https://github.com/orgs/mondoohq/discussions) page. We're here to help!
+If you encounter a problem that is not addressed in this guide, feel free to raise an issue in this GitHub repository. For more complex or ongoing issues, consider participating in our [GitHub discussions](https://github.com/orgs/mondoohq/discussions) page. We're here to help!

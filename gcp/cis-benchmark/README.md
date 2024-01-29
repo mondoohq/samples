@@ -7,7 +7,7 @@ This guide provides an example on how to scan a GCP project against the CIS Goog
 ## Pre-requisites
 
 - You should have the `cnspec` installed. You can follow the [installation instructions](https://github.com/mondoohq/cnspec#installation) to set it up.
-- You need an Google Cloud service account account and the necessary permissions.
+- You need an Google Cloud service account and the necessary permissions.
 - The Google Cloud SDK installed and configured with access to the project you wish to scan.
 
 ## Instructions
@@ -32,4 +32,4 @@ This command instructs `cnspec` to scan a Google Cloud project using the CIS Goo
 - **gcloud SDK CLI**: Ensure that `gcloud` CLI is [installed and configured](https://cloud.google.com/sdk/docs/install-sdk) correctly. Verify that you are using the correct account or service account credentials. If you encounter permission errors, check your IAM role and permissions.
 - **Benchmark execution issues**: If the benchmark does not execute as expected, ensure that you have the necessary permissions to access all resources in your Google Cloud project.
 
-If you encounter a problem that is not addressed in this guide, feel free to raise an issue in this GitHub repository. For more complex or ongoing issues, consider participating in our [Github discussions](https://github.com/orgs/mondoohq/discussions) page. We're here to help!
+If you encounter a problem that is not addressed in this guide, feel free to raise an issue in this GitHub repository. For more complex or ongoing issues, consider participating in our [GitHub discussions](https://github.com/orgs/mondoohq/discussions) page. We're here to help!
