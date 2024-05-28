@@ -81,6 +81,22 @@ data "aws_ami" "rhel8_cis" {
   owners = ["679593333241"]
 }
 
+data "aws_ami" "rhel7_cis" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["CIS Red Hat Enterprise Linux 7*Level 2*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
 
 data "aws_ami" "nginx_rhel9_cis" {
   most_recent = true
@@ -188,7 +204,7 @@ data "aws_ami" "ubuntu2204_cis" {
   }
 
   filter {
-    name = "architecture"
+    name   = "architecture"
     values = ["x86_64"]
   }
 
