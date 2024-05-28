@@ -425,7 +425,7 @@ module "oracle8_cis_cnspec" {
 module "rhel9" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
-  
+
   create                      = var.create_rhel9
   name                        = "${var.prefix}-rhel9-${random_id.instance_id.id}"
   ami                         = data.aws_ami.rhel9.id
@@ -439,7 +439,7 @@ module "rhel9" {
 module "rhel9_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
-  
+
   create                      = var.create_rhel9_cnspec
   name                        = "${var.prefix}-rhel9-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.rhel9.id
@@ -457,7 +457,7 @@ module "rhel9_cnspec" {
 module "rhel8" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
-  
+
   create                      = var.create_rhel8
   name                        = "${var.prefix}-rhel8-${random_id.instance_id.id}"
   ami                         = data.aws_ami.rhel8.id
@@ -471,7 +471,7 @@ module "rhel8" {
 module "rhel8_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
-  
+
   create                      = var.create_rhel8_cnspec
   name                        = "${var.prefix}-rhel8-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.rhel8.id
@@ -487,7 +487,7 @@ module "rhel8_cnspec" {
 module "rhel8_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
-  
+
   create                      = var.create_rhel8_cis
   name                        = "${var.prefix}-rhel8-cis-${random_id.instance_id.id}"
   ami                         = data.aws_ami.rhel8_cis.id
@@ -501,7 +501,7 @@ module "rhel8_cis" {
 module "rhel8_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
-  
+
   create                      = var.create_rhel8_cis_cnspec
   name                        = "${var.prefix}-rhel8-cis-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.rhel8_cis.id
@@ -513,6 +513,24 @@ module "rhel8_cis_cnspec" {
   user_data                   = base64encode(local.linux_user_data)
   user_data_replace_on_change = true
 }
+
+// Red Hat Linux 7
+module "rhel7_cis_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_rhel7_cis_cnspec
+  name                        = "${var.prefix}-rhel7-cis-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.rhel7_cis.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
 
 // NGINX on RHEL 9 CIS
 
