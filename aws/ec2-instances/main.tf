@@ -515,6 +515,21 @@ module "rhel8_cis_cnspec" {
 }
 
 // Red Hat Linux 7
+module "rhel7_cis" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_rhel7_cis
+  name                        = "${var.prefix}-rhel7-cis-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.rhel7_cis.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+
 module "rhel7_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
