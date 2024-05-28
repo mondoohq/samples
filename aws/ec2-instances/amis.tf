@@ -483,7 +483,7 @@ data "aws_ami" "winserver2019_cis" {
 
   filter {
     name   = "name"
-    values = ["CIS Microsoft Windows Server 2019 Benchmark v2*Level 2*"]
+    values = ["CIS Microsoft Windows Server 2019 Benchmark *Level 2*"]
   }
 
   filter {
@@ -515,7 +515,7 @@ data "aws_ami" "winserver2022_cis" {
 
   filter {
     name   = "name"
-    values = ["CIS Microsoft Windows Server 2022 Benchmark v2*Level 2*"]
+    values = ["CIS Microsoft Windows Server 2022 Benchmark *Level 2*"]
   }
 
   filter {
