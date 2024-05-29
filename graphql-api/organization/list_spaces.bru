@@ -1,0 +1,29 @@
+meta {
+  name: list_spaces
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  query OrganizationOverview {
+      organizationOverview(
+          input: { organizationMrn: "{{orgMrn}}" }
+      ) {
+          organizationMrn
+          spacesOverview {
+              spaceMrn
+              spaceName
+          }
+      }
+  }
+}
