@@ -1,0 +1,32 @@
+meta {
+  name: disable_framework
+  type: graphql
+  seq: 6
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  mutation ApplyFramework($input: ComplianceFrameworkMutationInput!) {
+    applyFrameworkMutation(input: $input)
+  }
+  
+}
+
+body:graphql:vars {
+  {
+  	"input": {
+  			"action": "PREVIEW",
+  			"frameworkMrn": "//policy.api.mondoo.app/frameworks/iso-27001-2022",
+  			"scopeMrn": "{{spaceMrn}}"
+    }
+  }
+}
