@@ -13,6 +13,7 @@ Welcome to our comprehensive security scanning repository! In our ongoing effort
   - [Scanning an AWS EC2 Instance with cnspec using EC2 Instance Connect](#scanning-an-aws-ec2-instance-with-cnspec-using-ec2-instance-connect)
 - [GitHub](#github)
   - [Performing CIS GitHub Supply Chain Benchmark with cnspec](#performing-cis-github-supply-chain-benchmark-with-cnspec)
+- [GraphQL API Examples](#graphql-api-examples)
 - [Hack Lab](#hack-lab)
   - [Demonstrating Container Escape in Kubernetes](#demonstrating-container-escape-in-kubernetes)
 - [Playing with AWS EC2 Instances](#playing-with-aws-ec2-instances)
@@ -71,6 +72,10 @@ This guide provides an example on how to execute the CIS (Center for Internet Se
 ![cnspec running a GitHub organization scan](./github/cis-supply-chain/github-supply-chain.gif)
 
 - [Instructions](./github/cis-supply-chain/)
+
+## GraphQL API Examples
+
+The [examples](./graphql-api) demonstrate how to query and interact with Mondoo Platform using GraphQL.
 
 ## Hack Lab
 

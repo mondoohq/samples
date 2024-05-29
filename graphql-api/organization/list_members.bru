@@ -1,0 +1,38 @@
+meta {
+  name: list_members
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  query LoadOrganizationMembers {
+      organization(mrn: "{{orgMrn}}") {
+          id
+          mrn
+          members {
+              edges {
+                  node {
+                      user {
+                          email
+                          name
+                      }
+                      roles {
+                          title
+                      }
+                  }
+              }
+          }
+      }
+  }
+  
+}

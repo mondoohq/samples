@@ -1,0 +1,40 @@
+meta {
+  name: list_assets_in_space
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  query Assets {
+      assets(spaceMrn: "{{spaceMrn}}") {
+          totalCount
+          edges {
+              cursor
+              node {
+                  id
+                  mrn
+                  state
+                  name
+                  updatedAt
+                  referenceIDs
+                  asset_type
+                  score {
+                      grade
+                      value
+                  }
+              }
+          }
+      }
+  }
+  
+}

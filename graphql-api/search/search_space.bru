@@ -1,0 +1,73 @@
+meta {
+  name: search_space
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  query SearchAggregateScore($scopeMrn:String!, $query:String!) {
+      search(query: $query, scope:$scopeMrn, type:AGGREGATE_SCORE) {
+          edges {
+              node {
+                  ... on AggregateScore {
+                      id
+                      title
+                      description
+                      tags {
+                          key
+                          value
+                      }
+                      scoreType
+                      findingMrn
+                      entity {
+                          __typename
+              ... on EntityInfoAsset{
+                              mrn 
+              	name
+                          }
+                          ... on EntityInfoSpace {
+                              mrn
+                              name
+                          }
+                      }
+                      rank
+          	riskScore
+                      epss {
+                          probability
+                          percentile
+                      }
+                      blastRadius {
+                          indicator
+                      }
+          	riskFactors {
+                          indicator
+                          title
+                          mrn
+                      }
+                  }
+              }
+          }
+      }
+  }
+  
+  
+                          
+  
+}
+
+body:graphql:vars {
+  {
+      "scopeMrn": "{{orgMrn}}",
+      "query" : "ebs"
+  }
+}
