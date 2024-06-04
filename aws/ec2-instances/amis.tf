@@ -249,6 +249,27 @@ data "aws_ami" "ubuntu2204_cis" {
   owners = ["679593333241"]
 }
 
+data "aws_ami" "ubuntu2204_cis_arm64" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["CIS Ubuntu Linux 22.04*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["arm64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
 data "aws_ami" "debian10" {
   most_recent = true
 
