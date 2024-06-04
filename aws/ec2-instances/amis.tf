@@ -114,6 +114,23 @@ data "aws_ami" "nginx_rhel9_cis" {
   owners = ["679593333241"]
 }
 
+data "aws_ami" "nginx_win2016" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["NGINX2016-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
+
 
 data "aws_ami" "rhel9" {
   most_recent = true
