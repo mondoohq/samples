@@ -167,6 +167,14 @@ variable "create_rhel8_cis_cnspec" {
   default = false
 }
 
+variable "create_rhel7" {
+  default = false
+}
+
+variable "create_rhel7_cnspec" {
+  default = false
+}
+
 variable "create_rhel7_cis" {
   default = false
 }
@@ -350,4 +358,7 @@ variable "windows_admin_password" {
 
 variable "publicIP" {
   description = "Your home PublicIP to configure access to ec2 instances"
+
+  # usually automatically pulled by data "http" "clientip" resource
+  default = ""
 }

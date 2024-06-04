@@ -2,6 +2,14 @@ output "vpc-name" {
   value = module.vpc.name
 }
 
+output "deployer_ip_address" {
+  value = local.userIP
+}
+
+output "data_public_ip_address" {
+  value = chomp(data.http.clientip.response_body)
+}
+
 # amazon2_instances
 output "amazon2" {
   value = module.amazon2.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.amazon2.public_ip}"
@@ -27,6 +35,25 @@ output "amazon2023" {
 output "amazon2023_cnspec" {
   value = module.amazon2023_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.amazon2023_cnspec.public_ip}"
 }
+
+# rhel 7
+output "rhel7" {
+  value = module.rhel7.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7.public_ip}"
+}
+
+output "rhel7_cnspec" {
+  value = module.rhel7_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7_cnspec.public_ip}"
+}
+
+
+output "rhel7_cis" {
+  value = module.rhel7_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7_cis.public_ip}"
+}
+
+output "rhel7_cis_cnspec" {
+  value = module.rhel7_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7_cis_cnspec.public_ip}"
+}
+
 
 # rhel8
 output "rhel8" {

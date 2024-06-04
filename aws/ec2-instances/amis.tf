@@ -81,6 +81,22 @@ data "aws_ami" "rhel8_cis" {
   owners = ["679593333241"]
 }
 
+data "aws_ami" "rhel7" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["RHEL_HA-7*_HVM-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["309956199498"]
+}
+
 data "aws_ami" "rhel7_cis" {
   most_recent = true
 
