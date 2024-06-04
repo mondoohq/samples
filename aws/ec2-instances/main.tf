@@ -2,7 +2,15 @@ resource "random_id" "instance_id" {
   byte_length = 4
 }
 
+# and assigned the IP address of the person who runs the terraform to the ource_address_prefix
+data "http" "clientip" {
+  url = "https://ipv4.icanhazip.com/"
+}
+
 locals {
+
+  userIP = "${chomp(data.http.clientip.response_body)}/32"
+
   linux_user_data = <<-EOT
     #!/bin/bash
     bash -c "$(curl -sSL https://install.mondoo.com/sh)"
@@ -72,7 +80,7 @@ module "linux_sg" {
       to_port     = 0
       protocol    = "-1"
       description = "Allow all from my ip"
-      cidr_blocks = "10.0.0.0/8,${var.publicIP}"
+      cidr_blocks = "10.0.0.0/8,${local.userIP}"
     }
   ]
 
@@ -515,6 +523,36 @@ module "rhel8_cis_cnspec" {
 }
 
 // Red Hat Linux 7
+module "rhel7" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_rhel7
+  name                        = "${var.prefix}-rhel7-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.rhel7.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+module "rhel7_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.2.1"
+
+  create                      = var.create_rhel7_cnspec
+  name                        = "${var.prefix}-rhel7-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.rhel7.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
 module "rhel7_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
@@ -864,7 +902,7 @@ module "windows_sg" {
       to_port     = 0
       protocol    = "-1"
       description = "Allow all from my ip"
-      cidr_blocks = "10.10.0.0/16,${var.publicIP}"
+      cidr_blocks = "10.10.0.0/16,${local.userIP}"
     }
   ]
 
