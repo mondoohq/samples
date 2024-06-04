@@ -257,3 +257,7 @@ output "windows2022_german" {
 output "windows2022_italian" {
   value = module.windows2022_italian.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2022_italian.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"
 }
+# nginx on windows 2016
+output "nginx_win2016_cnspec" {
+  value = module.nginx_win2016_cnspec.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.nginx_win2016_cnspec.public_ip}:3389 /h:1200 /w:1920 /p:'${var.windows_admin_password}'\n(This will take a couple minutes to become available...)"
+}

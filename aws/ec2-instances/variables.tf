@@ -339,6 +339,11 @@ variable "create_windows2016_cis_cnspec" {
   default = false
 }
 
+variable "create_nginx_win2016_cnspec" {
+  default = false
+}
+
+
 variable "windows_admin_password" {
   default = "MondooSPM1!"
 }
