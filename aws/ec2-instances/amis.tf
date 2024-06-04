@@ -254,7 +254,7 @@ data "aws_ami" "ubuntu2204_cis_arm64" {
 
   filter {
     name   = "name"
-    values = ["CIS Ubuntu Linux 22.04*"]
+    values = ["CIS Ubuntu Linux 22.04*ARM*"]
   }
 
   filter {

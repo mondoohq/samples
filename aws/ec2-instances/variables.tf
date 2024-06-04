@@ -75,6 +75,10 @@ variable "linux_instance_type" {
   default = "t2.micro"
 }
 
+variable "linux_instance_type_arm64" {
+  default = "t4g.medium"
+}
+
 variable "windows_instance_type" {
   default = "t2.micro"
 }
@@ -118,6 +122,15 @@ variable "create_ubuntu2204_cis" {
 variable "create_ubuntu2204_cis_cnspec" {
   default = false
 }
+
+variable "create_ubuntu2204_cis_arm" {
+  default = false
+}
+
+variable "create_ubuntu2204_cis_cnspec_arm" {
+  default = false
+}
+
 
 variable "create_ubuntu2004" {
   default = false
