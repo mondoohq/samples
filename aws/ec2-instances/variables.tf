@@ -360,7 +360,7 @@ variable "create_windows2016_cis_cnspec" {
   default = false
 }
 
-variable "create_nginx_win2016_cnspec" {
+variable "create_nginx_win2019_cnspec" {
   default = false
 }
 

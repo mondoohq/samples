@@ -130,12 +130,12 @@ data "aws_ami" "nginx_rhel9_cis" {
   owners = ["679593333241"]
 }
 
-data "aws_ami" "nginx_win2016" {
+data "aws_ami" "nginx_win2019" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["NGINX2016-*"]
+    values = ["NGINX2019-*"]
   }
 
   filter {

@@ -617,15 +617,15 @@ module "nginx_rhel9_cis_cnspec" {
   user_data_replace_on_change = true
 }
 
-// NGINX on Windows 2016
+// NGINX on Windows 2019
 
-module "nginx_win2016_cnspec" {
+module "nginx_win2019_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.2.1"
 
-  create                      = var.create_nginx_win2016_cnspec
-  name                        = "${var.prefix}-nginx-win2016-cnspec-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.nginx_win2016.id
+  create                      = var.create_nginx_win2019_cnspec
+  name                        = "${var.prefix}-nginx-win2019-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.nginx_win2019.id
   instance_type               = var.windows_instance_type
   vpc_security_group_ids      = [module.windows_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
