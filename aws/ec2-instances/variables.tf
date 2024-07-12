@@ -208,13 +208,13 @@ variable "create_debian10" {
   default = false
 }
 
-variable "create_debian10_cnspec" {
-  default = false
-}
-
-variable "create_debian10_cis_cnspec" {
-  default = false
-}
+#variable "create_debian10_cnspec" {
+#  default = false
+#}
+#
+#variable "create_debian10_cis_cnspec" {
+#  default = false
+#}
 
 variable "create_debian11" {
   default = false

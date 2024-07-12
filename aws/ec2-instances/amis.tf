@@ -97,21 +97,21 @@ data "aws_ami" "rhel7" {
   owners = ["309956199498"]
 }
 
-data "aws_ami" "rhel7_cis" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["CIS Red Hat Enterprise Linux 7*Level 2*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["679593333241"]
-}
+#data "aws_ami" "rhel7_cis" {
+#  most_recent = true
+#
+#  filter {
+#    name   = "name"
+#    values = ["CIS Red Hat Enterprise Linux 7*Level 2*"]
+#  }
+#
+#  filter {
+#    name   = "virtualization-type"
+#    values = ["hvm"]
+#  }
+#
+#  owners = ["679593333241"]
+#}
 
 
 data "aws_ami" "nginx_rhel9_cis" {
