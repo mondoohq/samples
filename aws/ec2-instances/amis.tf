@@ -97,23 +97,6 @@ data "aws_ami" "rhel7" {
   owners = ["309956199498"]
 }
 
-data "aws_ami" "rhel7_cis" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["CIS Red Hat Enterprise Linux 7*Level 2*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["679593333241"]
-}
-
-
 data "aws_ami" "nginx_rhel9_cis" {
   most_recent = true
 
@@ -285,24 +268,6 @@ data "aws_ami" "debian10" {
 
   owners = ["136693071363"]
 }
-
-data "aws_ami" "debian10_cis" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["CIS Debian Linux 10*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["679593333241"]
-}
-
-
 
 data "aws_ami" "debian11" {
   most_recent = true
