@@ -536,7 +536,7 @@ module "rhel7_cnspec" {
 }
 
 // Private RHEL7 Image
-module "rhel7-pass-private" {
+module "rhel7_pass_private" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.6.1"
 
