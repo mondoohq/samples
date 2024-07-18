@@ -41,6 +41,11 @@ output "rhel7" {
   value = module.rhel7.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7.public_ip}"
 }
 
+output "rhel7_pass_private" {
+  value = module.rhel7_pass_private.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7_pass_private.public_ip}"
+}
+
+
 output "rhel7_cnspec" {
   value = module.rhel7_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7_cnspec.public_ip}"
 }
