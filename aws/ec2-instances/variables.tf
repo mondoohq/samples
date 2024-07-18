@@ -188,13 +188,13 @@ variable "create_rhel7_cnspec" {
   default = false
 }
 
-variable "create_rhel7_cis" {
-  default = false
-}
+#variable "create_rhel7_cis" {
+#  default = false
+#}
 
-variable "create_rhel7_cis_cnspec" {
-  default = false
-}
+#variable "create_rhel7_cis_cnspec" {
+#  default = false
+#}
 
 variable "create_nginx_rhel9_cis" {
   default = false
@@ -208,13 +208,13 @@ variable "create_debian10" {
   default = false
 }
 
-variable "create_debian10_cnspec" {
-  default = false
-}
-
-variable "create_debian10_cis_cnspec" {
-  default = false
-}
+#variable "create_debian10_cnspec" {
+#  default = false
+#}
+#
+#variable "create_debian10_cis_cnspec" {
+#  default = false
+#}
 
 variable "create_debian11" {
   default = false
