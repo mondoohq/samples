@@ -45,16 +45,6 @@ output "rhel7_cnspec" {
   value = module.rhel7_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7_cnspec.public_ip}"
 }
 
-
-output "rhel7_cis" {
-  value = module.rhel7_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7_cis.public_ip}"
-}
-
-output "rhel7_cis_cnspec" {
-  value = module.rhel7_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7_cis_cnspec.public_ip}"
-}
-
-
 # rhel8
 output "rhel8" {
   value = module.rhel8.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel8.public_ip}"
@@ -135,13 +125,6 @@ output "ubuntu2204_cis_arm" {
 
 output "ubuntu2204_cis_cnspec_arm" {
   value = module.ubuntu2204_cis_cnspec_arm.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ubuntu@${module.ubuntu2204_cis_cnspec_arm.public_ip}"
-}
-
-
-
-# debian10
-output "debian10_cis_cnspec" {
-  value = module.debian10_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian10_cis_cnspec.public_ip}"
 }
 
 # debian11
