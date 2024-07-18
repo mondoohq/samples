@@ -286,21 +286,21 @@ data "aws_ami" "debian10" {
   owners = ["136693071363"]
 }
 
-data "aws_ami" "debian10_cis" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["CIS Debian Linux 10*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["679593333241"]
-}
+#data "aws_ami" "debian10_cis" {
+#  most_recent = true
+#
+#  filter {
+#    name   = "name"
+#    values = ["CIS Debian Linux 10*"]
+#  }
+#
+#  filter {
+#    name   = "virtualization-type"
+#    values = ["hvm"]
+#  }
+#
+#  owners = ["679593333241"]
+#}
 
 
 

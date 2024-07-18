@@ -188,13 +188,13 @@ variable "create_rhel7_cnspec" {
   default = false
 }
 
-variable "create_rhel7_cis" {
-  default = false
-}
+#variable "create_rhel7_cis" {
+#  default = false
+#}
 
-variable "create_rhel7_cis_cnspec" {
-  default = false
-}
+#variable "create_rhel7_cis_cnspec" {
+#  default = false
+#}
 
 variable "create_nginx_rhel9_cis" {
   default = false
