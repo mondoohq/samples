@@ -184,6 +184,10 @@ variable "create_rhel7" {
   default = false
 }
 
+variable "create_rhel7_pass_private" {
+  default = false
+}
+
 variable "create_rhel7_cnspec" {
   default = false
 }
