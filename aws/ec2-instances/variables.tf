@@ -180,6 +180,10 @@ variable "create_rhel8_cis_cnspec" {
   default = false
 }
 
+variable "create_centos7_hardened_community" {
+  default = false
+}
+
 variable "create_rhel7" {
   default = false
 }

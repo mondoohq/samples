@@ -504,6 +504,22 @@ module "rhel8_cis_cnspec" {
   user_data_replace_on_change = true
 }
 
+// CentOS Linux 7
+module "centos7_hardened_community" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.6.1"
+
+  create                      = var.create_centos7_hardened_community
+  name                        = "${var.prefix}-centos7_hardened_community-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.centos7_hardened_community.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+
 // Red Hat Linux 7
 module "rhel7" {
   source  = "terraform-aws-modules/ec2-instance/aws"

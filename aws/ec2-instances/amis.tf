@@ -49,6 +49,23 @@ data "aws_ami" "amazon2_cis" {
   owners = ["679593333241"]
 }
 
+# centos7
+data "aws_ami" "centos7_hardened_community" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["os-cis-hardened-centos-7.9*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
 data "aws_ami" "rhel8" {
   most_recent = true
 
