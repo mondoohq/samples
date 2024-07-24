@@ -190,13 +190,13 @@ output "oracle7_cnspec" {
   value = module.oracle7_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle7_cnspec.public_ip}"
 }
 
-output "oracle7_cis" {
-  value = module.oracle7_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle7_cis.public_ip}"
-}
-
-output "oracle7_cis_cnspec" {
-  value = module.oracle7_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle7_cis_cnspec.public_ip}"
-}
+#output "oracle7_cis" {
+#  value = module.oracle7_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle7_cis.public_ip}"
+#}
+#
+#output "oracle7_cis_cnspec" {
+#  value = module.oracle7_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle7_cis_cnspec.public_ip}"
+#}
 
 # oracle8
 output "oracle8" {

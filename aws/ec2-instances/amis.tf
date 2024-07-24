@@ -404,21 +404,21 @@ data "aws_ami" "oracle7" {
   owners = ["679593333241"]
 }
 
-data "aws_ami" "oracle7_cis" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["CIS Oracle Linux 7 Benchmark*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["679593333241"]
-}
+#data "aws_ami" "oracle7_cis" {
+#  most_recent = true
+#
+#  filter {
+#    name   = "name"
+#    values = ["CIS Oracle Linux 7 Benchmark*"]
+#  }
+#
+#  filter {
+#    name   = "virtualization-type"
+#    values = ["hvm"]
+#  }
+#
+#  owners = ["679593333241"]
+#}
 
 data "aws_ami" "oracle8" {
   most_recent = true
