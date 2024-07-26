@@ -156,6 +156,14 @@ variable "create_ubuntu1804_cnspec" {
   default = false
 }
 
+variable "create_rhel9_cis" {
+  default = false
+}
+
+variable "create_rhel9_cis_cnspec" {
+  default = false
+}
+
 variable "create_rhel9" {
   default = false
 }

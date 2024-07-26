@@ -81,6 +81,14 @@ output "rhel9_cnspec" {
   value = module.rhel9_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel9_cnspec.public_ip}"
 }
 
+output "rhel9_cis" {
+  value = module.rhel9_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel9_cis.public_ip}"
+}
+
+output "rhel9_cis_cnspec" {
+  value = module.rhel9_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel9_cis_cnspec.public_ip}"
+}
+
 # nginx on rhel9 cis
 output "nginx_rhel9_cis" {
   value = module.nginx_rhel9_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.nginx_rhel9_cis.public_ip}"
