@@ -425,7 +425,7 @@ module "oracle9" {
   associate_public_ip_address = true
 }
 
-module "oracle8_cnspec" {
+module "oracle9_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.6.1"
 
@@ -441,7 +441,7 @@ module "oracle8_cnspec" {
   user_data_replace_on_change = true
 }
 
-module "oracle8_cis" {
+module "oracle9_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.6.1"
 
@@ -455,7 +455,7 @@ module "oracle8_cis" {
   associate_public_ip_address = true
 }
 
-module "oracle8_cis_cnspec" {
+module "oracle9_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.6.1"
 
