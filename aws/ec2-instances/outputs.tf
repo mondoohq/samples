@@ -215,6 +215,24 @@ output "oracle8_cis_cnspec" {
   value = module.oracle8_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle8_cis_cnspec.public_ip}"
 }
 
+# oracle9
+output "oracle9" {
+  value = module.oracle9.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle9.public_ip}"
+}
+
+output "oracle9_cnspec" {
+  value = module.oracle9_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle9_cnspec.public_ip}"
+}
+
+output "oracle9_cis" {
+  value = module.oracle9_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle9_cis.public_ip}"
+}
+
+output "oracle9_cis_cnspec" {
+  value = module.oracle9_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle9_cis_cnspec.public_ip}"
+}
+
+
 # rocky9
 output "rocky9" {
   value = module.rocky9.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} rocky@${module.rocky9.public_ip}"
