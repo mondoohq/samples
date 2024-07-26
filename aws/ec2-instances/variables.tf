@@ -272,13 +272,13 @@ variable "create_oracle7_cnspec" {
   default = false
 }
 
-variable "create_oracle7_cis" {
-  default = false
-}
-
-variable "create_oracle7_cis_cnspec" {
-  default = false
-}
+#variable "create_oracle7_cis" {
+#  default = false
+#}
+#
+#variable "create_oracle7_cis_cnspec" {
+#  default = false
+#}
 
 variable "create_oracle8" {
   default = false
@@ -295,6 +295,23 @@ variable "create_oracle8_cis" {
 variable "create_oracle8_cis_cnspec" {
   default = false
 }
+
+variable "create_oracle9" {
+  default = false
+}
+
+variable "create_oracle9_cnspec" {
+  default = false
+}
+
+variable "create_oracle9_cis" {
+  default = false
+}
+
+variable "create_oracle9_cis_cnspec" {
+  default = false
+}
+
 
 variable "create_rocky9" {
   default = false
