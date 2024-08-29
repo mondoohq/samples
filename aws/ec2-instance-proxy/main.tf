@@ -52,6 +52,8 @@ locals {
     Set-LocalUser -Name Administrator -Password $NewPassword
     New-NetFirewallRule -DisplayName “AllowRDP” -Direction Inbound -Protocol TCP -LocalPort 3389 -Action Allow
     Set-NetFirewallProfile -Name Public -DefaultOutboundAction Block
+    Set-NetFirewallProfile -Name Domain -DefaultOutboundAction Block
+    Set-NetFirewallProfile -Name Private -DefaultOutboundAction Block
     New-NetFirewallRule -DisplayName “AllowDNS” -Direction Outbound -Protocol ANY -RemotePort 53 -Action Allow
     New-NetFirewallRule -Name Allow10.0.0.0 -DisplayName 'Allow from 10.0.0.0/8' -Enabled True -Direction Outbound -Protocol ANY -Action Allow -Profile ANY -RemoteAddress 10.0.0.0/8
     </powershell>
