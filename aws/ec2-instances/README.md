@@ -67,6 +67,7 @@ This repository contains Terraform code for provisioning AWS EC2 instances for t
 | Ubuntu 22.04 CIS cnspec    | CIS Ubuntu Linux 22.04 LTS Benchmark - Level 1 with latest cnspec        | `create_ubuntu2204_cis_cnspec`  | [CIS Ubuntu Linux 22.04 LTS Benchmark - Level 1](https://aws.amazon.com/marketplace/pp/prodview-7afxz7ijttzk4?sr=0-1&ref_=beagle&applicationId=AWSMPContessa)         |
 | Ubuntu 22.04 CIS ARM           | CIS Ubuntu Linux 22.04 LTS Benchmark - Level 1 on ARM                          | `create_ubuntu2204_cis_arm`         | [CIS Ubuntu Linux 22.04 LTS Benchmark - Level 1 (ARM)](https://aws.amazon.com/marketplace/pp/prodview-r547agtl65wsu?sr=0-1&ref_=beagle&applicationId=AWS-EC2-Console)         |
 | Ubuntu 22.04 CIS ARM cnspec    | CIS Ubuntu Linux 22.04 LTS Benchmark - Level 1 with latest cnspec on ARM       | `create_ubuntu2204_cis_cnspec_arm`  | [CIS Ubuntu Linux 22.04 LTS Benchmark - Level 1 (ARM)](https://aws.amazon.com/marketplace/pp/prodview-r547agtl65wsu?sr=0-1&ref_=beagle&applicationId=AWS-EC2-Console)         |
+| Ubuntu 24.04 ARM cnspec    | Latest Ubuntu Linux 24.04 with latest cnspec on ARM       | `create_ubuntu2404_arm64_cnspec_arm`  | [Ubuntu Linux 24.04 LTS (ARM)](https://aws.amazon.com/marketplace/pp/prodview-ppkztkiaeuede?applicationId=AWS-EC2-Console&ref_=beagle&sr=0-3)         |
 | Rocky 9                    | Latest Rocky 9 image                                                     | `create_rocky9`                 |                                                                                                                                                                       |
 | Rocky 9 cnspec             | Latest Rocky 9 image with latest cnspec                                  | `create_rocky9_cnspec`          |                                                                                                                                                                       |
 | Rocky 9 CIS                | CIS Rocky Linux 9 Benchmark - Level 1                                    | `create_rocky9_cis`             | [CIS Rocky Linux 9 Benchmark - Level 1](https://aws.amazon.com/marketplace/pp/prodview-4dof2bylegr46?sr=0-39&ref_=beagle&applicationId=AWSMPContessa)                 |
@@ -128,4 +129,10 @@ terraform apply tfplan.out
 
 ```bash
 aws ec2 describe-images --region us-east-2 --filters "Name=architecture,Values=x86_64" "Name=name,Values=Windows_Server-2019-English-Full-Base*" "Name=root-device-type,Values=ebs" --output table --query 'Images[*].{Owner:OwnerId,CreationDate:CreationDate,Name:Name,ID:ImageId,Release:Release}'
+```
+
+## Another example
+
+```bash
+aws ec2 describe-images --region us-east-2 --filters "Name=architecture,Values=arm64" "Name=name,Values=*ubuntu-noble-24.04-arm64-server*" "Name=root-device-type,Values=ebs" "Name=owner-id,Values='679593333241'" --output table --query 'Images[*].{Owner:OwnerId,CreationDate:CreationDate,Name:Name,ID:ImageId,Release:Release}'
 ```

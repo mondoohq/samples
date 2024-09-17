@@ -397,6 +397,9 @@ variable "create_nginx_win2019_cnspec" {
   default = false
 }
 
+variable "create_ubuntu2404_arm64_cnspec_arm" {
+  default = false
+}
 
 variable "windows_admin_password" {
   default = "MondooSPM1!"

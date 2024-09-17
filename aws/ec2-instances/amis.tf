@@ -304,6 +304,49 @@ data "aws_ami" "ubuntu2204_cis_arm64" {
   owners = ["679593333241"]
 }
 
+# Ubuntu 24.04
+data "aws_ami" "ubuntu2404" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["*ubuntu-noble-24.04-*-server*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
+data "aws_ami" "ubuntu2404_arm64" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["*ubuntu-noble-24.04-arm64-server*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["arm64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
 data "aws_ami" "debian10" {
   most_recent = true
 

@@ -145,6 +145,12 @@ output "ubuntu2204_cis_cnspec_arm" {
   value = module.ubuntu2204_cis_cnspec_arm.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ubuntu@${module.ubuntu2204_cis_cnspec_arm.public_ip}"
 }
 
+## Ubuntu 24.04 ARM
+output "ubuntu2204_cis_cnspec_arm" {
+  value = module.ubuntu2404_arm64_cnspec_arm.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ubuntu@${module.ubuntu2404_arm64_cnspec_arm.public_ip}"
+}
+
+
 # debian11
 output "debian11" {
   value = module.debian11.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11.public_ip}"
