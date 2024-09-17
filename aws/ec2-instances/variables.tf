@@ -79,6 +79,10 @@ variable "linux_instance_type_arm64" {
   default = "t4g.medium"
 }
 
+variable "linux_instance_type_arm64_new" {
+  default = "m6g.medium"
+}
+
 variable "windows_instance_type" {
   default = "t2.micro"
 }

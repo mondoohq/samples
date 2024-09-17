@@ -876,7 +876,7 @@ module "ubuntu2404_arm64_cnspec_arm" {
   create                      = var.create_ubuntu2404_arm64_cnspec_arm
   name                        = "${var.prefix}-ubuntu2404-cnspec-arm-${random_id.instance_id.id}"
   ami                         = data.aws_ami.ubuntu2404_arm64.id
-  instance_type               = var.linux_instance_type_arm64
+  instance_type               = var.linux_instance_type_arm64_new
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
   key_name                    = var.aws_key_pair_name
