@@ -146,7 +146,7 @@ output "ubuntu2204_cis_cnspec_arm" {
 }
 
 ## Ubuntu 24.04 ARM
-output "ubuntu2204_cis_cnspec_arm" {
+output "ubuntu2404_arm64_cnspec_arm" {
   value = module.ubuntu2404_arm64_cnspec_arm.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ubuntu@${module.ubuntu2404_arm64_cnspec_arm.public_ip}"
 }
 
