@@ -79,6 +79,10 @@ variable "linux_instance_type_arm64" {
   default = "t4g.medium"
 }
 
+variable "linux_instance_type_arm64_new" {
+  default = "m6g.medium"
+}
+
 variable "windows_instance_type" {
   default = "t2.micro"
 }
@@ -397,6 +401,9 @@ variable "create_nginx_win2019_cnspec" {
   default = false
 }
 
+variable "create_ubuntu2404_arm64_cnspec_arm" {
+  default = false
+}
 
 variable "windows_admin_password" {
   default = "MondooSPM1!"

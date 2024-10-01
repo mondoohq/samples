@@ -868,6 +868,24 @@ module "ubuntu2204_cis_cnspec_arm" {
   user_data_replace_on_change = true
 }
 
+# Ubuntu 24.04 ARM
+module "ubuntu2404_arm64_cnspec_arm" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.6.1"
+
+  create                      = var.create_ubuntu2404_arm64_cnspec_arm
+  name                        = "${var.prefix}-ubuntu2404-cnspec-arm-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.ubuntu2404_arm64.id
+  instance_type               = var.linux_instance_type_arm64_new
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
+
 // SuSe Enterprise 15
 
 module "suse15" {
