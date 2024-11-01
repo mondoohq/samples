@@ -286,6 +286,39 @@ module "debian12_cnspec" {
   user_data_replace_on_change = true
 }
 
+
+module "debian12_cis" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.6.1"
+
+  create                      = var.create_debian12_cis
+  name                        = "${var.prefix}-debian12-cis-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.debian12_cis.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+module "debian12_cis_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.6.1"
+
+  create                      = var.create_debian12_cis_cnspec
+  name                        = "${var.prefix}-debian12-cis-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.debian12_cis.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
+
+
 // Oracle 7
 
 module "oracle7" {
