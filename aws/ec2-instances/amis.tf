@@ -115,21 +115,21 @@ data "aws_ami" "rhel9_cis" {
 }
 
 
-data "aws_ami" "rhel7" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["RHEL_HA-7*_HVM-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["309956199498"]
-}
+#data "aws_ami" "rhel7" {
+#  most_recent = true
+#
+#  filter {
+#    name   = "name"
+#    values = ["RHEL_HA-7*_HVM-*"]
+#  }
+#
+#  filter {
+#    name   = "virtualization-type"
+#    values = ["hvm"]
+#  }
+#
+#  owners = ["309956199498"]
+#}
 
 data "aws_ami" "rhel7-cis-pass-private" {
   most_recent = true
@@ -409,6 +409,22 @@ data "aws_ami" "debian12" {
   }
 
   owners = ["136693071363"]
+}
+
+data "aws_ami" "debian12_cis" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["CIS Debian Linux 12*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
 }
 
 data "aws_ami" "suse15" {
