@@ -260,6 +260,14 @@ variable "create_debian12_cnspec" {
   default = false
 }
 
+variable "create_debian12_cis" {
+  default = false
+}
+
+variable "create_debian12_cis_cnspec" {
+  default = false
+}
+
 variable "create_suse15" {
   default = false
 }
