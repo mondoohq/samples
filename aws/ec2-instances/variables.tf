@@ -284,13 +284,14 @@ variable "create_suse15_cis_cnspec" {
   default = false
 }
 
-variable "create_oracle7" {
-  default = false
-}
-
-variable "create_oracle7_cnspec" {
-  default = false
-}
+#DEPRECATED 06.11.2024
+#variable "create_oracle7" {
+#  default = false
+#}
+#
+#variable "create_oracle7_cnspec" {
+#  default = false
+#}
 
 #variable "create_oracle7_cis" {
 #  default = false
@@ -300,13 +301,13 @@ variable "create_oracle7_cnspec" {
 #  default = false
 #}
 
-variable "create_oracle8" {
-  default = false
-}
-
-variable "create_oracle8_cnspec" {
-  default = false
-}
+#variable "create_oracle8" {
+#  default = false
+#}
+#
+#variable "create_oracle8_cnspec" {
+#  default = false
+#}
 
 variable "create_oracle8_cis" {
   default = false
