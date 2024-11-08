@@ -115,22 +115,6 @@ data "aws_ami" "rhel9_cis" {
 }
 
 
-#data "aws_ami" "rhel7" {
-#  most_recent = true
-#
-#  filter {
-#    name   = "name"
-#    values = ["RHEL_HA-7*_HVM-*"]
-#  }
-#
-#  filter {
-#    name   = "virtualization-type"
-#    values = ["hvm"]
-#  }
-#
-#  owners = ["309956199498"]
-#}
-
 data "aws_ami" "rhel7-cis-pass-private" {
   most_recent = true
 
@@ -463,54 +447,6 @@ data "aws_ami" "suse15_cis" {
 
   owners = ["679593333241"]
 }
-
-#data "aws_ami" "oracle7" {
-#  most_recent = true
-#
-#  filter {
-#    name   = "name"
-#    values = ["*SupportedImages OL7.9*"]
-#  }
-#
-#  filter {
-#    name   = "virtualization-type"
-#    values = ["hvm"]
-#  }
-#
-#  owners = ["679593333241"]
-#}
-
-#data "aws_ami" "oracle7_cis" {
-#  most_recent = true
-#
-#  filter {
-#    name   = "name"
-#    values = ["CIS Oracle Linux 7 Benchmark*"]
-#  }
-#
-#  filter {
-#    name   = "virtualization-type"
-#    values = ["hvm"]
-#  }
-#
-#  owners = ["679593333241"]
-#}
-
-#data "aws_ami" "oracle8" {
-#  most_recent = true
-#
-#  filter {
-#    name   = "name"
-#    values = ["*SupportedImages OL8.8*"]
-#  }
-#
-#  filter {
-#    name   = "virtualization-type"
-#    values = ["hvm"]
-#  }
-#
-#  owners = ["679593333241"]
-#}
 
 data "aws_ami" "oracle8_cis" {
   most_recent = true
