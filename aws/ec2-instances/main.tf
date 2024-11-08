@@ -286,15 +286,14 @@ module "debian12_cnspec" {
   user_data_replace_on_change = true
 }
 
-// Oracle 7
 
-module "oracle7" {
+module "debian12_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.6.1"
 
-  create                      = var.create_oracle7
-  name                        = "${var.prefix}-oracle7-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.oracle7.id
+  create                      = var.create_debian12_cis
+  name                        = "${var.prefix}-debian12-cis-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.debian12_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
@@ -302,13 +301,13 @@ module "oracle7" {
   associate_public_ip_address = true
 }
 
-module "oracle7_cnspec" {
+module "debian12_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.6.1"
 
-  create                      = var.create_oracle7_cnspec
-  name                        = "${var.prefix}-oracle7-cnspec-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.oracle7.id
+  create                      = var.create_debian12_cis_cnspec
+  name                        = "${var.prefix}-debian12-cis-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.debian12_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
@@ -317,6 +316,40 @@ module "oracle7_cnspec" {
   user_data                   = base64encode(local.linux_user_data)
   user_data_replace_on_change = true
 }
+
+
+
+// Oracle 7
+
+#module "oracle7" {
+#  source  = "terraform-aws-modules/ec2-instance/aws"
+#  version = "~> 5.6.1"
+#
+#  create                      = var.create_oracle7
+#  name                        = "${var.prefix}-oracle7-${random_id.instance_id.id}"
+#  ami                         = data.aws_ami.oracle7.id
+#  instance_type               = var.linux_instance_type
+#  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#  subnet_id                   = module.vpc.public_subnets[0]
+#  key_name                    = var.aws_key_pair_name
+#  associate_public_ip_address = true
+#}
+#
+#module "oracle7_cnspec" {
+#  source  = "terraform-aws-modules/ec2-instance/aws"
+#  version = "~> 5.6.1"
+#
+#  create                      = var.create_oracle7_cnspec
+#  name                        = "${var.prefix}-oracle7-cnspec-${random_id.instance_id.id}"
+#  ami                         = data.aws_ami.oracle7.id
+#  instance_type               = var.linux_instance_type
+#  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#  subnet_id                   = module.vpc.public_subnets[0]
+#  key_name                    = var.aws_key_pair_name
+#  associate_public_ip_address = true
+#  user_data                   = base64encode(local.linux_user_data)
+#  user_data_replace_on_change = true
+#}
 
 #module "oracle7_cis" {
 #  source  = "terraform-aws-modules/ec2-instance/aws"
@@ -348,37 +381,37 @@ module "oracle7_cnspec" {
 #  user_data_replace_on_change = true
 #}
 
-// Oracle 8
+// Oracle 8 deprecated
 
-module "oracle8" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
-
-  create                      = var.create_oracle8
-  name                        = "${var.prefix}-oracle8-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.oracle8.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-}
-
-module "oracle8_cnspec" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
-
-  create                      = var.create_oracle8_cnspec
-  name                        = "${var.prefix}-oracle8-cnspec-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.oracle8.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-  user_data                   = base64encode(local.linux_user_data)
-  user_data_replace_on_change = true
-}
+#module "oracle8" {
+#  source  = "terraform-aws-modules/ec2-instance/aws"
+#  version = "~> 5.6.1"
+#
+#  create                      = var.create_oracle8
+#  name                        = "${var.prefix}-oracle8-${random_id.instance_id.id}"
+#  ami                         = data.aws_ami.oracle8.id
+#  instance_type               = var.linux_instance_type
+#  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#  subnet_id                   = module.vpc.public_subnets[0]
+#  key_name                    = var.aws_key_pair_name
+#  associate_public_ip_address = true
+#}
+#
+#module "oracle8_cnspec" {
+#  source  = "terraform-aws-modules/ec2-instance/aws"
+#  version = "~> 5.6.1"
+#
+#  create                      = var.create_oracle8_cnspec
+#  name                        = "${var.prefix}-oracle8-cnspec-${random_id.instance_id.id}"
+#  ami                         = data.aws_ami.oracle8.id
+#  instance_type               = var.linux_instance_type
+#  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#  subnet_id                   = module.vpc.public_subnets[0]
+#  key_name                    = var.aws_key_pair_name
+#  associate_public_ip_address = true
+#  user_data                   = base64encode(local.linux_user_data)
+#  user_data_replace_on_change = true
+#}
 
 module "oracle8_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
@@ -613,37 +646,37 @@ module "centos7_hardened_community" {
   associate_public_ip_address = true
 }
 
-
-// Red Hat Linux 7
-module "rhel7" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
-
-  create                      = var.create_rhel7
-  name                        = "${var.prefix}-rhel7-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.rhel7.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-}
-
-module "rhel7_cnspec" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
-
-  create                      = var.create_rhel7_cnspec
-  name                        = "${var.prefix}-rhel7-cnspec-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.rhel7.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-  user_data                   = base64encode(local.linux_user_data)
-  user_data_replace_on_change = true
-}
+# DISFUNCT
+#// Red Hat Linux 7
+#module "rhel7" {
+#  source  = "terraform-aws-modules/ec2-instance/aws"
+#  version = "~> 5.6.1"
+#
+#  create                      = var.create_rhel7
+#  name                        = "${var.prefix}-rhel7-${random_id.instance_id.id}"
+#  ami                         = data.aws_ami.rhel7.id
+#  instance_type               = var.linux_instance_type
+#  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#  subnet_id                   = module.vpc.public_subnets[0]
+#  key_name                    = var.aws_key_pair_name
+#  associate_public_ip_address = true
+#}
+#
+#module "rhel7_cnspec" {
+#  source  = "terraform-aws-modules/ec2-instance/aws"
+#  version = "~> 5.6.1"
+#
+#  create                      = var.create_rhel7_cnspec
+#  name                        = "${var.prefix}-rhel7-cnspec-${random_id.instance_id.id}"
+#  ami                         = data.aws_ami.rhel7.id
+#  instance_type               = var.linux_instance_type
+#  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#  subnet_id                   = module.vpc.public_subnets[0]
+#  key_name                    = var.aws_key_pair_name
+#  associate_public_ip_address = true
+#  user_data                   = base64encode(local.linux_user_data)
+#  user_data_replace_on_change = true
+#}
 
 // Private RHEL7 Image
 module "rhel7_pass_private" {

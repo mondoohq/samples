@@ -196,15 +196,7 @@ variable "create_centos7_hardened_community" {
   default = false
 }
 
-variable "create_rhel7" {
-  default = false
-}
-
 variable "create_rhel7_pass_private" {
-  default = false
-}
-
-variable "create_rhel7_cnspec" {
   default = false
 }
 
@@ -260,6 +252,14 @@ variable "create_debian12_cnspec" {
   default = false
 }
 
+variable "create_debian12_cis" {
+  default = false
+}
+
+variable "create_debian12_cis_cnspec" {
+  default = false
+}
+
 variable "create_suse15" {
   default = false
 }
@@ -273,30 +273,6 @@ variable "create_suse15_cis" {
 }
 
 variable "create_suse15_cis_cnspec" {
-  default = false
-}
-
-variable "create_oracle7" {
-  default = false
-}
-
-variable "create_oracle7_cnspec" {
-  default = false
-}
-
-#variable "create_oracle7_cis" {
-#  default = false
-#}
-#
-#variable "create_oracle7_cis_cnspec" {
-#  default = false
-#}
-
-variable "create_oracle8" {
-  default = false
-}
-
-variable "create_oracle8_cnspec" {
   default = false
 }
 
