@@ -114,24 +114,6 @@ data "aws_ami" "rhel9_cis" {
   owners = ["679593333241"]
 }
 
-
-data "aws_ami" "rhel7-cis-pass-private" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["mondoo-cis-cnspec-rhel7-pass"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["162854405951"]
-}
-
-
 data "aws_ami" "nginx_rhel9_cis" {
   most_recent = true
 
