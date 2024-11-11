@@ -9,7 +9,8 @@ data "http" "clientip" {
 
 locals {
 
-  userIP = "${chomp(data.http.clientip.response_body)}/32"
+  #userIP = "${chomp(data.http.clientip.response_body)}/32"
+  userIP = var.publicIP == "" ? "${chomp(data.http.clientip.response_body)}/32" : var.publicIP
 
   linux_user_data = <<-EOT
     #!/bin/bash
@@ -677,22 +678,6 @@ module "centos7_hardened_community" {
 #  user_data                   = base64encode(local.linux_user_data)
 #  user_data_replace_on_change = true
 #}
-
-// Private RHEL7 Image
-module "rhel7_pass_private" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
-
-  create                      = var.create_rhel7_pass_private
-  name                        = "${var.prefix}-rhel7-pass-private-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.rhel7-cis-pass-private.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-}
-
 
 // NGINX on RHEL 9 CIS
 

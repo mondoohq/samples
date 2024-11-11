@@ -41,11 +41,6 @@ output "centos7_hardened_community" {
   value = module.centos7_hardened_community.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.centos7_hardened_community.public_ip}"
 }
 
-# rhel 7 private mondoo image
-output "rhel7_pass_private" {
-  value = module.rhel7_pass_private.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7_pass_private.public_ip}"
-}
-
 # rhel8
 output "rhel8" {
   value = module.rhel8.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel8.public_ip}"
