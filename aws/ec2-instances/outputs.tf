@@ -36,11 +36,6 @@ output "amazon2023_cnspec" {
   value = module.amazon2023_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.amazon2023_cnspec.public_ip}"
 }
 
-# centos 7 hardened community
-output "centos7_hardened_community" {
-  value = module.centos7_hardened_community.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.centos7_hardened_community.public_ip}"
-}
-
 # rhel8
 output "rhel8" {
   value = module.rhel8.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel8.public_ip}"

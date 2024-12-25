@@ -632,53 +632,6 @@ module "rhel8_cis_cnspec" {
   user_data_replace_on_change = true
 }
 
-// CentOS Linux 7
-module "centos7_hardened_community" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
-
-  create                      = var.create_centos7_hardened_community
-  name                        = "${var.prefix}-centos7_hardened_community-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.centos7_hardened_community.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-}
-
-# DISFUNCT
-#// Red Hat Linux 7
-#module "rhel7" {
-#  source  = "terraform-aws-modules/ec2-instance/aws"
-#  version = "~> 5.6.1"
-#
-#  create                      = var.create_rhel7
-#  name                        = "${var.prefix}-rhel7-${random_id.instance_id.id}"
-#  ami                         = data.aws_ami.rhel7.id
-#  instance_type               = var.linux_instance_type
-#  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-#  subnet_id                   = module.vpc.public_subnets[0]
-#  key_name                    = var.aws_key_pair_name
-#  associate_public_ip_address = true
-#}
-#
-#module "rhel7_cnspec" {
-#  source  = "terraform-aws-modules/ec2-instance/aws"
-#  version = "~> 5.6.1"
-#
-#  create                      = var.create_rhel7_cnspec
-#  name                        = "${var.prefix}-rhel7-cnspec-${random_id.instance_id.id}"
-#  ami                         = data.aws_ami.rhel7.id
-#  instance_type               = var.linux_instance_type
-#  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-#  subnet_id                   = module.vpc.public_subnets[0]
-#  key_name                    = var.aws_key_pair_name
-#  associate_public_ip_address = true
-#  user_data                   = base64encode(local.linux_user_data)
-#  user_data_replace_on_change = true
-#}
-
 // NGINX on RHEL 9 CIS
 
 module "nginx_rhel9_cis" {
