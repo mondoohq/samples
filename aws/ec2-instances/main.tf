@@ -53,7 +53,7 @@ locals {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.9.0"
+  version = "~> 5.19.0"
 
   name = "${var.prefix}-${random_id.instance_id.id}"
   cidr = var.vpc_cidr
@@ -69,7 +69,7 @@ module "vpc" {
 
 module "linux_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 5.1.2"
+  version = "~> 5.3.0"
 
   name        = "${var.prefix}-${random_id.instance_id.id}-linux-sg"
   description = "Security group for linux instances"
@@ -103,7 +103,7 @@ module "linux_sg" {
 
 module "amazon2023" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_amazon2023
   name                        = "${var.prefix}-amazon2023-${random_id.instance_id.id}"
@@ -117,7 +117,7 @@ module "amazon2023" {
 
 module "amazon2023_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_amazon2023_cnspec
   name                        = "${var.prefix}-amazon2023-cnspec-${random_id.instance_id.id}"
@@ -135,7 +135,7 @@ module "amazon2023_cnspec" {
 
 module "amazon2" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_amazon2
   name                        = "${var.prefix}-amazon2-${random_id.instance_id.id}"
@@ -149,7 +149,7 @@ module "amazon2" {
 
 module "amazon2_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_amazon2_cnspec
   name                        = "${var.prefix}-amazon2-cnspec-${random_id.instance_id.id}"
@@ -165,7 +165,7 @@ module "amazon2_cnspec" {
 
 module "amazon2_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_amazon2_cis
   name                        = "${var.prefix}-amazon2-cis-${random_id.instance_id.id}"
@@ -179,7 +179,7 @@ module "amazon2_cis" {
 
 module "amazon2_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_amazon2_cis_cnspec
   name                        = "${var.prefix}-amazon2-cis-cnspec-${random_id.instance_id.id}"
@@ -197,7 +197,7 @@ module "amazon2_cis_cnspec" {
 
 module "debian11" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_debian11
   name                        = "${var.prefix}-debian11-${random_id.instance_id.id}"
@@ -211,7 +211,7 @@ module "debian11" {
 
 module "debian11_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_debian11_cnspec
   name                        = "${var.prefix}-debian11-cnspec-${random_id.instance_id.id}"
@@ -227,7 +227,7 @@ module "debian11_cnspec" {
 
 module "debian11_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_debian11_cis
   name                        = "${var.prefix}-debian11-cis-${random_id.instance_id.id}"
@@ -241,7 +241,7 @@ module "debian11_cis" {
 
 module "debian11_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_debian11_cis_cnspec
   name                        = "${var.prefix}-debian11-cis-cnspec-${random_id.instance_id.id}"
@@ -259,7 +259,7 @@ module "debian11_cis_cnspec" {
 
 module "debian12" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_debian12
   name                        = "${var.prefix}-debian12-${random_id.instance_id.id}"
@@ -273,7 +273,7 @@ module "debian12" {
 
 module "debian12_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_debian12_cnspec
   name                        = "${var.prefix}-debian12-${random_id.instance_id.id}"
@@ -290,7 +290,7 @@ module "debian12_cnspec" {
 
 module "debian12_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_debian12_cis
   name                        = "${var.prefix}-debian12-cis-${random_id.instance_id.id}"
@@ -304,7 +304,7 @@ module "debian12_cis" {
 
 module "debian12_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_debian12_cis_cnspec
   name                        = "${var.prefix}-debian12-cis-cnspec-${random_id.instance_id.id}"
@@ -324,7 +324,7 @@ module "debian12_cis_cnspec" {
 
 #module "oracle7" {
 #  source  = "terraform-aws-modules/ec2-instance/aws"
-#  version = "~> 5.6.1"
+#  version = "~> 5.7.1"
 #
 #  create                      = var.create_oracle7
 #  name                        = "${var.prefix}-oracle7-${random_id.instance_id.id}"
@@ -338,7 +338,7 @@ module "debian12_cis_cnspec" {
 #
 #module "oracle7_cnspec" {
 #  source  = "terraform-aws-modules/ec2-instance/aws"
-#  version = "~> 5.6.1"
+#  version = "~> 5.7.1"
 #
 #  create                      = var.create_oracle7_cnspec
 #  name                        = "${var.prefix}-oracle7-cnspec-${random_id.instance_id.id}"
@@ -354,7 +354,7 @@ module "debian12_cis_cnspec" {
 
 #module "oracle7_cis" {
 #  source  = "terraform-aws-modules/ec2-instance/aws"
-#  version = "~> 5.6.1"
+#  version = "~> 5.7.1"
 #
 #  create                      = var.create_oracle7_cis
 #  name                        = "${var.prefix}-oracle7-cis-${random_id.instance_id.id}"
@@ -368,7 +368,7 @@ module "debian12_cis_cnspec" {
 
 #module "oracle7_cis_cnspec" {
 #  source  = "terraform-aws-modules/ec2-instance/aws"
-#  version = "~> 5.6.1"
+#  version = "~> 5.7.1"
 #
 #  create                      = var.create_oracle7_cis_cnspec
 #  name                        = "${var.prefix}-oracle7-cis-cnspec-${random_id.instance_id.id}"
@@ -386,7 +386,7 @@ module "debian12_cis_cnspec" {
 
 #module "oracle8" {
 #  source  = "terraform-aws-modules/ec2-instance/aws"
-#  version = "~> 5.6.1"
+#  version = "~> 5.7.1"
 #
 #  create                      = var.create_oracle8
 #  name                        = "${var.prefix}-oracle8-${random_id.instance_id.id}"
@@ -400,7 +400,7 @@ module "debian12_cis_cnspec" {
 #
 #module "oracle8_cnspec" {
 #  source  = "terraform-aws-modules/ec2-instance/aws"
-#  version = "~> 5.6.1"
+#  version = "~> 5.7.1"
 #
 #  create                      = var.create_oracle8_cnspec
 #  name                        = "${var.prefix}-oracle8-cnspec-${random_id.instance_id.id}"
@@ -416,7 +416,7 @@ module "debian12_cis_cnspec" {
 
 module "oracle8_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_oracle8_cis
   name                        = "${var.prefix}-oracle8-cis-${random_id.instance_id.id}"
@@ -430,7 +430,7 @@ module "oracle8_cis" {
 
 module "oracle8_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_oracle8_cis_cnspec
   name                        = "${var.prefix}-oracle8-cis-cnspec-${random_id.instance_id.id}"
@@ -447,7 +447,7 @@ module "oracle8_cis_cnspec" {
 // Oracle 9
 module "oracle9" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_oracle9
   name                        = "${var.prefix}-oracle9-${random_id.instance_id.id}"
@@ -461,7 +461,7 @@ module "oracle9" {
 
 module "oracle9_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_oracle9_cnspec
   name                        = "${var.prefix}-oracle9-cnspec-${random_id.instance_id.id}"
@@ -477,7 +477,7 @@ module "oracle9_cnspec" {
 
 module "oracle9_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_oracle9_cis
   name                        = "${var.prefix}-oracle9-cis-${random_id.instance_id.id}"
@@ -491,7 +491,7 @@ module "oracle9_cis" {
 
 module "oracle9_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_oracle9_cis_cnspec
   name                        = "${var.prefix}-oracle9-cis-cnspec-${random_id.instance_id.id}"
@@ -510,7 +510,7 @@ module "oracle9_cis_cnspec" {
 
 module "rhel9" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_rhel9
   name                        = "${var.prefix}-rhel9-${random_id.instance_id.id}"
@@ -524,7 +524,7 @@ module "rhel9" {
 
 module "rhel9_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_rhel9_cnspec
   name                        = "${var.prefix}-rhel9-cnspec-${random_id.instance_id.id}"
@@ -540,7 +540,7 @@ module "rhel9_cnspec" {
 
 module "rhel9_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_rhel9_cis
   name                        = "${var.prefix}-rhel9-cis-${random_id.instance_id.id}"
@@ -554,7 +554,7 @@ module "rhel9_cis" {
 
 module "rhel9_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_rhel9_cis_cnspec
   name                        = "${var.prefix}-rhel9-cis-cnspec-${random_id.instance_id.id}"
@@ -574,7 +574,7 @@ module "rhel9_cis_cnspec" {
 
 module "rhel8" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_rhel8
   name                        = "${var.prefix}-rhel8-${random_id.instance_id.id}"
@@ -588,7 +588,7 @@ module "rhel8" {
 
 module "rhel8_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_rhel8_cnspec
   name                        = "${var.prefix}-rhel8-cnspec-${random_id.instance_id.id}"
@@ -604,7 +604,7 @@ module "rhel8_cnspec" {
 
 module "rhel8_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_rhel8_cis
   name                        = "${var.prefix}-rhel8-cis-${random_id.instance_id.id}"
@@ -618,7 +618,7 @@ module "rhel8_cis" {
 
 module "rhel8_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_rhel8_cis_cnspec
   name                        = "${var.prefix}-rhel8-cis-cnspec-${random_id.instance_id.id}"
@@ -636,7 +636,7 @@ module "rhel8_cis_cnspec" {
 
 module "nginx_rhel9_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_nginx_rhel9_cis
   name                        = "${var.prefix}-nginx-rhel9-cis-${random_id.instance_id.id}"
@@ -650,7 +650,7 @@ module "nginx_rhel9_cis" {
 
 module "nginx_rhel9_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_nginx_rhel9_cis_cnspec
   name                        = "${var.prefix}-nginx-rhel9-cis-cnspec-${random_id.instance_id.id}"
@@ -668,7 +668,7 @@ module "nginx_rhel9_cis_cnspec" {
 
 module "nginx_win2019_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_nginx_win2019_cnspec
   name                        = "${var.prefix}-nginx-win2019-cnspec-${random_id.instance_id.id}"
@@ -686,7 +686,7 @@ module "nginx_win2019_cnspec" {
 
 module "ubuntu2004" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_ubuntu2004
   name                        = "${var.prefix}-ubuntu2004-${random_id.instance_id.id}"
@@ -700,7 +700,7 @@ module "ubuntu2004" {
 
 module "ubuntu2004_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_ubuntu2004_cnspec
   name                        = "${var.prefix}-ubuntu2004-cnspec-${random_id.instance_id.id}"
@@ -716,7 +716,7 @@ module "ubuntu2004_cnspec" {
 
 module "ubuntu2004_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_ubuntu2004_cis
   name                        = "${var.prefix}-ubuntu2004-${random_id.instance_id.id}"
@@ -730,7 +730,7 @@ module "ubuntu2004_cis" {
 
 module "ubuntu2004_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_ubuntu2004_cis_cnspec
   name                        = "${var.prefix}-ubuntu2004-cis-cnspec-${random_id.instance_id.id}"
@@ -750,7 +750,7 @@ module "ubuntu2004_cis_cnspec" {
 
 module "ubuntu2204" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_ubuntu2204
   name                        = "${var.prefix}-ubuntu2204-${random_id.instance_id.id}"
@@ -764,7 +764,7 @@ module "ubuntu2204" {
 
 module "ubuntu2204_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_ubuntu2204_cnspec
   name                        = "${var.prefix}-ubuntu2204-cnspec-${random_id.instance_id.id}"
@@ -780,7 +780,7 @@ module "ubuntu2204_cnspec" {
 
 module "ubuntu2204_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_ubuntu2204_cis
   name                        = "${var.prefix}-ubuntu2204-cis-${random_id.instance_id.id}"
@@ -794,7 +794,7 @@ module "ubuntu2204_cis" {
 
 module "ubuntu2204_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_ubuntu2204_cis_cnspec
   name                        = "${var.prefix}-ubuntu2204-cis-cnspec-${random_id.instance_id.id}"
@@ -811,7 +811,7 @@ module "ubuntu2204_cis_cnspec" {
 // Ubuntu 22.04 CIS arm64
 module "ubuntu2204_cis_arm" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_ubuntu2204_cis_arm
   name                        = "${var.prefix}-ubuntu2204-cis-arm-${random_id.instance_id.id}"
@@ -825,7 +825,7 @@ module "ubuntu2204_cis_arm" {
 
 module "ubuntu2204_cis_cnspec_arm" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_ubuntu2204_cis_cnspec_arm
   name                        = "${var.prefix}-ubuntu2204-cis-cnspec-arm-${random_id.instance_id.id}"
@@ -842,7 +842,7 @@ module "ubuntu2204_cis_cnspec_arm" {
 # Ubuntu 24.04 ARM
 module "ubuntu2404_arm64_cnspec_arm" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_ubuntu2404_arm64_cnspec_arm
   name                        = "${var.prefix}-ubuntu2404-cnspec-arm-${random_id.instance_id.id}"
@@ -856,12 +856,28 @@ module "ubuntu2404_arm64_cnspec_arm" {
   user_data_replace_on_change = true
 }
 
+# Ubuntu 24.04 amd64
+module "ubuntu2404" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.7.1"
+
+  create                      = var.create_ubuntu2404
+  name                        = "${var.prefix}-ubuntu2404-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.ubuntu2404.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data_replace_on_change = true
+}
+
 
 // SuSe Enterprise 15
 
 module "suse15" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_suse15
   name                        = "${var.prefix}-suse15-${random_id.instance_id.id}"
@@ -875,7 +891,7 @@ module "suse15" {
 
 module "suse15_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_suse15_cnspec
   name                        = "${var.prefix}-suse15-cnspec-${random_id.instance_id.id}"
@@ -891,7 +907,7 @@ module "suse15_cnspec" {
 
 module "suse15_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_suse15_cis
   name                        = "${var.prefix}-suse15-cis-${random_id.instance_id.id}"
@@ -905,7 +921,7 @@ module "suse15_cis" {
 
 module "suse15_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_suse15_cis_cnspec
   name                        = "${var.prefix}-suse15-cis-cnspec-${random_id.instance_id.id}"
@@ -923,7 +939,7 @@ module "suse15_cis_cnspec" {
 
 module "rocky9" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_rocky9
   name                        = "${var.prefix}-rocky9-${random_id.instance_id.id}"
@@ -937,7 +953,7 @@ module "rocky9" {
 
 module "rocky9_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_rocky9_cnspec
   name                        = "${var.prefix}-rocky9-cnspec-${random_id.instance_id.id}"
@@ -953,7 +969,7 @@ module "rocky9_cnspec" {
 
 module "rocky9_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_rocky9_cis
   name                        = "${var.prefix}-rocky9-cis-${random_id.instance_id.id}"
@@ -967,7 +983,7 @@ module "rocky9_cis" {
 
 module "rocky9_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_rocky9_cis_cnspec
   name                        = "${var.prefix}-rocky9-cis-cnspec-${random_id.instance_id.id}"
@@ -1019,7 +1035,7 @@ module "windows_sg" {
 
 module "windows2016" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2016
   name                        = "${var.prefix}-windows2016-${random_id.instance_id.id}"
@@ -1035,7 +1051,7 @@ module "windows2016" {
 
 module "windows2016_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2016_cnspec
   name                        = "${var.prefix}-windows2016-cnspec-${random_id.instance_id.id}"
@@ -1051,7 +1067,7 @@ module "windows2016_cnspec" {
 
 module "windows2016_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2016_cis
   name                        = "${var.prefix}-windows2016-cis-${random_id.instance_id.id}"
@@ -1068,7 +1084,7 @@ module "windows2016_cis" {
 
 module "windows2016_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2016_cis_cnspec
   name                        = "${var.prefix}-windows2016-cis-cnspec-${random_id.instance_id.id}"
@@ -1087,7 +1103,7 @@ module "windows2016_cis_cnspec" {
 
 module "windows2019" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2019
   name                        = "${var.prefix}-windows2019-${random_id.instance_id.id}"
@@ -1103,7 +1119,7 @@ module "windows2019" {
 
 module "windows2019_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2019_cnspec
   name                        = "${var.prefix}-windows2019-cnspec-${random_id.instance_id.id}"
@@ -1119,7 +1135,7 @@ module "windows2019_cnspec" {
 
 module "windows2019_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2019_cis
   name                        = "${var.prefix}-windows2019-cis-${random_id.instance_id.id}"
@@ -1136,7 +1152,7 @@ module "windows2019_cis" {
 
 module "windows2019_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2019_cis_cnspec
   name                        = "${var.prefix}-windows2019-cis-cnspec-${random_id.instance_id.id}"
@@ -1155,7 +1171,7 @@ module "windows2019_cis_cnspec" {
 
 module "windows2022" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2022
   name                        = "${var.prefix}-windows2022-${random_id.instance_id.id}"
@@ -1171,7 +1187,7 @@ module "windows2022" {
 
 module "windows2022_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2022_cnspec
   name                        = "${var.prefix}-windows2022-cnspec-${random_id.instance_id.id}"
@@ -1187,7 +1203,7 @@ module "windows2022_cnspec" {
 
 module "windows2022_cis" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2022_cis
   name                        = "${var.prefix}-windows2022-cis-${random_id.instance_id.id}"
@@ -1204,7 +1220,7 @@ module "windows2022_cis" {
 
 module "windows2022_cis_cnspec" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2022_cis_cnspec
   name                        = "${var.prefix}-windows2022-cis-cnspec-${random_id.instance_id.id}"
@@ -1221,7 +1237,7 @@ module "windows2022_cis_cnspec" {
 
 module "windows2022_german" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2022_german
   name                        = "${var.prefix}-windows2022-german-${random_id.instance_id.id}"
@@ -1237,7 +1253,7 @@ module "windows2022_german" {
 
 module "windows2022_italian" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.6.1"
+  version = "~> 5.7.1"
 
   create                      = var.create_windows2022_italian
   name                        = "${var.prefix}-windows2022-italian-${random_id.instance_id.id}"
