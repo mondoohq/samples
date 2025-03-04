@@ -259,7 +259,7 @@ data "aws_ami" "ubuntu2404" {
 
   filter {
     name   = "name"
-    values = ["*ubuntu-noble-24.04-*-server*"]
+    values = ["*ubuntu-noble-24.04-amd64-server*"]
   }
 
   filter {
@@ -272,7 +272,7 @@ data "aws_ami" "ubuntu2404" {
     values = ["hvm"]
   }
 
-  owners = ["679593333241"]
+  owners = ["099720109477"]
 }
 
 data "aws_ami" "ubuntu2404_arm64" {
