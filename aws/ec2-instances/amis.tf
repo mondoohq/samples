@@ -10,6 +10,11 @@ data "aws_ami" "amazon2023" {
   }
 
   filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
     name   = "virtualization-type"
     values = ["hvm"]
   }
@@ -26,6 +31,11 @@ data "aws_ami" "amazon2" {
   }
 
   filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
     name   = "virtualization-type"
     values = ["hvm"]
   }
@@ -38,7 +48,12 @@ data "aws_ami" "amazon2_cis" {
 
   filter {
     name   = "name"
-    values = ["CIS Amazon Linux 2 Benchmark*Level 2*"]
+    values = ["CIS Amazon Linux 2 *Level 2*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
   }
 
   filter {
