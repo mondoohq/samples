@@ -192,22 +192,6 @@ variable "create_rhel8_cis_cnspec" {
   default = false
 }
 
-variable "create_centos7_hardened_community" {
-  default = false
-}
-
-variable "create_rhel7_pass_private" {
-  default = false
-}
-
-variable "create_rhel7_cis" {
-  default = false
-}
-
-variable "create_rhel7_cis_cnspec" {
-  default = false
-}
-
 variable "create_nginx_rhel9_cis" {
   default = false
 }
@@ -217,14 +201,6 @@ variable "create_nginx_rhel9_cis_cnspec" {
 }
 
 variable "create_debian10" {
-  default = false
-}
-
-variable "create_debian10_cnspec" {
-  default = false
-}
-
-variable "create_debian10_cis_cnspec" {
   default = false
 }
 
