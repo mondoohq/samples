@@ -74,6 +74,9 @@ variable "aws_key_pair_name" {}
 variable "linux_instance_type" {
   default = "t2.micro"
 }
+variable "linux_instance_type_medium" {
+  default = "t2.medium"
+}
 
 variable "linux_instance_type_arm64" {
   default = "t4g.medium"
