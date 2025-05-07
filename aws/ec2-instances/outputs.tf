@@ -36,19 +36,6 @@ output "amazon2023_cnspec" {
   value = module.amazon2023_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.amazon2023_cnspec.public_ip}"
 }
 
-# rhel7
-output "rhel7_cis" {
-  value = module.rhel7_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.rhel7_cis.public_ip}"
-}
-
-output "rhel7_cis_cnspec" {
-  value = module.rhel7_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.rhel7_cis_cnspec.public_ip}"
-}
-
-output "rhel7_pass_private" {
-  value = module.rhel7_pass_private.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.rhel7_pass_private.public_ip}"
-}
-
 # rhel8
 output "rhel8" {
   value = module.rhel8.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel8.public_ip}"
@@ -153,14 +140,6 @@ output "ubuntu2404" {
 # debian10
 output "debian10" {
   value = module.debian10.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian10.public_ip}"
-}
-
-output "debian10_cis" {
-  value = module.debian10_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian10_cis.public_ip}"
-}
-
-output "debian10_cis_cnspec" {
-  value = module.debian10_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian10_cis_cnspec.public_ip}"
 }
 
 # debian11
@@ -320,9 +299,3 @@ output "windows2022_italian" {
 output "nginx_win2019_cnspec" {
   value = module.nginx_win2019_cnspec.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.nginx_win2019_cnspec.public_ip}:3389 /h:1200 /w:1920 /p:'${var.windows_admin_password}'\n(This will take a couple minutes to become available...)"
 }
-# centos7
-output "centos7_hardened_community" {
-  value = module.centos7_hardened_community.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ubuntu@${module.centos7_hardened_community.public_ip}"
-}
-
-
