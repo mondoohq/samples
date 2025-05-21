@@ -1,0 +1,47 @@
+meta {
+  name: <Policy> List Enabled
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  {
+    content(
+      input: { scopeMrn: "{{spaceMrn}}", catalogType: POLICY, assignedOnly: true }
+    ) {
+      totalCount
+      edges {
+        node {
+          __typename
+          ... on Policy {
+            mrn
+            name
+            version
+            summary
+            category
+            trustLevel
+          }
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input" : {
+      "spaceMrn" : "{{spaceMrn}}"
+    }
+  }
+}

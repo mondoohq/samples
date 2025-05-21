@@ -1,0 +1,29 @@
+meta {
+  name: <SSH> List Keys
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  {
+    # need user permissions, not possible with api token
+    viewer {
+      mrn
+      email
+      sshKeys {
+        fingerprint
+        content
+      }
+    }
+  }
+}

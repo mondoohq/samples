@@ -1,0 +1,27 @@
+meta {
+  name: <SSH> Add Key
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  mutation {
+    addSSHKey (
+      input:{
+      	mrn: "//captain.api.mondoo.app/users/123456",
+      	content: "ssh-ed25519 AAAAC..Nn0UL"
+      }) {
+       success
+    }
+  }
+}

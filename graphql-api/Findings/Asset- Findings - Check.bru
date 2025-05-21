@@ -1,0 +1,107 @@
+meta {
+  name: <Asset> Findings - Check
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  query GetChecks(
+    $scopeMrn: String!
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+    $orderBy: FindingsOrder
+    $filter: FindingsFilter
+  ) {
+    findings(
+      scopeMrn: $scopeMrn
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+      orderBy: $orderBy
+      filter: $filter
+    ) {
+      ... on FindingsConnection {
+        totalCount
+        filteredTotalCount
+        edges {
+          cursor
+          node {
+            ... on CheckFinding {
+              id
+              mrn
+              title
+              asset {
+                id
+              }
+              rating
+              state
+              resultType
+              riskValue
+              state
+              lastUpdated
+              tags {
+                key
+                value
+              }
+              riskFactors {
+                mrn
+                indicator
+                title
+                affected
+                total
+                isPositive
+              }
+              exception {
+                id
+                exceptionId
+                scope
+                reviewStatus
+                action
+                justification
+              }
+            }
+          }
+        }
+        pageInfo {
+          startCursor
+          endCursor
+          hasNextPage
+          hasPreviousPage
+        }
+      }
+      ... on RequestError {
+        message
+        code
+      }
+      ... on NotFoundError {
+        message
+        code
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "scopeMrn": "{{spaceMrn}}",
+    "first": 10,
+    "orderBy": {
+      "direction": "DESC",
+      "field": "RISK_VALUE"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 meta {
-  name: disable_framework
+  name: <Framework> Enable
   type: graphql
-  seq: 6
+  seq: 1
 }
 
 post {
@@ -24,7 +24,7 @@ body:graphql {
 body:graphql:vars {
   {
   	"input": {
-  			"action": "PREVIEW",
+  			"action": "ENABLE",
   			"frameworkMrn": "//policy.api.mondoo.app/frameworks/iso-27001-2022",
   			"scopeMrn": "{{spaceMrn}}"
     }

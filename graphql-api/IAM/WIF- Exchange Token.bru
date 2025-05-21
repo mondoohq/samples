@@ -1,0 +1,23 @@
+meta {
+  name: <WIF> Exchange Token
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://{{endpoint}}/SecureTokenService/ExchangeExternalToken
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:json {
+  {
+    "audience": "{{spaceMrn}}",
+    "issuer_uri": "https://accounts.google.com",
+    "jwt_token": "eyJhbGc...UPgxYdJRw"
+  }
+}

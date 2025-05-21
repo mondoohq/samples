@@ -1,0 +1,35 @@
+meta {
+  name: <Policy> Enable
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  mutation EnablePolicy($assetMrn: String!, $policyMrn: String!) {
+    assignPolicy(
+      input: {
+        assetMrn: $assetMrn
+        policyMrn: $policyMrn
+        action: ACTIVE
+      }
+    )
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "assetMrn": "{{spaceMrn}}",
+    "policyMrn": "//policy.api.mondoo.app/policies/mondoo-dns-security"
+  }
+}

@@ -1,0 +1,45 @@
+meta {
+  name: <Query Pack> List Available
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  {
+    content(
+      input: {
+        scopeMrn: "{{spaceMrn}}"
+        catalogType: QUERYPACK
+        assignedOnly: false
+        includePrivate: true
+        includePublic: true
+      }
+    ) {
+      totalCount
+      edges {
+        node {
+          __typename
+          ... on Policy {
+            mrn
+            name
+            version
+            summary
+            category
+            trustLevel
+          }
+        }
+      }
+    }
+  }
+  
+}

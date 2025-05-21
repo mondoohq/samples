@@ -1,0 +1,27 @@
+meta {
+  name: <WIF> List Bindings
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: http://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  query {
+    listWIFAuthBindings(scopeMrn: "{{spaceMrn}}") {
+      bindings {
+  			name
+        issuerURI
+        scope
+  		}
+    }
+  }
+}
