@@ -1,0 +1,38 @@
+meta {
+  name: <WIF> Create Binding
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: http://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  mutation {
+    createWIFAuthBinding(
+      input: {
+        name: "test"
+        scopeMrn: "{{spaceMrn}}"
+        issuerUri: "https://accounts.google.com"
+        subject: "1234567890"
+      }
+    ) {
+      binding {
+        mrn
+        name
+      }
+      config {
+        audience
+        issuer_uri
+      }
+    }
+  }
+  
+}

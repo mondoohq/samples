@@ -1,0 +1,136 @@
+meta {
+  name: <Asset> Findings - Software
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  query GetAssetPackages(
+    $scopeMrn: String!
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+    $orderBy: FindingsOrder
+    $filter: FindingsFilter
+  ) {
+    findings(
+      scopeMrn: $scopeMrn
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+      orderBy: $orderBy
+      filter: $filter
+    ) {
+      ... on FindingsConnection {
+        edges {
+          cursor
+          node {
+            ... on PackageFinding {
+              id
+              baseScore
+              riskValue
+              rating
+              packageName
+              installedVersion
+              availableVersion
+              lastUpdated
+              firstFound
+              cvss {
+                value
+                vector
+              }
+              epss {
+                probability
+                percentile
+              }
+              iconId
+              packageType
+              riskFactors {
+                mrn
+                indicator
+                title
+                affected
+                total
+                isPositive
+              }
+              platform
+              tags {
+                key
+                value
+              }
+              asset {
+                id
+                mrn
+                name
+                icon
+                lastUpdated
+                platform {
+                  name
+                  title
+                  arch
+                  version
+                  kind
+                  runtime
+                  family
+                  labels {
+                    key
+                    value
+                  }
+                }
+              }
+            }
+          }
+        }
+        filteredTotalCount
+        pageInfo {
+          startCursor
+          endCursor
+          hasNextPage
+          hasPreviousPage
+        }
+        totalCount
+      }
+      ... on RequestError {
+        message
+        code
+      }
+      ... on NotFoundError {
+        message
+        code
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "scopeMrn": "//assets.api.mondoo.app/spaces/amazing-dhawan-655469/assets/2xBRZXUn3AY0SubVEY6y8as6k8P",
+    "first": 10,
+    "filter": {
+      "queryTerms": [],
+      "types": [
+        "OS_PACKAGE",
+        "PACKAGE"
+      ],
+      "includeCicd": false,
+      "state": "OPEN"
+    },
+    "orderBy": {
+      "direction": "DESC",
+      "field": "RISK_VALUE"
+    }
+  }
+}

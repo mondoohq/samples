@@ -1,0 +1,174 @@
+meta {
+  name: <Space> Findings
+  type: graphql
+  seq: 5
+}
+
+post {
+  url: https://{{endpoint}}/query
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{MONDOO_API_TOKEN}}
+}
+
+body:graphql {
+  query GetAggregateScores(
+    $entityMrn: String!
+    $filter: AggregateScoreFilter
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+    $orderBy: AggregateScoreOrder
+  ) {
+    aggregateScores(
+      entityMrn: $entityMrn
+      filter: $filter
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+      orderBy: $orderBy
+    ) {
+      ... on AggregateScoresConnection {
+        totalCount
+        edges {
+          cursor
+          node {
+            id
+            iconId
+            state
+            entity {
+              ... on EntityInfoAsset {
+                id
+                mrn
+                name
+                __typename
+              }
+              ... on EntityInfoSpace {
+                id
+                mrn
+                name
+                __typename
+              }
+              __typename
+            }
+            findingMrn
+            rank
+            baseScore
+            riskValue
+            rankScore
+            scoreType
+            rating
+            blastRadius {
+              ...BlastRadiusFields
+              __typename
+            }
+            epss {
+              probability
+              percentile
+              __typename
+            }
+            cvss {
+              id
+              value
+              type
+              vector
+              source
+              rating
+              __typename
+            }
+            riskFactors {
+              mrn
+              indicator
+              title
+              total
+              affected
+              isPositive
+              __typename
+            }
+            detectionSources {
+              name
+              firstDetectedAt
+              lastUpdatedAt
+              affectedAssets
+              vendor
+              __typename
+            }
+            title
+            description
+            tags {
+              key
+              value
+              __typename
+            }
+            lastScannedAt
+            firstDetectedAt
+            remediatedAt
+            spaceId
+            exception {
+              id
+              exceptionId
+              reviewStatus
+              action
+              __typename
+            }
+            __typename
+          }
+          __typename
+        }
+        pageInfo {
+          startCursor
+          endCursor
+          hasNextPage
+          hasPreviousPage
+          __typename
+        }
+        __typename
+      }
+      ... on RequestError {
+        message
+        code
+        __typename
+      }
+      ... on NotFoundError {
+        message
+        code
+        __typename
+      }
+      __typename
+    }
+  }
+  fragment BlastRadiusFields on BlastRadius {
+    indicator
+    assets
+    affected
+    critical
+    high
+    medium
+    low
+    none
+    snoozed
+    disabled
+    __typename
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "entityMrn": "{{spaceMrn}}",
+      "first": 50,
+      "orderBy": { "direction": "ASC", "field": "RANK" },
+      "filter": {
+        "scoreTypes": ["CHECK", "VULNERABILITY"],
+        "queryTerms": [],
+        "minRiskValue": null,
+        "findingMrn": null,
+        "risks": { "indicators": [], "mrns": { "and": [], "or": [] } }
+      }
+    }
+}
