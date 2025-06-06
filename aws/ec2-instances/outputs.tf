@@ -88,16 +88,6 @@ output "ubuntu2004_cnspec" {
   value = module.ubuntu2004_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ubuntu@${module.ubuntu2004_cnspec.public_ip}"
 }
 
-output "ubuntu2004_cis" {
-  value = module.ubuntu2004_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ubuntu@${module.ubuntu2004_cis.public_ip}"
-}
-
-
-output "ubuntu2004_cis_cnspec" {
-  value = module.ubuntu2004_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ubuntu@${module.ubuntu2004_cis_cnspec.public_ip}"
-}
-
-
 
 # ubuntu2204
 output "ubuntu2204" {
