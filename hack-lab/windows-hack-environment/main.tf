@@ -132,7 +132,7 @@ data "aws_ami" "windows-ad" {
 
   filter {
     name   = "name"
-    values = ["Windows_Server-2022-English-Full-Base-2023*"]
+    values = ["TPM-Windows_Server-2022-English-Full-Base-2024*"]
   }
 
   filter {
