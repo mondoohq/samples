@@ -175,7 +175,7 @@ data "aws_ami" "ubuntu1804" {
     values = ["hvm"]
   }
 
-  owners = ["099720109477"]
+  owners = ["099720109477"] // Canonical
 }
 
 data "aws_ami" "ubuntu2004" {
@@ -191,7 +191,7 @@ data "aws_ami" "ubuntu2004" {
     values = ["hvm"]
   }
 
-  owners = ["099720109477"]
+  owners = ["099720109477"] // Canonical
 }
 
 
@@ -208,7 +208,7 @@ data "aws_ami" "ubuntu2204" {
     values = ["hvm"]
   }
 
-  owners = ["099720109477"]
+  owners = ["099720109477"] // Canonical
 }
 
 data "aws_ami" "ubuntu2204_cis" {
@@ -272,7 +272,7 @@ data "aws_ami" "ubuntu2404" {
     values = ["hvm"]
   }
 
-  owners = ["099720109477"]
+  owners = ["099720109477"] // Canonical
 }
 
 data "aws_ami" "ubuntu2404_arm64" {
