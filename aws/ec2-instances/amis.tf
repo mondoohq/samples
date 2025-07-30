@@ -27,7 +27,7 @@ data "aws_ami" "amazon2" {
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-kernel-5.10-hvm-2.0.2023*"]
+    values = ["amzn2-ami-kernel-5.10-hvm-2.0.2025*"]
   }
 
   filter {
