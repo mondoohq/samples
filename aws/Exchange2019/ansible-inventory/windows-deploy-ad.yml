@@ -1,0 +1,21 @@
+- name: Deploy AD
+  hosts: dc
+  gather_facts: yes
+  become: no
+  tasks:
+    - name: Prepare DC
+      import_role:
+        name: windows-ad
+        tasks_from: prepare-system
+    - name: Create new lokal Admin
+      import_role:
+        name: windows-ad
+        tasks_from: create-local-admin
+    - name: Create Domain
+      import_role:
+        name: windows-ad
+        tasks_from: create-domain
+    - name:
+      import_role:
+        name: adcs-enrollment
+        tasks_from: main

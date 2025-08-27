@@ -1,0 +1,8 @@
+# create new user and add to local admin group
+- name: create mondoo user
+  ansible.windows.win_user:
+    name: "{{ username }}"
+    password: "{{ password }}"
+    state: present
+    groups:
+      - Administrators
