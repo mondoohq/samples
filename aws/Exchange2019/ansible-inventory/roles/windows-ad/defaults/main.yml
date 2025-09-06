@@ -1,0 +1,12 @@
+---
+username: mondoo
+password: mondoo.com
+domain_name: mondoo.hacklab
+man_adcs_winrm_domain: '{{ domain_name }}'
+domain_admin: Administrator
+domain_admin_password: MondooSPM1!
+netbios_name: MONDOO
+domain_mode: WinThreshold
+dns_server:
+  - 10.0.4.10
+  - 8.8.8.8

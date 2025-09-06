@@ -1,0 +1,15 @@
+---
+username: mondoo
+password: mondoo.com
+domain_name: mondoo.hacklab
+man_adcs_winrm_domain: "{{ domain_name }}"
+domain_admin: Administrator
+domain_admin_password: MondooSPM1!
+netbios_name: MONDOO
+domain_mode: WinThreshold
+dns_server:
+  - 10.0.4.10
+  - 8.8.8.8
+exchange_folder: C:\exchange2019
+exchange_iso: C:\Tools\ExchangeServer2019-x64-CU12.ISO
+exchange_url: https://download.microsoft.com/download/b/c/7/bc766694-8398-4258-8e1e-ce4ddb9b3f7d/ExchangeServer2019-x64-CU12.ISO

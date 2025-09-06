@@ -1,0 +1,67 @@
+---
+# tasks file for windows-common
+
+- name: Install RSAT Tools
+  ansible.windows.win_feature:
+    name:
+      - RSAT-AD-PowerShell
+      - RSAT-AD-AdminCenter
+    state: present
+  register: rsat_install
+
+# disable ipv6
+- name: Run PowerShell to disable ipv6
+  ansible.windows.win_powershell:
+    script: |
+      Get-NetAdapterBinding -ComponentID ms_tcpip6 | ForEach-Object {Disable-NetAdapterBinding -Name $_.Name -ComponentID ms_tcpip6}
+      Get-NetAdapterBinding -ComponentID ms_tcpip6
+
+- name: set registry key to disable ipv6
+  ansible.windows.win_regedit:
+    path: HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters
+    name: "DisabledComponents"
+    data: "255"
+    type: dword
+
+# disable windows firewall
+- name: Run PowerShell to disable Firewall
+  ansible.windows.win_powershell:
+    script: |
+      netsh advfirewall set allprofiles state off
+
+# disable windows defender
+- name: Uninstall Windows Defender
+  ansible.windows.win_feature:
+    name:
+      - Windows-Defender
+    state: absent
+- name: Run PowerShell to disable defender
+  ansible.windows.win_powershell:
+    script: |
+      Set-MpPreference -DisableArchiveScanning 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableBehaviorMonitoring 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableIntrusionPreventionSystem 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableIOAVProtection 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableRemovableDriveScanning 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableBlockAtFirstSeen 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableScanningMappedNetworkDrivesForFullScan 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableScanningNetworkFiles 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableScriptScanning 1 -ErrorAction SilentlyContinue
+      Set-MpPreference -DisableRealtimeMonitoring 1 -ErrorAction SilentlyContinue
+
+# disable windows password complexity
+- name: Run PowerShell to disable password complexity
+  ansible.windows.win_powershell:
+    script: |
+      secedit /export /cfg C:\secpol.cfg
+      (gc C:\secpol.cfg).replace("PasswordComplexity = 1", "PasswordComplexity = 0") | Out-File C:\secpol.cfg
+      secedit /configure /db C:\Windows\security\local.sdb /cfg C:\secpol.cfg /areas SECURITYPOLICY
+      rm -force C:\secpol.cfg -confirm:$false
+
+# in the vagrant env the win_reboot is not working
+- name: reboot if RSAT Tools feature requires it
+  ansible.windows.win_reboot:
+    #post_reboot_delay: 120
+    test_command: 'exit (Get-Service -Name Netlogon).Status -ne "Running"'
+    #reboot_timeout: 3600
+  when: rsat_install.reboot_required
