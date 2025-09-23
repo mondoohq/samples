@@ -61,6 +61,11 @@
     path: "{{ exchange_iso }}"
   register: stat_result
 
+- name: Create tools directory
+  ansible.windows.win_file:
+    path: C:\Tools
+    state: directory
+
 - name: Download Exchange ISO
   ansible.windows.win_get_url:
     url: "{{ exchange_url }}"
