@@ -59,6 +59,28 @@
   retries: 60
   delay: 15
 
+- name: Create tools directory
+  ansible.windows.win_file:
+    path: C:\Tools
+    state: directory
+
+- name: Check if badblood exists
+  ansible.windows.win_stat:
+    path: C:\Tools\badblood.zip
+  register: badblood_stat_result
+
+- name: Download badblood
+  ansible.windows.win_get_url:
+    url: https://github.com/davidprowe/BadBlood/archive/master.zip
+    dest: C:\Tools\badblood.zip
+  when: not badblood_stat_result.stat.exists
+
+- name: decompress badblood zip
+  community.windows.win_unzip:
+    src: C:\Tools\badblood.zip
+    dest: C:\Tools\badblood
+    creates: C:\Tools\badblood
+
 - name: check badblood execution
   ansible.windows.win_stat:
     path: C:\Tools\badblood\badblood-executed.txt
