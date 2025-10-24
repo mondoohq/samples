@@ -56,7 +56,7 @@ private_ami_id    = "ami-0abcdef1234567890"
 private_ami_owner = "123456789012"
 
 # Optional: Customize naming and SSH
-private_ami_name     = "myapp"
+private_ami_name     = "private-ami"
 private_ami_ssh_user = "ec2-user"
 ```
 
@@ -143,7 +143,7 @@ This ensures:
 
 ### AMI Not Found
 
-**Error**: `InvalidAMIID.NotFound` or `InvalidAMIID.Unavailable`
+**Error**: `Invalid AMI ID.NotFound` or `Invalid AMI ID.Unavailable`
 
 **Solution**: 
 1. Verify the AMI ID is correct
