@@ -1,0 +1,49 @@
+# Example terraform.tfvars for using Private AMIs
+# Copy relevant sections to your terraform.tfvars file
+
+################################
+# Private AMI Configuration
+################################
+
+# Enable private AMI instances
+create_private_ami        = true   # Basic instance
+create_private_ami_cnspec = false  # Instance with cnspec monitoring
+
+# Private AMI Details
+private_ami_id    = "ami-xxxxxxxxxxxxxxxxx"  # Your AMI ID
+private_ami_owner = "123456789012"           # AMI owner account ID (12 digits)
+
+# Instance Configuration
+private_ami_name          = "private"  # Name used in resource naming
+private_ami_ssh_user      = "ec2-user" # SSH user for the AMI
+private_ami_instance_type = "t2.micro" # Instance type
+
+################################
+# Required for cnspec instances
+################################
+
+# If create_private_ami_cnspec = true, you need:
+# mondoo_registration_token = "your-mondoo-token-here"
+
+################################
+# Example: Ubuntu-based private AMI
+################################
+
+# create_private_ami        = true
+# private_ami_id            = "ami-0abcdef1234567890"
+# private_ami_owner         = "098765432109"
+# private_ami_name          = "ubuntu-custom"
+# private_ami_ssh_user      = "ubuntu"
+# private_ami_instance_type = "t3.small"
+
+################################
+# Example: RHEL-based private AMI
+################################
+
+# create_private_ami        = true
+# private_ami_id            = "ami-0fedcba9876543210"
+# private_ami_owner         = "567890123456"
+# private_ami_name          = "rhel-custom"
+# private_ami_ssh_user      = "ec2-user"
+# private_ami_instance_type = "t2.medium"
+

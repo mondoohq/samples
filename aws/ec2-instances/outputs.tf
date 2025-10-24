@@ -298,3 +298,12 @@ output "windows2022_italian" {
 output "nginx_win2019_cnspec" {
   value = module.nginx_win2019_cnspec.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.nginx_win2019_cnspec.public_ip}:3389 /h:1200 /w:1920 /p:'${var.windows_admin_password}'\n(This will take a couple minutes to become available...)"
 }
+
+# private AMI instances
+output "private_ami" {
+  value = module.private_ami.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ${var.private_ami_ssh_user}@${module.private_ami.public_ip}"
+}
+
+output "private_ami_cnspec" {
+  value = module.private_ami_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ${var.private_ami_ssh_user}@${module.private_ami_cnspec.public_ip}"
+}
