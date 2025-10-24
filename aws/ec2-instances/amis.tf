@@ -621,3 +621,17 @@ data "aws_ami" "winserver2022_italian" {
 
   owners = ["801119661308"]
 }
+
+////////////////////////////////
+// Private AMI
+
+data "aws_ami" "private_ami" {
+  most_recent = true
+
+  filter {
+    name   = "image-id"
+    values = [var.private_ami_id]
+  }
+
+  owners = [var.private_ami_owner]
+}

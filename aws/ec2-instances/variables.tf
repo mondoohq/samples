@@ -371,3 +371,48 @@ variable "publicIP" {
   # usually automatically pulled by data "http" "clientip" resource
   default = ""
 }
+
+////////////////////////////////
+// Private AMI Settings
+
+variable "private_ami_id" {
+  description = "Private AMI ID to use for creating instances"
+  type        = string
+  default     = ""
+}
+
+variable "private_ami_owner" {
+  description = "Owner account ID of the private AMI"
+  type        = string
+  default     = ""
+}
+
+variable "private_ami_name" {
+  description = "Name identifier for the private AMI instance (will be used in resource naming)"
+  type        = string
+  default     = "private"
+}
+
+variable "private_ami_ssh_user" {
+  description = "SSH user for the private AMI instances"
+  type        = string
+  default     = "ec2-user"
+}
+
+variable "private_ami_instance_type" {
+  description = "Instance type for private AMI instances"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "create_private_ami" {
+  description = "Whether to create an instance from the private AMI"
+  type        = bool
+  default     = false
+}
+
+variable "create_private_ami_cnspec" {
+  description = "Whether to create an instance from the private AMI with cnspec"
+  type        = bool
+  default     = false
+}
