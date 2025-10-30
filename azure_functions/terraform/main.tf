@@ -135,9 +135,9 @@ resource "azurerm_linux_function_app" "functions" {
     vnet_route_all_enabled   = false  # No VNet in Phase 1
 
     # Dynamic application stack based on language
+    # Note: Azure Functions only support Python and Java (PHP not supported)
     application_stack {
       python_version = each.value.stack == "python" ? local.language_versions[each.value.config].python : null
-      php_version    = each.value.stack == "php" ? local.language_versions[each.value.config].php : null
       java_version   = each.value.stack == "java" ? local.language_versions[each.value.config].java : null
     }
 
@@ -262,9 +262,9 @@ resource "azurerm_linux_function_app_slot" "function_slots" {
     vnet_route_all_enabled   = false  # No VNet in Phase 1
 
     # Dynamic application stack based on language
+    # Note: Azure Functions only support Python and Java (PHP not supported)
     application_stack {
       python_version = each.value.stack == "python" ? local.language_versions[each.value.config].python : null
-      php_version    = each.value.stack == "php" ? local.language_versions[each.value.config].php : null
       java_version   = each.value.stack == "java" ? local.language_versions[each.value.config].java : null
     }
 
