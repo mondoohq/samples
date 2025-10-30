@@ -12,6 +12,7 @@ dvwa
 eecdfd
 FFn
 fjw
+functionapp
 fzvkw
 Gci
 hacklab
@@ -34,6 +35,7 @@ messagebus
 meterpreter
 MIIJKg
 msfconsole
+mondoosatest
 nch
 NCIs
 ndots
@@ -59,3 +61,4 @@ vmss
 webserver
 xdsp
 XVCJ
+XXXX
