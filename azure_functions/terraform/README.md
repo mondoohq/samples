@@ -307,6 +307,29 @@ Total: 20 test assets (with S1 SKU, PHP excluded from Functions)
 - **Public access** controlled via `public_network_access_enabled`
 - Hardened assets have public access disabled but remain accessible via HTTPS
 
+### Implementation Notes
+
+> **Why are Function Apps split into separate resources?**
+>
+> Azure Function Apps require storage authentication, which supports two **mutually exclusive** methods:
+> - **Vanilla (non-compliant):** Uses `storage_account_access_key` (insecure key-based auth)
+> - **Hardened (CIS-compliant):** Uses `storage_uses_managed_identity` (secure Azure AD auth)
+>
+> Terraform requires these to be separate resources since both parameters cannot exist in the same resource definition, even if one is null/false. This is an Azure API constraint, not a Terraform limitation.
+
+### Azure-Specific Limitations Discovered & Resolved
+
+During implementation, we discovered **4 Azure-specific limitations** that required special handling:
+
+| # | Limitation | Impact | Solution |
+|---|------------|--------|----------|
+| 1 | **PHP Runtime Not Supported in Functions** | Functions can't use PHP | Smart filtering excludes PHP from Function deployments |
+| 2 | **Java Configuration Complexity** | Web Apps need 3 params, Functions need 1 | Different parameter sets based on resource type |
+| 3 | **Java Server Parameters** | Functions don't support `java_server`/`java_server_version` | Removed server params from Function resources |
+| 4 | **Storage Auth Parameters Mutually Exclusive** | Can't have both access key and managed identity | Split Function Apps into separate vanilla/hardened resources |
+
+All limitations have been resolved in this implementation. See troubleshooting section for details.
+
 ---
 
 ## 🔧 Configuration Details
@@ -455,6 +478,19 @@ az account set --subscription YOUR_SUB_ID
 **Solution:** This has been fixed in the configuration. PHP is automatically excluded from Function App deployments.
 **Note:** If you manually set `stacks_to_deploy = ["php"]`, no Function Apps will be created (only Web Apps).
 
+#### Issue: "Conflicting configuration arguments" - storage_account_access_key conflicts with storage_uses_managed_identity
+**Cause:** Azure Function Apps support **two mutually exclusive** storage authentication methods:
+1. **Access Key** (`storage_account_access_key`) - Key-based authentication
+2. **Managed Identity** (`storage_uses_managed_identity`) - Azure AD-based authentication
+
+You cannot specify both parameters in the same resource, even if one is `null` or `false`.
+
+**Solution:** This has been fixed in the configuration. Function Apps are now split into separate resources:
+- **Vanilla Function Apps** use `storage_account_access_key` (insecure, for testing)
+- **Hardened Function Apps** use `storage_uses_managed_identity` (secure, CIS-compliant)
+
+**Note:** This is why the Terraform configuration has separate `functions_vanilla` and `functions_hardened` resources instead of a single `functions` resource.
+
 ### Validation Commands
 
 ```bash
@@ -531,8 +567,12 @@ For issues or questions:
 
 ---
 
-**Version:** 1.0.1
+**Version:** 1.0.2
 **Last Updated:** October 30, 2025
 **Status:** Phase 1 Complete - Ready for Testing
-**Recent Updates:** Fixed Java configuration for Function Apps (java_version only, no server params)
+
+**Recent Updates (October 30, 2025):**
+- Fixed Java configuration for Function Apps (java_version only, no server params)
+- Resolved storage authentication conflict by splitting Function Apps into separate vanilla/hardened resources
+- Documented 4 Azure-specific limitations and their solutions
 

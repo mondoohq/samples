@@ -105,14 +105,77 @@ resource "azurerm_linux_web_app" "apps" {
 }
 
 # ==============================================================================
-# LINUX FUNCTION APPS - DYNAMIC (All Configurations & Language Stacks)
+# LINUX FUNCTION APPS - VANILLA (Uses Storage Account Access Key)
+# NOTE: storage_account_access_key and storage_uses_managed_identity are mutually
+#       exclusive, so we need separate resources for vanilla vs hardened
 # ==============================================================================
 
-resource "azurerm_linux_function_app" "functions" {
+resource "azurerm_linux_function_app" "functions_vanilla" {
   for_each = {
     for key, asset in local.assets_map :
     key => asset
-    if asset.type == "function"
+    if asset.type == "function" && asset.config == "vanilla"
+  }
+
+  name                = "${local.resource_prefix}-func-${each.value.config}-${each.value.stack}-${local.suffix}"
+  resource_group_name = azurerm_resource_group.mondoo_testing.name
+  location            = azurerm_resource_group.mondoo_testing.location
+  service_plan_id     = azurerm_service_plan.webapp.id
+
+  storage_account_name       = azurerm_storage_account.function_storage.name
+  storage_account_access_key = azurerm_storage_account.function_storage.primary_access_key
+
+  # Vanilla (non-compliant) settings
+  https_only                                 = false
+  public_network_access_enabled              = true
+  client_certificate_enabled                 = false
+  client_certificate_mode                    = "Optional"
+  ftp_publish_basic_authentication_enabled   = true
+  webdeploy_publish_basic_authentication_enabled = true
+
+  site_config {
+    minimum_tls_version      = var.vanilla_min_tls_version
+    ftps_state               = var.vanilla_ftps_state
+    remote_debugging_enabled = true
+    http2_enabled            = false
+    vnet_route_all_enabled   = false  # No VNet in Phase 1
+
+    # Dynamic application stack based on language
+    # Note: Azure Functions only support Python and Java (PHP not supported)
+    # Note: Function Apps only need java_version (NOT java_server/java_server_version like Web Apps)
+    application_stack {
+      python_version = each.value.stack == "python" ? local.language_versions["vanilla"].python : null
+      java_version   = each.value.stack == "java" ? local.language_versions["vanilla"].java : null
+    }
+
+    cors {
+      allowed_origins = var.vanilla_cors_allowed_origins
+    }
+  }
+
+  # No managed identity for vanilla
+
+  # Note: auth_settings_v2 deferred to Phase 2 - CIS 2.3.11
+  # Note: VNet integration deferred to Phase 2 - CIS 2.3.14
+
+  tags = merge(
+    local.vanilla_tags,
+    {
+      AssetCategory = "functionapp"
+      LanguageStack = each.value.stack
+    }
+  )
+}
+
+# ==============================================================================
+# LINUX FUNCTION APPS - HARDENED (Uses Managed Identity)
+# ==============================================================================
+
+resource "azurerm_linux_function_app" "functions_hardened" {
+  for_each = {
+    for key, asset in local.assets_map :
+    key => asset
+    if asset.type == "function" && asset.config == "hardened"
   }
 
   name                = "${local.resource_prefix}-func-${each.value.config}-${each.value.stack}-${local.suffix}"
@@ -121,52 +184,46 @@ resource "azurerm_linux_function_app" "functions" {
   service_plan_id     = azurerm_service_plan.webapp.id
 
   storage_account_name          = azurerm_storage_account.function_storage.name
-  storage_account_access_key    = each.value.config == "vanilla" ? azurerm_storage_account.function_storage.primary_access_key : null
-  storage_uses_managed_identity = each.value.config == "hardened" ? true : false
+  storage_uses_managed_identity = true
 
-  # Configuration-dependent settings
-  https_only                                 = each.value.config == "hardened" ? true : false
-  public_network_access_enabled              = each.value.config == "hardened" ? false : true
-  client_certificate_enabled                 = each.value.config == "hardened" ? true : false
-  client_certificate_mode                    = each.value.config == "hardened" ? "Required" : "Optional"
-  ftp_publish_basic_authentication_enabled   = each.value.config == "hardened" ? false : true
-  webdeploy_publish_basic_authentication_enabled = each.value.config == "hardened" ? false : true
+  # Hardened (CIS-compliant) settings
+  https_only                                 = true
+  public_network_access_enabled              = false
+  client_certificate_enabled                 = true
+  client_certificate_mode                    = "Required"
+  ftp_publish_basic_authentication_enabled   = false
+  webdeploy_publish_basic_authentication_enabled = false
 
   site_config {
-    minimum_tls_version      = each.value.config == "hardened" ? var.hardened_min_tls_version : var.vanilla_min_tls_version
-    ftps_state               = each.value.config == "hardened" ? var.hardened_ftps_state : var.vanilla_ftps_state
-    remote_debugging_enabled = each.value.config == "hardened" ? false : true
-    http2_enabled            = each.value.config == "hardened" ? true : false
+    minimum_tls_version      = var.hardened_min_tls_version
+    ftps_state               = var.hardened_ftps_state
+    remote_debugging_enabled = false
+    http2_enabled            = true
     vnet_route_all_enabled   = false  # No VNet in Phase 1
 
     # Dynamic application stack based on language
     # Note: Azure Functions only support Python and Java (PHP not supported)
     # Note: Function Apps only need java_version (NOT java_server/java_server_version like Web Apps)
     application_stack {
-      python_version = each.value.stack == "python" ? local.language_versions[each.value.config].python : null
-
-      # Java only needs version (server parameters not supported in Function Apps)
-      java_version = each.value.stack == "java" ? local.language_versions[each.value.config].java : null
+      python_version = each.value.stack == "python" ? local.language_versions["hardened"].python : null
+      java_version   = each.value.stack == "java" ? local.language_versions["hardened"].java : null
     }
 
     cors {
-      allowed_origins = each.value.config == "hardened" ? var.hardened_cors_allowed_origins : var.vanilla_cors_allowed_origins
+      allowed_origins = var.hardened_cors_allowed_origins
     }
   }
 
-  # Managed identity only for hardened
-  dynamic "identity" {
-    for_each = each.value.config == "hardened" ? [1] : []
-    content {
-      type = "SystemAssigned"
-    }
+  # Managed identity for hardened
+  identity {
+    type = "SystemAssigned"
   }
 
   # Note: auth_settings_v2 deferred to Phase 2 - CIS 2.3.11
   # Note: VNet integration deferred to Phase 2 - CIS 2.3.14
 
   tags = merge(
-    each.value.config == "hardened" ? local.hardened_tags : local.vanilla_tags,
+    local.hardened_tags,
     {
       AssetCategory = "functionapp"
       LanguageStack = each.value.stack
@@ -241,66 +298,121 @@ resource "azurerm_linux_web_app_slot" "app_slots" {
 }
 
 # ==============================================================================
-# FUNCTION APP DEPLOYMENT SLOTS - DYNAMIC (All Configurations & Language Stacks)
+# FUNCTION APP DEPLOYMENT SLOTS - VANILLA (Uses Storage Account Access Key)
 # NOTE: Only deployed if SKU supports deployment slots (Standard S1 or higher)
+# NOTE: storage_account_access_key and storage_uses_managed_identity are mutually
+#       exclusive, so we need separate resources for vanilla vs hardened
 # ==============================================================================
 
-resource "azurerm_linux_function_app_slot" "function_slots" {
+resource "azurerm_linux_function_app_slot" "function_slots_vanilla" {
   for_each = local.deploy_slots ? {
     for key, asset in local.assets_map :
     key => asset
-    if asset.type == "function"
+    if asset.type == "function" && asset.config == "vanilla"
   } : {}
 
   name            = local.slot_name
-  function_app_id = azurerm_linux_function_app.functions[each.key].id
+  function_app_id = azurerm_linux_function_app.functions_vanilla[each.key].id
 
-  storage_account_name          = azurerm_storage_account.function_storage.name
-  storage_account_access_key    = each.value.config == "vanilla" ? azurerm_storage_account.function_storage.primary_access_key : null
-  storage_uses_managed_identity = each.value.config == "hardened" ? true : false
+  storage_account_name       = azurerm_storage_account.function_storage.name
+  storage_account_access_key = azurerm_storage_account.function_storage.primary_access_key
 
-  # Configuration-dependent settings
-  https_only                                 = each.value.config == "hardened" ? true : false
-  public_network_access_enabled              = each.value.config == "hardened" ? false : true
-  client_certificate_enabled                 = each.value.config == "hardened" ? true : false
-  client_certificate_mode                    = each.value.config == "hardened" ? "Required" : "Optional"
-  ftp_publish_basic_authentication_enabled   = each.value.config == "hardened" ? false : true
-  webdeploy_publish_basic_authentication_enabled = each.value.config == "hardened" ? false : true
+  # Vanilla (non-compliant) settings
+  https_only                                 = false
+  public_network_access_enabled              = true
+  client_certificate_enabled                 = false
+  client_certificate_mode                    = "Optional"
+  ftp_publish_basic_authentication_enabled   = true
+  webdeploy_publish_basic_authentication_enabled = true
 
   site_config {
-    minimum_tls_version      = each.value.config == "hardened" ? var.hardened_min_tls_version : var.vanilla_min_tls_version
-    ftps_state               = each.value.config == "hardened" ? var.hardened_ftps_state : var.vanilla_ftps_state
-    remote_debugging_enabled = each.value.config == "hardened" ? false : true
-    http2_enabled            = each.value.config == "hardened" ? true : false
+    minimum_tls_version      = var.vanilla_min_tls_version
+    ftps_state               = var.vanilla_ftps_state
+    remote_debugging_enabled = true
+    http2_enabled            = false
     vnet_route_all_enabled   = false  # No VNet in Phase 1
 
     # Dynamic application stack based on language
     # Note: Azure Functions only support Python and Java (PHP not supported)
     # Note: Function Apps only need java_version (NOT java_server/java_server_version like Web Apps)
     application_stack {
-      python_version = each.value.stack == "python" ? local.language_versions[each.value.config].python : null
-
-      # Java only needs version (server parameters not supported in Function Apps)
-      java_version = each.value.stack == "java" ? local.language_versions[each.value.config].java : null
+      python_version = each.value.stack == "python" ? local.language_versions["vanilla"].python : null
+      java_version   = each.value.stack == "java" ? local.language_versions["vanilla"].java : null
     }
 
     cors {
-      allowed_origins = each.value.config == "hardened" ? var.hardened_cors_allowed_origins : var.vanilla_cors_allowed_origins
+      allowed_origins = var.vanilla_cors_allowed_origins
     }
   }
 
-  # Managed identity only for hardened
-  dynamic "identity" {
-    for_each = each.value.config == "hardened" ? [1] : []
-    content {
-      type = "SystemAssigned"
+  # No managed identity for vanilla
+
+  # Note: auth_settings_v2 deferred to Phase 2 - CIS 2.4.10
+
+  tags = merge(
+    local.vanilla_tags,
+    {
+      AssetCategory = "functionapp-slot"
+      LanguageStack = each.value.stack
     }
+  )
+}
+
+# ==============================================================================
+# FUNCTION APP DEPLOYMENT SLOTS - HARDENED (Uses Managed Identity)
+# NOTE: Only deployed if SKU supports deployment slots (Standard S1 or higher)
+# ==============================================================================
+
+resource "azurerm_linux_function_app_slot" "function_slots_hardened" {
+  for_each = local.deploy_slots ? {
+    for key, asset in local.assets_map :
+    key => asset
+    if asset.type == "function" && asset.config == "hardened"
+  } : {}
+
+  name            = local.slot_name
+  function_app_id = azurerm_linux_function_app.functions_hardened[each.key].id
+
+  storage_account_name          = azurerm_storage_account.function_storage.name
+  storage_uses_managed_identity = true
+
+  # Hardened (CIS-compliant) settings
+  https_only                                 = true
+  public_network_access_enabled              = false
+  client_certificate_enabled                 = true
+  client_certificate_mode                    = "Required"
+  ftp_publish_basic_authentication_enabled   = false
+  webdeploy_publish_basic_authentication_enabled = false
+
+  site_config {
+    minimum_tls_version      = var.hardened_min_tls_version
+    ftps_state               = var.hardened_ftps_state
+    remote_debugging_enabled = false
+    http2_enabled            = true
+    vnet_route_all_enabled   = false  # No VNet in Phase 1
+
+    # Dynamic application stack based on language
+    # Note: Azure Functions only support Python and Java (PHP not supported)
+    # Note: Function Apps only need java_version (NOT java_server/java_server_version like Web Apps)
+    application_stack {
+      python_version = each.value.stack == "python" ? local.language_versions["hardened"].python : null
+      java_version   = each.value.stack == "java" ? local.language_versions["hardened"].java : null
+    }
+
+    cors {
+      allowed_origins = var.hardened_cors_allowed_origins
+    }
+  }
+
+  # Managed identity for hardened
+  identity {
+    type = "SystemAssigned"
   }
 
   # Note: auth_settings_v2 deferred to Phase 2 - CIS 2.4.10
 
   tags = merge(
-    each.value.config == "hardened" ? local.hardened_tags : local.vanilla_tags,
+    local.hardened_tags,
     {
       AssetCategory = "functionapp-slot"
       LanguageStack = each.value.stack

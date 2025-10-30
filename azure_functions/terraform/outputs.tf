@@ -31,21 +31,35 @@ output "web_apps" {
 }
 
 # ==============================================================================
-# FUNCTION APP OUTPUTS (Dynamic)
+# FUNCTION APP OUTPUTS (Dynamic - Merged Vanilla + Hardened)
 # ==============================================================================
 
 output "function_apps" {
   description = "Map of all deployed function apps with their details"
-  value = {
-    for key, func in azurerm_linux_function_app.functions :
-    key => {
-      id               = func.id
-      name             = func.name
-      default_hostname = func.default_hostname
-      config           = local.assets_map[key].config
-      stack            = local.assets_map[key].stack
+  value = merge(
+    # Vanilla function apps
+    {
+      for key, func in azurerm_linux_function_app.functions_vanilla :
+      key => {
+        id               = func.id
+        name             = func.name
+        default_hostname = func.default_hostname
+        config           = local.assets_map[key].config
+        stack            = local.assets_map[key].stack
+      }
+    },
+    # Hardened function apps
+    {
+      for key, func in azurerm_linux_function_app.functions_hardened :
+      key => {
+        id               = func.id
+        name             = func.name
+        default_hostname = func.default_hostname
+        config           = local.assets_map[key].config
+        stack            = local.assets_map[key].stack
+      }
     }
-  }
+  )
 }
 
 # ==============================================================================
@@ -67,15 +81,28 @@ output "web_app_slots" {
 
 output "function_app_slots" {
   description = "Map of all deployed function app slots (empty if slots not enabled)"
-  value = {
-    for key, slot in azurerm_linux_function_app_slot.function_slots :
-    key => {
-      id     = slot.id
-      name   = slot.name
-      config = local.assets_map[key].config
-      stack  = local.assets_map[key].stack
+  value = merge(
+    # Vanilla function app slots
+    {
+      for key, slot in azurerm_linux_function_app_slot.function_slots_vanilla :
+      key => {
+        id     = slot.id
+        name   = slot.name
+        config = local.assets_map[key].config
+        stack  = local.assets_map[key].stack
+      }
+    },
+    # Hardened function app slots
+    {
+      for key, slot in azurerm_linux_function_app_slot.function_slots_hardened :
+      key => {
+        id     = slot.id
+        name   = slot.name
+        config = local.assets_map[key].config
+        stack  = local.assets_map[key].stack
+      }
     }
-  }
+  )
 }
 
 output "deployment_slots_enabled" {
@@ -95,9 +122,14 @@ output "mondoo_scan_commands" {
       for key, app in azurerm_linux_web_app.apps :
       "webapp_${key}" => "cnspec scan azure --subscription ${var.subscription_id} --discover app-services --asset-name ${app.name}"
     },
-    # Function App scan commands
+    # Function App scan commands - Vanilla
     {
-      for key, func in azurerm_linux_function_app.functions :
+      for key, func in azurerm_linux_function_app.functions_vanilla :
+      "function_${key}" => "cnspec scan azure --subscription ${var.subscription_id} --discover functions --asset-name ${func.name}"
+    },
+    # Function App scan commands - Hardened
+    {
+      for key, func in azurerm_linux_function_app.functions_hardened :
       "function_${key}" => "cnspec scan azure --subscription ${var.subscription_id} --discover functions --asset-name ${func.name}"
     },
     # Web App Slot scan commands
@@ -105,9 +137,14 @@ output "mondoo_scan_commands" {
       for key, slot in azurerm_linux_web_app_slot.app_slots :
       "webapp_slot_${key}" => "cnspec scan azure --subscription ${var.subscription_id} --discover app-services --asset-name ${slot.name}"
     },
-    # Function App Slot scan commands
+    # Function App Slot scan commands - Vanilla
     {
-      for key, slot in azurerm_linux_function_app_slot.function_slots :
+      for key, slot in azurerm_linux_function_app_slot.function_slots_vanilla :
+      "function_slot_${key}" => "cnspec scan azure --subscription ${var.subscription_id} --discover functions --asset-name ${slot.name}"
+    },
+    # Function App Slot scan commands - Hardened
+    {
+      for key, slot in azurerm_linux_function_app_slot.function_slots_hardened :
       "function_slot_${key}" => "cnspec scan azure --subscription ${var.subscription_id} --discover functions --asset-name ${slot.name}"
     }
   )
@@ -121,9 +158,14 @@ output "mondoo_resource_ids" {
       for key, app in azurerm_linux_web_app.apps :
       "webapp_${key}" => app.id
     },
-    # Function App resource IDs
+    # Function App resource IDs - Vanilla
     {
-      for key, func in azurerm_linux_function_app.functions :
+      for key, func in azurerm_linux_function_app.functions_vanilla :
+      "function_${key}" => func.id
+    },
+    # Function App resource IDs - Hardened
+    {
+      for key, func in azurerm_linux_function_app.functions_hardened :
       "function_${key}" => func.id
     },
     # Web App Slot resource IDs
@@ -131,9 +173,14 @@ output "mondoo_resource_ids" {
       for key, slot in azurerm_linux_web_app_slot.app_slots :
       "webapp_slot_${key}" => slot.id
     },
-    # Function App Slot resource IDs
+    # Function App Slot resource IDs - Vanilla
     {
-      for key, slot in azurerm_linux_function_app_slot.function_slots :
+      for key, slot in azurerm_linux_function_app_slot.function_slots_vanilla :
+      "function_slot_${key}" => slot.id
+    },
+    # Function App Slot resource IDs - Hardened
+    {
+      for key, slot in azurerm_linux_function_app_slot.function_slots_hardened :
       "function_slot_${key}" => slot.id
     }
   )
@@ -160,10 +207,10 @@ output "deployment_summary" {
     
     asset_counts = {
       web_apps           = length(azurerm_linux_web_app.apps)
-      function_apps      = length(azurerm_linux_function_app.functions)
+      function_apps      = length(azurerm_linux_function_app.functions_vanilla) + length(azurerm_linux_function_app.functions_hardened)
       web_app_slots      = length(azurerm_linux_web_app_slot.app_slots)
-      function_app_slots = length(azurerm_linux_function_app_slot.function_slots)
-      total_test_assets  = length(azurerm_linux_web_app.apps) + length(azurerm_linux_function_app.functions) + length(azurerm_linux_web_app_slot.app_slots) + length(azurerm_linux_function_app_slot.function_slots)
+      function_app_slots = length(azurerm_linux_function_app_slot.function_slots_vanilla) + length(azurerm_linux_function_app_slot.function_slots_hardened)
+      total_test_assets  = length(azurerm_linux_web_app.apps) + length(azurerm_linux_function_app.functions_vanilla) + length(azurerm_linux_function_app.functions_hardened) + length(azurerm_linux_web_app_slot.app_slots) + length(azurerm_linux_function_app_slot.function_slots_vanilla) + length(azurerm_linux_function_app_slot.function_slots_hardened)
     }
 
     deployed_web_apps = [
@@ -171,10 +218,16 @@ output "deployment_summary" {
       "${app.name} (${local.assets_map[key].config}-${local.assets_map[key].stack})"
     ]
 
-    deployed_function_apps = [
-      for key, func in azurerm_linux_function_app.functions :
-      "${func.name} (${local.assets_map[key].config}-${local.assets_map[key].stack})"
-    ]
+    deployed_function_apps = concat(
+      [
+        for key, func in azurerm_linux_function_app.functions_vanilla :
+        "${func.name} (${local.assets_map[key].config}-${local.assets_map[key].stack})"
+      ],
+      [
+        for key, func in azurerm_linux_function_app.functions_hardened :
+        "${func.name} (${local.assets_map[key].config}-${local.assets_map[key].stack})"
+      ]
+    )
   }
 }
 
@@ -196,10 +249,10 @@ output "next_steps" {
 
   ASSET COUNTS:
   - Web Apps: ${length(azurerm_linux_web_app.apps)}
-  - Function Apps: ${length(azurerm_linux_function_app.functions)}
+  - Function Apps: ${length(azurerm_linux_function_app.functions_vanilla) + length(azurerm_linux_function_app.functions_hardened)}
   - Web App Slots: ${length(azurerm_linux_web_app_slot.app_slots)}
-  - Function App Slots: ${length(azurerm_linux_function_app_slot.function_slots)}
-  - Total Test Assets: ${length(azurerm_linux_web_app.apps) + length(azurerm_linux_function_app.functions) + length(azurerm_linux_web_app_slot.app_slots) + length(azurerm_linux_function_app_slot.function_slots)}
+  - Function App Slots: ${length(azurerm_linux_function_app_slot.function_slots_vanilla) + length(azurerm_linux_function_app_slot.function_slots_hardened)}
+  - Total Test Assets: ${length(azurerm_linux_web_app.apps) + length(azurerm_linux_function_app.functions_vanilla) + length(azurerm_linux_function_app.functions_hardened) + length(azurerm_linux_web_app_slot.app_slots) + length(azurerm_linux_function_app_slot.function_slots_vanilla) + length(azurerm_linux_function_app_slot.function_slots_hardened)}
 
   NEXT STEPS:
   
