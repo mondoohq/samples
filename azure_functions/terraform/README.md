@@ -19,11 +19,22 @@ This framework provisions **24 test assets** (default) across **3 asset categori
 - **Hardened:** CIS Benchmark Level 1 + 2 compliant
 
 #### Language Stacks (3 runtimes)
-- **Python:** 3.7 (vanilla) vs 3.13 (hardened) - Supported by Web Apps and Functions
-- **PHP:** 7.4 (vanilla) vs 8.3 (hardened) - **Web Apps only** (Azure Functions don't support PHP)
-- **Java:** 11 (vanilla) vs 17 (hardened) - Supported by Web Apps and Functions
+- **Python:** 3.7 (vanilla) vs 3.13 (hardened)
+  - Supported by: Web Apps and Functions
+  - Configuration: Simple (1 parameter: `python_version`)
 
-> **Note:** PHP is only deployed for Web Apps and Web App Slots. Azure Functions do not support PHP runtime.
+- **PHP:** 7.4 (vanilla) vs 8.3 (hardened)
+  - Supported by: **Web Apps only** (Functions don't support PHP)
+  - Configuration: Simple (1 parameter: `php_version`)
+
+- **Java:** 11 (vanilla) vs 17 (hardened)
+  - Supported by: Web Apps and Functions
+  - Configuration: Complex (3 parameters: `java_version`, `java_server`, `java_server_version`)
+  - Default: Java SE (Standard Edition)
+
+> **Important Notes:**
+> - PHP is only deployed for Web Apps and Web App Slots (Azure Functions don't support PHP)
+> - Java requires 3 configuration parameters (using Java SE by default for simplicity)
 
 #### Total Assets (Default with S1 SKU)
 **20 test assets** (PHP excluded from Functions)

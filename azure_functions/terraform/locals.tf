@@ -72,6 +72,18 @@ locals {
     }
   }
 
+  # Java server configuration (required for Java apps)
+  java_server_config = {
+    vanilla = {
+      server         = var.vanilla_java_server          # "JAVA" (Java SE)
+      server_version = var.vanilla_java_server_version  # "SE"
+    }
+    hardened = {
+      server         = var.hardened_java_server          # "JAVA" (Java SE)
+      server_version = var.hardened_java_server_version  # "SE"
+    }
+  }
+
   # ============================================================================
   # RESOURCE NAMING
   # ============================================================================

@@ -68,10 +68,15 @@ resource "azurerm_linux_web_app" "apps" {
     vnet_route_all_enabled   = false  # No VNet in Phase 1
 
     # Dynamic application stack based on language
+    # Note: Java requires 3 parameters (java_version, java_server, java_server_version)
     application_stack {
       python_version = each.value.stack == "python" ? local.language_versions[each.value.config].python : null
       php_version    = each.value.stack == "php" ? local.language_versions[each.value.config].php : null
-      java_version   = each.value.stack == "java" ? local.language_versions[each.value.config].java : null
+
+      # Java requires all three parameters
+      java_version        = each.value.stack == "java" ? local.language_versions[each.value.config].java : null
+      java_server         = each.value.stack == "java" ? local.java_server_config[each.value.config].server : null
+      java_server_version = each.value.stack == "java" ? local.java_server_config[each.value.config].server_version : null
     }
 
     cors {
@@ -136,9 +141,14 @@ resource "azurerm_linux_function_app" "functions" {
 
     # Dynamic application stack based on language
     # Note: Azure Functions only support Python and Java (PHP not supported)
+    # Note: Java requires 3 parameters (java_version, java_server, java_server_version)
     application_stack {
       python_version = each.value.stack == "python" ? local.language_versions[each.value.config].python : null
-      java_version   = each.value.stack == "java" ? local.language_versions[each.value.config].java : null
+
+      # Java requires all three parameters
+      java_version        = each.value.stack == "java" ? local.language_versions[each.value.config].java : null
+      java_server         = each.value.stack == "java" ? local.java_server_config[each.value.config].server : null
+      java_server_version = each.value.stack == "java" ? local.java_server_config[each.value.config].server_version : null
     }
 
     cors {
@@ -197,10 +207,15 @@ resource "azurerm_linux_web_app_slot" "app_slots" {
     vnet_route_all_enabled   = false  # No VNet in Phase 1
 
     # Dynamic application stack based on language
+    # Note: Java requires 3 parameters (java_version, java_server, java_server_version)
     application_stack {
       python_version = each.value.stack == "python" ? local.language_versions[each.value.config].python : null
       php_version    = each.value.stack == "php" ? local.language_versions[each.value.config].php : null
-      java_version   = each.value.stack == "java" ? local.language_versions[each.value.config].java : null
+
+      # Java requires all three parameters
+      java_version        = each.value.stack == "java" ? local.language_versions[each.value.config].java : null
+      java_server         = each.value.stack == "java" ? local.java_server_config[each.value.config].server : null
+      java_server_version = each.value.stack == "java" ? local.java_server_config[each.value.config].server_version : null
     }
 
     cors {
@@ -263,9 +278,14 @@ resource "azurerm_linux_function_app_slot" "function_slots" {
 
     # Dynamic application stack based on language
     # Note: Azure Functions only support Python and Java (PHP not supported)
+    # Note: Java requires 3 parameters (java_version, java_server, java_server_version)
     application_stack {
       python_version = each.value.stack == "python" ? local.language_versions[each.value.config].python : null
-      java_version   = each.value.stack == "java" ? local.language_versions[each.value.config].java : null
+
+      # Java requires all three parameters
+      java_version        = each.value.stack == "java" ? local.language_versions[each.value.config].java : null
+      java_server         = each.value.stack == "java" ? local.java_server_config[each.value.config].server : null
+      java_server_version = each.value.stack == "java" ? local.java_server_config[each.value.config].server_version : null
     }
 
     cors {

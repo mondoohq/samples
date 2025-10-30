@@ -49,6 +49,18 @@ variable "hardened_java_version" {
   default     = "17"
 }
 
+variable "hardened_java_server" {
+  description = "Java server type for hardened assets (JAVA=Java SE, TOMCAT, JBOSSEAP)"
+  type        = string
+  default     = "JAVA"  # Java SE for simplicity
+}
+
+variable "hardened_java_server_version" {
+  description = "Java server version for hardened assets (SE for Java SE)"
+  type        = string
+  default     = "SE"  # Standard Edition
+}
+
 # Vanilla Configuration - Language Versions (Deprecated)
 variable "vanilla_python_version" {
   description = "Python version for vanilla assets (deprecated)"
@@ -66,6 +78,18 @@ variable "vanilla_java_version" {
   description = "Java version for vanilla assets (deprecated)"
   type        = string
   default     = "11"
+}
+
+variable "vanilla_java_server" {
+  description = "Java server type for vanilla assets"
+  type        = string
+  default     = "JAVA"  # Java SE
+}
+
+variable "vanilla_java_server_version" {
+  description = "Java server version for vanilla assets"
+  type        = string
+  default     = "SE"  # Standard Edition
 }
 
 # Security Configuration - Hardened
