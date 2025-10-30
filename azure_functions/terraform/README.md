@@ -29,12 +29,15 @@ This framework provisions **24 test assets** (default) across **3 asset categori
 
 - **Java:** 11 (vanilla) vs 17 (hardened)
   - Supported by: Web Apps and Functions
-  - Configuration: Complex (3 parameters: `java_version`, `java_server`, `java_server_version`)
-  - Default: Java SE (Standard Edition)
+  - **Web Apps Configuration:** Complex (3 parameters: `java_version`, `java_server`, `java_server_version`)
+  - **Function Apps Configuration:** Simple (1 parameter: `java_version` only)
+  - Default: Java SE (Standard Edition) for Web Apps
 
 > **Important Notes:**
 > - PHP is only deployed for Web Apps and Web App Slots (Azure Functions don't support PHP)
-> - Java requires 3 configuration parameters (using Java SE by default for simplicity)
+> - Java configuration differs by resource type:
+>   - **Web Apps**: Require 3 parameters (version + server + server_version)
+>   - **Function Apps**: Require only 1 parameter (version only)
 
 #### Total Assets (Default with S1 SKU)
 **20 test assets** (PHP excluded from Functions)
@@ -197,9 +200,9 @@ cnspec scan azure --subscription YOUR_SUB_ID --discover app-services \
 cnspec scan azure --subscription YOUR_SUB_ID --discover app-services \
   --asset-name mondoo-app-webapp-hardened-python-XXXX
 
-# Scan vanilla PHP function app
-cnspec scan azure --subscription YOUR_SUB_ID --discover functions \
-  --asset-name mondoo-func-vanilla-php-XXXX
+# Scan vanilla PHP web app (PHP only supported in Web Apps, not Functions)
+cnspec scan azure --subscription YOUR_SUB_ID --discover app-services \
+  --asset-name mondoo-app-webapp-vanilla-php-XXXX
 
 # Scan hardened Java function app
 cnspec scan azure --subscription YOUR_SUB_ID --discover functions \
@@ -282,16 +285,12 @@ Resource Group: mondoo-rg-test-eastus
 │   │   └── mondoo-app-webapp-hardened-java-XXXX
 │   │       └── Deployment Slot: staging
 │   │
-│   └── Function Apps (6 total)
+│   └── Function Apps (4 total - PHP not supported)
 │       ├── mondoo-func-vanilla-python-XXXX
-│       │   └── Deployment Slot: staging
-│       ├── mondoo-func-vanilla-php-XXXX
 │       │   └── Deployment Slot: staging
 │       ├── mondoo-func-vanilla-java-XXXX
 │       │   └── Deployment Slot: staging
 │       ├── mondoo-func-hardened-python-XXXX
-│       │   └── Deployment Slot: staging
-│       ├── mondoo-func-hardened-php-XXXX
 │       │   └── Deployment Slot: staging
 │       └── mondoo-func-hardened-java-XXXX
 │           └── Deployment Slot: staging
@@ -299,7 +298,7 @@ Resource Group: mondoo-rg-test-eastus
 └── Storage Account: mondoosatestXXXX
     └── (Required for Function Apps)
 
-Total: 24 test assets (with S1 SKU)
+Total: 20 test assets (with S1 SKU, PHP excluded from Functions)
 ```
 
 ### Network Architecture (Phase 1)
@@ -444,6 +443,18 @@ az account set --subscription YOUR_SUB_ID
 #### Issue: "Function App deployment fails"
 **Solution:** Ensure storage account is created first. Function Apps require storage accounts for backend storage.
 
+#### Issue: "Unsupported argument: java_server" or "Unsupported argument: java_server_version"
+**Cause:** Azure Function Apps do NOT support `java_server` and `java_server_version` parameters (only Web Apps do).
+**Solution:** This has been fixed in the configuration. Function Apps now only use `java_version` parameter for Java applications.
+**Note:**
+- **Web Apps**: Require 3 Java parameters (java_version, java_server, java_server_version)
+- **Function Apps**: Require only 1 Java parameter (java_version)
+
+#### Issue: "Unsupported argument: php_version" for Function Apps
+**Cause:** Azure Function Apps do NOT support PHP runtime (only Web Apps do).
+**Solution:** This has been fixed in the configuration. PHP is automatically excluded from Function App deployments.
+**Note:** If you manually set `stacks_to_deploy = ["php"]`, no Function Apps will be created (only Web Apps).
+
 ### Validation Commands
 
 ```bash
@@ -520,7 +531,8 @@ For issues or questions:
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** October 28, 2025  
+**Version:** 1.0.1
+**Last Updated:** October 30, 2025
 **Status:** Phase 1 Complete - Ready for Testing
+**Recent Updates:** Fixed Java configuration for Function Apps (java_version only, no server params)
 
