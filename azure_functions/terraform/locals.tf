@@ -22,23 +22,40 @@ locals {
   # DYNAMIC ASSET GENERATION
   # ============================================================================
 
-  # Generate all combinations of config types × asset types × language stacks
-  # This creates the full matrix of assets to deploy based on user configuration
-  asset_combinations = setproduct(
-    var.config_types_to_deploy,  # ["vanilla", "hardened"]
-    ["webapp", "function"],       # Asset types (base types, slots handled separately)
-    var.stacks_to_deploy          # ["python", "php", "java"]
-  )
+  # Define which stacks are supported by each asset type
+  # Azure Functions do NOT support PHP - only Python, Java, Node, .NET, PowerShell
+  # Web Apps support Python, PHP, Java, Node, .NET, Ruby, etc.
+  webapp_stacks = [for stack in var.stacks_to_deploy : stack]  # All selected stacks
+  function_stacks = [for stack in var.stacks_to_deploy : stack if stack != "php"]  # Exclude PHP
+
+  # Generate combinations for Web Apps (supports all languages)
+  webapp_combinations = [
+    for combo in setproduct(var.config_types_to_deploy, ["webapp"], local.webapp_stacks) :
+    {
+      config = combo[0]
+      type   = combo[1]
+      stack  = combo[2]
+    }
+  ]
+
+  # Generate combinations for Function Apps (no PHP support)
+  function_combinations = [
+    for combo in setproduct(var.config_types_to_deploy, ["function"], local.function_stacks) :
+    {
+      config = combo[0]
+      type   = combo[1]
+      stack  = combo[2]
+    }
+  ]
+
+  # Combine all asset combinations
+  all_asset_combinations = concat(local.webapp_combinations, local.function_combinations)
 
   # Create a map of assets for easy for_each usage
   # Key format: "config-type-stack" (e.g., "vanilla-webapp-python")
   assets_map = {
-    for combo in local.asset_combinations :
-    "${combo[0]}-${combo[1]}-${combo[2]}" => {
-      config = combo[0]  # "vanilla" or "hardened"
-      type   = combo[1]  # "webapp" or "function"
-      stack  = combo[2]  # "python", "php", or "java"
-    }
+    for asset in local.all_asset_combinations :
+    "${asset.config}-${asset.type}-${asset.stack}" => asset
   }
 
   # Helper function to get language version based on config and stack

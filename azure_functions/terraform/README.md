@@ -19,21 +19,23 @@ This framework provisions **24 test assets** (default) across **3 asset categori
 - **Hardened:** CIS Benchmark Level 1 + 2 compliant
 
 #### Language Stacks (3 runtimes)
-- **Python:** 3.7 (vanilla) vs 3.13 (hardened)
-- **PHP:** 7.4 (vanilla) vs 8.3 (hardened)
-- **Java:** 11 (vanilla) vs 17 (hardened)
+- **Python:** 3.7 (vanilla) vs 3.13 (hardened) - Supported by Web Apps and Functions
+- **PHP:** 7.4 (vanilla) vs 8.3 (hardened) - **Web Apps only** (Azure Functions don't support PHP)
+- **Java:** 11 (vanilla) vs 17 (hardened) - Supported by Web Apps and Functions
+
+> **Note:** PHP is only deployed for Web Apps and Web App Slots. Azure Functions do not support PHP runtime.
 
 #### Total Assets (Default with S1 SKU)
-**24 test assets** = 2 configs × 4 asset types × 3 languages
-- 6 Web Apps (vanilla + hardened × 3 languages)
-- 6 Function Apps (vanilla + hardened × 3 languages)
-- 6 Web App Slots (vanilla + hardened × 3 languages)
-- 6 Function App Slots (vanilla + hardened × 3 languages)
+**20 test assets** (PHP excluded from Functions)
+- 6 Web Apps (2 configs × 3 languages: Python, PHP, Java)
+- 4 Function Apps (2 configs × 2 languages: Python, Java - no PHP)
+- 6 Web App Slots (2 configs × 3 languages: Python, PHP, Java)
+- 4 Function App Slots (2 configs × 2 languages: Python, Java - no PHP)
 
 #### With B1 SKU (No Slots)
-**12 test assets** = 2 configs × 2 asset types × 3 languages
-- 6 Web Apps (vanilla + hardened × 3 languages)
-- 6 Function Apps (vanilla + hardened × 3 languages)
+**10 test assets** (PHP excluded from Functions)
+- 6 Web Apps (2 configs × 3 languages: Python, PHP, Java)
+- 4 Function Apps (2 configs × 2 languages: Python, Java - no PHP)
 
 ### Purpose
 
@@ -110,15 +112,15 @@ stacks_to_deploy = ["python", "php", "java"]      # or any subset like ["python"
 
 | Setting | Default | Options | Result |
 |---------|---------|---------|--------|
-| **SKU** | `S1` | `S1`, `B1` | S1 = 24 assets, B1 = 12 assets |
+| **SKU** | `S1` | `S1`, `B1` | S1 = 20 assets, B1 = 10 assets |
 | **Configs** | `["vanilla", "hardened"]` | Any subset | Filter by config type |
-| **Stacks** | `["python", "php", "java"]` | Any subset | Filter by language |
+| **Stacks** | `["python", "php", "java"]` | Any subset | Filter by language (PHP web only) |
 
 **Examples:**
-- **Full Testing (Default):** All 24 assets with S1
+- **Full Testing (Default):** All 20 assets with S1 (PHP excluded from Functions)
 - **Python Only:** Set `stacks_to_deploy = ["python"]` → 8 assets (4 with B1)
-- **Hardened Only:** Set `config_types_to_deploy = ["hardened"]` → 12 assets (6 with B1)
-- **Budget Mode:** Use B1 SKU → 12 assets (no deployment slots)
+- **Hardened Only:** Set `config_types_to_deploy = ["hardened"]` → 10 assets (5 with B1)
+- **Budget Mode:** Use B1 SKU → 10 assets (no deployment slots)
 
 #### 2. Initialize Terraform
 
@@ -132,18 +134,18 @@ terraform init
 terraform plan
 ```
 
-Expected resources: 27 total (default with S1, all stacks)
+Expected resources: 23 total (default with S1, all stacks)
 - 1 Resource Group
 - 1 App Service Plan (S1)
 - 1 Storage Account
-- 6 Web Apps (2 configs × 3 languages)
-- 6 Function Apps (2 configs × 3 languages)
-- 6 Web App Slots (2 configs × 3 languages)
-- 6 Function App Slots (2 configs × 3 languages)
+- 6 Web Apps (2 configs × 3 languages: Python, PHP, Java)
+- 4 Function Apps (2 configs × 2 languages: Python, Java)
+- 6 Web App Slots (2 configs × 3 languages: Python, PHP, Java)
+- 4 Function App Slots (2 configs × 2 languages: Python, Java)
 
-**With B1 SKU:** 15 total resources (12 test assets, no slots)
-**Python Only (S1):** 11 total resources (8 test assets)
-**Python Only (B1):** 7 total resources (4 test assets)
+**With B1 SKU:** 13 total resources (10 test assets, no slots)
+**Python Only (S1):** 11 total resources (8 test assets: 4 web + 4 function, with slots)
+**Python Only (B1):** 7 total resources (4 test assets: 2 web + 2 function, no slots)
 
 #### 4. Deploy Infrastructure
 

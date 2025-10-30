@@ -53,12 +53,12 @@ owner_email = "your-email@example.com"
 # Option 1 - Cost Optimized (No Deployment Slots):
 #   app_service_plan_sku = "B1"      # Basic - ~$13/month, NO deployment slots
 #   enable_deployment_slots = false  # Must be false for B1
-#   Total assets: 12 (6 Web Apps + 6 Function Apps, all languages)
+#   Total assets: 10 (6 Web Apps + 4 Function Apps, PHP excluded from Functions)
 #
 # Option 2 - Full Testing (With Deployment Slots): ⭐ RECOMMENDED
 #   app_service_plan_sku = "S1"      # Standard - ~$70/month, supports deployment slots
 #   enable_deployment_slots = true   # Can be true for S1
-#   Total assets: 24 (6 Web Apps + 6 Function Apps + 12 Slots, all languages)
+#   Total assets: 20 (6 Web Apps + 4 Function Apps + 10 Slots, PHP excluded from Functions)
 #
 # Default: S1 for full testing with deployment slots
 app_service_plan_sku = "S1"
@@ -83,15 +83,19 @@ config_types_to_deploy = ["vanilla", "hardened"]
 # Options:
 #   ["python", "php", "java"]  - Deploy all languages (default, comprehensive)
 #   ["python"]                 - Deploy only Python assets (CIS 2.x.2)
-#   ["php"]                    - Deploy only PHP assets (CIS 2.x.3)
+#   ["php"]                    - Deploy only PHP assets (CIS 2.x.3, Web Apps only)
 #   ["java"]                   - Deploy only Java assets (CIS 2.x.1)
 #   ["python", "php"]          - Deploy subset of languages
 #
-# Impact: Total assets = configs × asset_types × selected_stacks
-# Examples:
-#   - All 3 languages: 24 assets (with S1) or 12 assets (with B1)
+# IMPORTANT: PHP is only supported by Web Apps, not Azure Functions!
+# Azure Functions will automatically skip PHP and only deploy Python/Java.
+#
+# Impact: Total assets varies by language support
+# Examples (default both configs):
+#   - All 3 languages: 20 assets (with S1) or 10 assets (with B1)
 #   - Python only: 8 assets (with S1) or 4 assets (with B1)
-#   - Python + PHP: 16 assets (with S1) or 8 assets (with B1)
+#   - Java only: 8 assets (with S1) or 4 assets (with B1)
+#   - PHP only: 4 Web Apps (with S1) or 2 Web Apps (with B1), no Functions
 stacks_to_deploy = ["python", "php", "java"]
 
 # Storage Account Configuration
