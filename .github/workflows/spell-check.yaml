@@ -48,7 +48,7 @@ jobs:
     if: (success() || failure()) && needs.spelling.outputs.followup
     steps:
       - name: comment
-        uses: check-spelling/check-spelling@v0.0.24
+        uses: check-spelling/check-spelling@67debf50669c7fc76fc8f5d7f996384535a72b77 # v0.0.24
         with:
           checkout: true
           task: ${{ needs.spelling.outputs.followup }}
