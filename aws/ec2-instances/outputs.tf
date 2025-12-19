@@ -218,6 +218,41 @@ output "oracle9_cis_cnspec" {
   value = module.oracle9_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle9_cis_cnspec.public_ip}"
 }
 
+# oracle10
+output "oracle10" {
+  value = module.oracle10.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle10.public_ip}"
+}
+
+output "oracle10_cnspec" {
+  value = module.oracle10_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle10_cnspec.public_ip}"
+}
+
+# CIS Oracle Linux 10 - uncomment when CIS image is available
+# output "oracle10_cis" {
+#   value = module.oracle10_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle10_cis.public_ip}"
+# }
+
+# output "oracle10_cis_cnspec" {
+#   value = module.oracle10_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.oracle10_cis_cnspec.public_ip}"
+# }
+
+# alma10
+output "alma10" {
+  value = module.alma10.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} almalinux@${module.alma10.public_ip}"
+}
+
+output "alma10_cnspec" {
+  value = module.alma10_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} almalinux@${module.alma10_cnspec.public_ip}"
+}
+
+# CIS AlmaLinux 10 - uncomment when CIS image is available
+# output "alma10_cis" {
+#   value = module.alma10_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} almalinux@${module.alma10_cis.public_ip}"
+# }
+
+# output "alma10_cis_cnspec" {
+#   value = module.alma10_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} almalinux@${module.alma10_cis_cnspec.public_ip}"
+# }
 
 # rocky9
 output "rocky9" {
