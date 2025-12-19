@@ -276,14 +276,14 @@ variable "create_oracle9_cis_cnspec" {
   default = false
 }
 
-// Oracle Linux 10
-variable "create_oracle10" {
-  default = false
-}
+// Oracle Linux 10 - uncomment when AMI is available
+# variable "create_oracle10" {
+#   default = false
+# }
 
-variable "create_oracle10_cnspec" {
-  default = false
-}
+# variable "create_oracle10_cnspec" {
+#   default = false
+# }
 
 # CIS Oracle Linux 10 - uncomment when CIS image is available
 # variable "create_oracle10_cis" {
@@ -294,14 +294,14 @@ variable "create_oracle10_cnspec" {
 #   default = false
 # }
 
-// AlmaLinux 10
-variable "create_alma10" {
-  default = false
-}
+// AlmaLinux 10 - uncomment when AMI is available
+# variable "create_alma10" {
+#   default = false
+# }
 
-variable "create_alma10_cnspec" {
-  default = false
-}
+# variable "create_alma10_cnspec" {
+#   default = false
+# }
 
 # CIS AlmaLinux 10 - uncomment when CIS image is available
 # variable "create_alma10_cis" {
