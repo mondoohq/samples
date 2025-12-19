@@ -328,6 +328,32 @@ variable "create_rocky9_cis_cnspec" {
   default = false
 }
 
+// Rocky Linux 10
+variable "create_rocky10" {
+  default = false
+}
+
+variable "create_rocky10_cnspec" {
+  default = false
+}
+
+variable "create_rocky10_arm64" {
+  default = false
+}
+
+variable "create_rocky10_arm64_cnspec" {
+  default = false
+}
+
+# CIS Rocky Linux 10 - uncomment when CIS image is available
+# variable "create_rocky10_cis" {
+#   default = false
+# }
+
+# variable "create_rocky10_cis_cnspec" {
+#   default = false
+# }
+
 variable "create_windows2022" {
   default = false
 }

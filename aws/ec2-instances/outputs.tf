@@ -271,6 +271,33 @@ output "rocky9_cis_cnspec" {
   value = module.rocky9_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} rocky@${module.rocky9_cis_cnspec.public_ip}"
 }
 
+# rocky10
+output "rocky10" {
+  value = module.rocky10.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} rocky@${module.rocky10.public_ip}"
+}
+
+output "rocky10_cnspec" {
+  value = module.rocky10_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} rocky@${module.rocky10_cnspec.public_ip}"
+}
+
+# rocky10 ARM64
+output "rocky10_arm64" {
+  value = module.rocky10_arm64.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} rocky@${module.rocky10_arm64.public_ip}"
+}
+
+output "rocky10_arm64_cnspec" {
+  value = module.rocky10_arm64_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} rocky@${module.rocky10_arm64_cnspec.public_ip}"
+}
+
+# CIS Rocky Linux 10 - uncomment when CIS image is available
+# output "rocky10_cis" {
+#   value = module.rocky10_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} rocky@${module.rocky10_cis.public_ip}"
+# }
+
+# output "rocky10_cis_cnspec" {
+#   value = module.rocky10_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} rocky@${module.rocky10_cis_cnspec.public_ip}"
+# }
+
 # windows2016
 output "windows2016" {
   value = module.windows2016.public_ip == null ? "" : "xfreerdp /u:Administrator /v:${module.windows2016.public_ip}:3389 /h:2048 /w:2048 /p:'${var.windows_admin_password}'"

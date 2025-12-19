@@ -582,6 +582,66 @@ data "aws_ami" "rocky9_cis" {
   owners = ["679593333241"]
 }
 
+// Rocky Linux 10
+data "aws_ami" "rocky10" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["Rocky-10-EC2-Base*x86_64*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["792107900819"] // RockyLinux official
+}
+
+data "aws_ami" "rocky10_arm64" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["Rocky-10-EC2-Base*aarch64*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["arm64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["792107900819"] // RockyLinux official
+}
+
+# CIS Rocky Linux 10 - uncomment when available
+# data "aws_ami" "rocky10_cis" {
+#   most_recent = true
+#
+#   filter {
+#     name   = "name"
+#     values = ["CIS Rocky Linux 10 Benchmark*"]
+#   }
+#
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+#
+#   owners = ["679593333241"]
+# }
+
 data "aws_ami" "winserver2016" {
   most_recent = true
 

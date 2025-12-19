@@ -1134,6 +1134,101 @@ module "rocky9_cis_cnspec" {
   user_data_replace_on_change = true
 }
 
+// Rocky Linux 10
+
+module "rocky10" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.7.1"
+
+  create                      = var.create_rocky10
+  name                        = "${var.prefix}-rocky10-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.rocky10.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+module "rocky10_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.7.1"
+
+  create                      = var.create_rocky10_cnspec
+  name                        = "${var.prefix}-rocky10-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.rocky10.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
+// Rocky Linux 10 ARM64
+
+module "rocky10_arm64" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.7.1"
+
+  create                      = var.create_rocky10_arm64
+  name                        = "${var.prefix}-rocky10-arm64-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.rocky10_arm64.id
+  instance_type               = var.linux_instance_type_arm64
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+module "rocky10_arm64_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.7.1"
+
+  create                      = var.create_rocky10_arm64_cnspec
+  name                        = "${var.prefix}-rocky10-arm64-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.rocky10_arm64.id
+  instance_type               = var.linux_instance_type_arm64
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
+# CIS Rocky Linux 10 - uncomment when CIS image is available
+# module "rocky10_cis" {
+#   source  = "terraform-aws-modules/ec2-instance/aws"
+#   version = "~> 5.7.1"
+#
+#   create                      = var.create_rocky10_cis
+#   name                        = "${var.prefix}-rocky10-cis-${random_id.instance_id.id}"
+#   ami                         = data.aws_ami.rocky10_cis.id
+#   instance_type               = var.linux_instance_type
+#   vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#   subnet_id                   = module.vpc.public_subnets[0]
+#   key_name                    = var.aws_key_pair_name
+#   associate_public_ip_address = true
+# }
+
+# module "rocky10_cis_cnspec" {
+#   source  = "terraform-aws-modules/ec2-instance/aws"
+#   version = "~> 5.7.1"
+#
+#   create                      = var.create_rocky10_cis_cnspec
+#   name                        = "${var.prefix}-rocky10-cis-cnspec-${random_id.instance_id.id}"
+#   ami                         = data.aws_ami.rocky10_cis.id
+#   instance_type               = var.linux_instance_type
+#   vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#   subnet_id                   = module.vpc.public_subnets[0]
+#   key_name                    = var.aws_key_pair_name
+#   associate_public_ip_address = true
+#   user_data                   = base64encode(local.linux_user_data)
+#   user_data_replace_on_change = true
+# }
+
 ////////////////////////////////
 // Windows Security Groups
 
