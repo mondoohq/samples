@@ -276,6 +276,41 @@ variable "create_oracle9_cis_cnspec" {
   default = false
 }
 
+// Oracle Linux 10 - uncomment when AMI is available
+# variable "create_oracle10" {
+#   default = false
+# }
+
+# variable "create_oracle10_cnspec" {
+#   default = false
+# }
+
+# CIS Oracle Linux 10 - uncomment when CIS image is available
+# variable "create_oracle10_cis" {
+#   default = false
+# }
+
+# variable "create_oracle10_cis_cnspec" {
+#   default = false
+# }
+
+// AlmaLinux 10 - uncomment when AMI is available
+# variable "create_alma10" {
+#   default = false
+# }
+
+# variable "create_alma10_cnspec" {
+#   default = false
+# }
+
+# CIS AlmaLinux 10 - uncomment when CIS image is available
+# variable "create_alma10_cis" {
+#   default = false
+# }
+
+# variable "create_alma10_cis_cnspec" {
+#   default = false
+# }
 
 variable "create_rocky9" {
   default = false
@@ -292,6 +327,32 @@ variable "create_rocky9_cis" {
 variable "create_rocky9_cis_cnspec" {
   default = false
 }
+
+// Rocky Linux 10
+variable "create_rocky10" {
+  default = false
+}
+
+variable "create_rocky10_cnspec" {
+  default = false
+}
+
+variable "create_rocky10_arm64" {
+  default = false
+}
+
+variable "create_rocky10_arm64_cnspec" {
+  default = false
+}
+
+# CIS Rocky Linux 10 - uncomment when CIS image is available
+# variable "create_rocky10_cis" {
+#   default = false
+# }
+
+# variable "create_rocky10_cis_cnspec" {
+#   default = false
+# }
 
 variable "create_windows2022" {
   default = false

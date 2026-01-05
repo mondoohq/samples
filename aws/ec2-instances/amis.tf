@@ -462,6 +462,94 @@ data "aws_ami" "oracle9_cis" {
   owners = ["679593333241"]
 }
 
+// Oracle Linux 10 - uncomment and adjust filter when AMI is available
+// To find available AMIs, run:
+//   aws ec2 describe-images --owners 131827586825 679593333241 --filters "Name=name,Values=*Oracle*10*" --query 'Images[*].[Name,ImageId,OwnerId]' --output table
+//
+// Try these patterns:
+//   - ["*(SupportedImages) - Oracle Linux 10 LATEST x86_64*"] with owner 679593333241 (marketplace)
+//   - ["OL10-*-HVM-*"] with owner 131827586825 (Oracle official)
+//   - ["Oracle-Linux-10*"] with owner 131827586825
+#
+# data "aws_ami" "oracle10" {
+#   most_recent = true
+#
+#   filter {
+#     name   = "name"
+#     values = ["*(SupportedImages) - Oracle Linux 10 LATEST x86_64*"]
+#   }
+#
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+#
+#   owners = ["679593333241"]
+# }
+
+# CIS Oracle Linux 10 - uncomment when available
+# data "aws_ami" "oracle10_cis" {
+#   most_recent = true
+#
+#   filter {
+#     name   = "name"
+#     values = ["CIS Oracle Linux 10 Benchmark*"]
+#   }
+#
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+#
+#   owners = ["679593333241"]
+# }
+
+// AlmaLinux 10 - uncomment and adjust filter when AMI is available
+// To find available AMIs, run:
+//   aws ec2 describe-images --owners 764336703387 679593333241 --filters "Name=name,Values=*AlmaLinux*10*" --query 'Images[*].[Name,ImageId,OwnerId]' --output table
+//
+// Try these patterns:
+//   - ["AlmaLinux OS 10*x86_64*"] with owner 764336703387 (AlmaLinux official)
+//   - ["AlmaLinux-10-*"] with owner 764336703387
+#
+# data "aws_ami" "alma10" {
+#   most_recent = true
+#
+#   filter {
+#     name   = "name"
+#     values = ["AlmaLinux OS 10*x86_64*"]
+#   }
+#
+#   filter {
+#     name   = "architecture"
+#     values = ["x86_64"]
+#   }
+#
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+#
+#   owners = ["764336703387"]
+# }
+
+# CIS AlmaLinux 10 - uncomment when available
+# data "aws_ami" "alma10_cis" {
+#   most_recent = true
+#
+#   filter {
+#     name   = "name"
+#     values = ["CIS AlmaLinux 10 Benchmark*"]
+#   }
+#
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+#
+#   owners = ["679593333241"]
+# }
+
 data "aws_ami" "rocky9" {
   most_recent = true
 
@@ -493,6 +581,66 @@ data "aws_ami" "rocky9_cis" {
 
   owners = ["679593333241"]
 }
+
+// Rocky Linux 10
+data "aws_ami" "rocky10" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["Rocky-10-EC2-Base*x86_64*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["792107900819"] // RockyLinux official
+}
+
+data "aws_ami" "rocky10_arm64" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["Rocky-10-EC2-Base*aarch64*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["arm64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["792107900819"] // RockyLinux official
+}
+
+# CIS Rocky Linux 10 - uncomment when available
+# data "aws_ami" "rocky10_cis" {
+#   most_recent = true
+#
+#   filter {
+#     name   = "name"
+#     values = ["CIS Rocky Linux 10 Benchmark*"]
+#   }
+#
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+#
+#   owners = ["679593333241"]
+# }
 
 data "aws_ami" "winserver2016" {
   most_recent = true
