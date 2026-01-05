@@ -210,128 +210,128 @@ module "debian10" {
 }
 // Debian 11
 
-module "debian11" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.7.1"
+# module "debian11" {
+#   source  = "terraform-aws-modules/ec2-instance/aws"
+#   version = "~> 5.7.1"
+#
+#   create                      = var.create_debian11
+#   name                        = "${var.prefix}-debian11-${random_id.instance_id.id}"
+#   ami                         = data.aws_ami.debian11.id
+#   instance_type               = var.linux_instance_type
+#   vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#   subnet_id                   = module.vpc.public_subnets[0]
+#   key_name                    = var.aws_key_pair_name
+#   associate_public_ip_address = true
+# }
 
-  create                      = var.create_debian11
-  name                        = "${var.prefix}-debian11-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.debian11.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-}
+# module "debian11_cnspec" {
+#   source  = "terraform-aws-modules/ec2-instance/aws"
+#   version = "~> 5.7.1"
+#
+#   create                      = var.create_debian11_cnspec
+#   name                        = "${var.prefix}-debian11-cnspec-${random_id.instance_id.id}"
+#   ami                         = data.aws_ami.debian11.id
+#   instance_type               = var.linux_instance_type
+#   vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#   subnet_id                   = module.vpc.public_subnets[0]
+#   key_name                    = var.aws_key_pair_name
+#   associate_public_ip_address = true
+#   user_data                   = base64encode(local.linux_user_data)
+#   user_data_replace_on_change = true
+# }
 
-module "debian11_cnspec" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.7.1"
+# module "debian11_cis" {
+#   source  = "terraform-aws-modules/ec2-instance/aws"
+#   version = "~> 5.7.1"
+#
+#   create                      = var.create_debian11_cis
+#   name                        = "${var.prefix}-debian11-cis-${random_id.instance_id.id}"
+#   ami                         = data.aws_ami.debian11_cis.id
+#   instance_type               = var.linux_instance_type
+#   vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#   subnet_id                   = module.vpc.public_subnets[0]
+#   key_name                    = var.aws_key_pair_name
+#   associate_public_ip_address = true
+# }
 
-  create                      = var.create_debian11_cnspec
-  name                        = "${var.prefix}-debian11-cnspec-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.debian11.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-  user_data                   = base64encode(local.linux_user_data)
-  user_data_replace_on_change = true
-}
-
-module "debian11_cis" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.7.1"
-
-  create                      = var.create_debian11_cis
-  name                        = "${var.prefix}-debian11-cis-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.debian11_cis.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-}
-
-module "debian11_cis_cnspec" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.7.1"
-
-  create                      = var.create_debian11_cis_cnspec
-  name                        = "${var.prefix}-debian11-cis-cnspec-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.debian11_cis.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-  user_data                   = base64encode(local.linux_user_data)
-  user_data_replace_on_change = true
-}
+# module "debian11_cis_cnspec" {
+#   source  = "terraform-aws-modules/ec2-instance/aws"
+#   version = "~> 5.7.1"
+#
+#   create                      = var.create_debian11_cis_cnspec
+#   name                        = "${var.prefix}-debian11-cis-cnspec-${random_id.instance_id.id}"
+#   ami                         = data.aws_ami.debian11_cis.id
+#   instance_type               = var.linux_instance_type
+#   vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#   subnet_id                   = module.vpc.public_subnets[0]
+#   key_name                    = var.aws_key_pair_name
+#   associate_public_ip_address = true
+#   user_data                   = base64encode(local.linux_user_data)
+#   user_data_replace_on_change = true
+# }
 
 // Debian 12
 
-module "debian12" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.7.1"
+# module "debian12" {
+#   source  = "terraform-aws-modules/ec2-instance/aws"
+#   version = "~> 5.7.1"
+#
+#   create                      = var.create_debian12
+#   name                        = "${var.prefix}-debian12-${random_id.instance_id.id}"
+#   ami                         = data.aws_ami.debian12.id
+#   instance_type               = var.linux_instance_type
+#   vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#   subnet_id                   = module.vpc.public_subnets[0]
+#   key_name                    = var.aws_key_pair_name
+#   associate_public_ip_address = true
+# }
 
-  create                      = var.create_debian12
-  name                        = "${var.prefix}-debian12-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.debian12.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-}
-
-module "debian12_cnspec" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.7.1"
-
-  create                      = var.create_debian12_cnspec
-  name                        = "${var.prefix}-debian12-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.debian12.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-  user_data                   = base64encode(local.linux_user_data)
-  user_data_replace_on_change = true
-}
+# module "debian12_cnspec" {
+#   source  = "terraform-aws-modules/ec2-instance/aws"
+#   version = "~> 5.7.1"
+#
+#   create                      = var.create_debian12_cnspec
+#   name                        = "${var.prefix}-debian12-${random_id.instance_id.id}"
+#   ami                         = data.aws_ami.debian12.id
+#   instance_type               = var.linux_instance_type
+#   vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#   subnet_id                   = module.vpc.public_subnets[0]
+#   key_name                    = var.aws_key_pair_name
+#   associate_public_ip_address = true
+#   user_data                   = base64encode(local.linux_user_data)
+#   user_data_replace_on_change = true
+# }
 
 
-module "debian12_cis" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.7.1"
+# module "debian12_cis" {
+#   source  = "terraform-aws-modules/ec2-instance/aws"
+#   version = "~> 5.7.1"
+#
+#   create                      = var.create_debian12_cis
+#   name                        = "${var.prefix}-debian12-cis-${random_id.instance_id.id}"
+#   ami                         = data.aws_ami.debian12_cis.id
+#   instance_type               = var.linux_instance_type
+#   vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#   subnet_id                   = module.vpc.public_subnets[0]
+#   key_name                    = var.aws_key_pair_name
+#   associate_public_ip_address = true
+# }
 
-  create                      = var.create_debian12_cis
-  name                        = "${var.prefix}-debian12-cis-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.debian12_cis.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-}
-
-module "debian12_cis_cnspec" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.7.1"
-
-  create                      = var.create_debian12_cis_cnspec
-  name                        = "${var.prefix}-debian12-cis-cnspec-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.debian12_cis.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-  user_data                   = base64encode(local.linux_user_data)
-  user_data_replace_on_change = true
-}
+# module "debian12_cis_cnspec" {
+#   source  = "terraform-aws-modules/ec2-instance/aws"
+#   version = "~> 5.7.1"
+#
+#   create                      = var.create_debian12_cis_cnspec
+#   name                        = "${var.prefix}-debian12-cis-cnspec-${random_id.instance_id.id}"
+#   ami                         = data.aws_ami.debian12_cis.id
+#   instance_type               = var.linux_instance_type
+#   vpc_security_group_ids      = [module.linux_sg.security_group_id]
+#   subnet_id                   = module.vpc.public_subnets[0]
+#   key_name                    = var.aws_key_pair_name
+#   associate_public_ip_address = true
+#   user_data                   = base64encode(local.linux_user_data)
+#   user_data_replace_on_change = true
+# }
 
 
 
