@@ -142,39 +142,39 @@ output "debian10" {
 }
 
 # debian11
-output "debian11" {
-  value = module.debian11.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11.public_ip}"
-}
+# output "debian11" {
+#   value = module.debian11.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11.public_ip}"
+# }
 
-output "debian11_cnspec" {
-  value = module.debian11_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11_cnspec.public_ip}"
-}
+# output "debian11_cnspec" {
+#   value = module.debian11_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11_cnspec.public_ip}"
+# }
 
-output "debian11_cis" {
-  value = module.debian11_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11_cis.public_ip}"
-}
+# output "debian11_cis" {
+#   value = module.debian11_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11_cis.public_ip}"
+# }
 
-output "debian11_cis_cnspec" {
-  value = module.debian11_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11_cis_cnspec.public_ip}"
-}
+# output "debian11_cis_cnspec" {
+#   value = module.debian11_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11_cis_cnspec.public_ip}"
+# }
 
 # debian12
-output "debian12" {
-  value = module.debian12.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian12.public_ip}"
-}
+# output "debian12" {
+#   value = module.debian12.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian12.public_ip}"
+# }
 
-output "debian12_cnspec" {
-  value = module.debian12_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian12_cnspec.public_ip}"
-}
+# output "debian12_cnspec" {
+#   value = module.debian12_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian12_cnspec.public_ip}"
+# }
 
 #debian12cis
-output "debian12_cis" {
-  value = module.debian12_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian12_cis.public_ip}"
-}
+# output "debian12_cis" {
+#   value = module.debian12_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian12_cis.public_ip}"
+# }
 
-output "debian12_cis_cnspec" {
-  value = module.debian12_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian12_cis_cnspec.public_ip}"
-}
+# output "debian12_cis_cnspec" {
+#   value = module.debian12_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian12_cis_cnspec.public_ip}"
+# }
 
 # suse15
 output "suse15" {
