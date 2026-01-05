@@ -312,69 +312,69 @@ data "aws_ami" "debian10" {
   owners = ["136693071363"]
 }
 
-data "aws_ami" "debian11" {
-  most_recent = true
+# data "aws_ami" "debian11" {
+#   most_recent = true
+#
+#   filter {
+#     name   = "name"
+#     values = ["debian-11-amd64-2023*"]
+#   }
+#
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+#
+#   owners = ["136693071363"]
+# }
 
-  filter {
-    name   = "name"
-    values = ["debian-11-amd64-2023*"]
-  }
+# data "aws_ami" "debian11_cis" {
+#   most_recent = true
+#
+#   filter {
+#     name   = "name"
+#     values = ["CIS Debian Linux 11*"]
+#   }
+#
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+#
+#   owners = ["679593333241"]
+# }
 
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
+# data "aws_ami" "debian12" {
+#   most_recent = true
+#
+#   filter {
+#     name   = "name"
+#     values = ["debian-12-amd64-2023*"]
+#   }
+#
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+#
+#   owners = ["136693071363"]
+# }
 
-  owners = ["136693071363"]
-}
-
-data "aws_ami" "debian11_cis" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["CIS Debian Linux 11*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["679593333241"]
-}
-
-data "aws_ami" "debian12" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["debian-12-amd64-2023*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["136693071363"]
-}
-
-data "aws_ami" "debian12_cis" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["CIS Debian Linux 12*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["679593333241"]
-}
+# data "aws_ami" "debian12_cis" {
+#   most_recent = true
+#
+#   filter {
+#     name   = "name"
+#     values = ["CIS Debian Linux 12*"]
+#   }
+#
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+#
+#   owners = ["679593333241"]
+# }
 
 data "aws_ami" "suse15" {
   most_recent = true
