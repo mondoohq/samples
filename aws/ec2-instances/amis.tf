@@ -376,6 +376,38 @@ data "aws_ami" "debian12_cis" {
   owners = ["679593333241"]
 }
 
+data "aws_ami" "debian13" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["debian-13-amd64-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["136693071363"]
+}
+
+data "aws_ami" "debian13_cis" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["CIS Debian Linux 13*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
 data "aws_ami" "suse15" {
   most_recent = true
 
