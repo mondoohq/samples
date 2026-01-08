@@ -185,13 +185,14 @@ output "debian13_cnspec" {
   value = module.debian13_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian13_cnspec.public_ip}"
 }
 
-output "debian13_cis" {
-  value = module.debian13_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian13_cis.public_ip}"
-}
+// CIS Debian 13 - uncomment when CIS image is available
+// output "debian13_cis" {
+//   value = module.debian13_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian13_cis.public_ip}"
+// }
 
-output "debian13_cis_cnspec" {
-  value = module.debian13_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian13_cis_cnspec.public_ip}"
-}
+// output "debian13_cis_cnspec" {
+//   value = module.debian13_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian13_cis_cnspec.public_ip}"
+// }
 
 # suse15
 output "suse15" {
