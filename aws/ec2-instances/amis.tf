@@ -317,7 +317,7 @@ data "aws_ami" "debian11" {
 
   filter {
     name   = "name"
-    values = ["debian-11-amd64-2023*"]
+    values = ["debian-11-amd64-*"]
   }
 
   filter {
@@ -349,7 +349,7 @@ data "aws_ami" "debian12" {
 
   filter {
     name   = "name"
-    values = ["debian-12-amd64-2023*"]
+    values = ["debian-12-amd64-*"]
   }
 
   filter {
