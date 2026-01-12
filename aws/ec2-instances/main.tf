@@ -1569,7 +1569,7 @@ module "private_ami" {
 
   create                      = var.create_private_ami
   name                        = "${var.prefix}-${var.private_ami_name}-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.private_ami.id
+  ami                         = one(data.aws_ami.private_ami[*].id)
   instance_type               = var.private_ami_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
@@ -1583,7 +1583,7 @@ module "private_ami_cnspec" {
 
   create                      = var.create_private_ami_cnspec
   name                        = "${var.prefix}-${var.private_ami_name}-cnspec-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.private_ami.id
+  ami                         = one(data.aws_ami.private_ami[*].id)
   instance_type               = var.private_ami_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
