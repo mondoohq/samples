@@ -805,8 +805,11 @@ data "aws_ami" "winserver2022_italian" {
 
 ////////////////////////////////
 // Private AMI
+// Only look up the AMI when both owner and ID are specified to avoid
+// "owners.0 must not be empty" error when variables are not set
 
 data "aws_ami" "private_ami" {
+  count       = var.private_ami_owner != "" && var.private_ami_id != "" ? 1 : 0
   most_recent = true
 
   filter {
