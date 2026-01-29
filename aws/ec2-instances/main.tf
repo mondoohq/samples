@@ -1071,6 +1071,68 @@ module "ubuntu2404" {
 }
 
 
+// SuSe Enterprise 12
+
+module "suse12" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.7.1"
+
+  create                      = var.create_suse12
+  name                        = "${var.prefix}-suse12-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.suse12.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+module "suse12_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.7.1"
+
+  create                      = var.create_suse12_cnspec
+  name                        = "${var.prefix}-suse12-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.suse12.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
+module "suse12_hardened" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.7.1"
+
+  create                      = var.create_suse12_hardened
+  name                        = "${var.prefix}-suse12-hardened-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.suse12.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+module "suse12_hardened_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.7.1"
+
+  create                      = var.create_suse12_hardened_cnspec
+  name                        = "${var.prefix}-suse12-hardened-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.suse12.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
 // SuSe Enterprise 15
 
 module "suse15" {

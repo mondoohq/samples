@@ -409,6 +409,27 @@ data "aws_ami" "debian13" {
 //   owners = ["679593333241"]
 // }
 
+data "aws_ami" "suse12" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["suse-sles-12-sp5*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["013907871322"]
+}
+
 data "aws_ami" "suse15" {
   most_recent = true
 

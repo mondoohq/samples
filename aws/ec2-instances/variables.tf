@@ -253,6 +253,22 @@ variable "create_debian13_cnspec" {
 //   default = false
 // }
 
+variable "create_suse12" {
+  default = false
+}
+
+variable "create_suse12_cnspec" {
+  default = false
+}
+
+variable "create_suse12_hardened" {
+  default = false
+}
+
+variable "create_suse12_hardened_cnspec" {
+  default = false
+}
+
 variable "create_suse15" {
   default = false
 }
