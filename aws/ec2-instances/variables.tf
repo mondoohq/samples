@@ -192,13 +192,14 @@ variable "create_rhel8_cis_cnspec" {
   default = false
 }
 
-variable "create_nginx_rhel9_cis" {
-  default = false
-}
+// CIS NGINX on RHEL 9 - commented out as AMI is not available
+// variable "create_nginx_rhel9_cis" {
+//   default = false
+// }
 
-variable "create_nginx_rhel9_cis_cnspec" {
-  default = false
-}
+// variable "create_nginx_rhel9_cis_cnspec" {
+//   default = false
+// }
 
 variable "create_debian10" {
   default = false
@@ -261,13 +262,14 @@ variable "create_suse12_cnspec" {
   default = false
 }
 
-variable "create_suse12_hardened" {
-  default = false
-}
+// SUSE 12 hardened - removed, testing only default state now
+// variable "create_suse12_hardened" {
+//   default = false
+// }
 
-variable "create_suse12_hardened_cnspec" {
-  default = false
-}
+// variable "create_suse12_hardened_cnspec" {
+//   default = false
+// }
 
 variable "create_suse15" {
   default = false

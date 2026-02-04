@@ -70,14 +70,14 @@ output "rhel9_cis_cnspec" {
   value = module.rhel9_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel9_cis_cnspec.public_ip}"
 }
 
-# nginx on rhel9 cis
-output "nginx_rhel9_cis" {
-  value = module.nginx_rhel9_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.nginx_rhel9_cis.public_ip}"
-}
+# nginx on rhel9 cis - commented out as AMI is not available
+// output "nginx_rhel9_cis" {
+//   value = module.nginx_rhel9_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.nginx_rhel9_cis.public_ip}"
+// }
 
-output "nginx_rhel9_cis_cnspec" {
-  value = module.nginx_rhel9_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.nginx_rhel9_cis_cnspec.public_ip}"
-}
+// output "nginx_rhel9_cis_cnspec" {
+//   value = module.nginx_rhel9_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.nginx_rhel9_cis_cnspec.public_ip}"
+// }
 
 # ubuntu1804
 output "ubuntu1804" {
@@ -203,13 +203,14 @@ output "suse12_cnspec" {
   value = module.suse12_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.suse12_cnspec.public_ip}"
 }
 
-output "suse12_hardened" {
-  value = module.suse12_hardened.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.suse12_hardened.public_ip}"
-}
+// SUSE 12 hardened - removed, testing only default state now
+// output "suse12_hardened" {
+//   value = module.suse12_hardened.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.suse12_hardened.public_ip}"
+// }
 
-output "suse12_hardened_cnspec" {
-  value = module.suse12_hardened_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.suse12_hardened_cnspec.public_ip}"
-}
+// output "suse12_hardened_cnspec" {
+//   value = module.suse12_hardened_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.suse12_hardened_cnspec.public_ip}"
+// }
 
 # suse15
 output "suse15" {
