@@ -1,0 +1,29 @@
+# Development Environment Configuration
+# Copy this file to terraform.tfvars and fill in the values
+
+project_name = "intune-prototype"
+environment  = "dev"
+location     = "eastus"
+
+# VM Configuration
+vm_admin_username = "azureadmin"
+# vm_admin_password - DO NOT set a default. Generate a secure password:
+#   openssl rand -base64 24
+# Then pass via: terraform apply -var="vm_admin_password=YOUR_SECURE_PASSWORD"
+vm_size           = "Standard_D2s_v3"
+
+# Network Configuration
+vnet_address_space    = ["10.0.0.0/16"]
+subnet_address_prefix = "10.0.1.0/24"
+
+# Mondoo Configuration (set via environment variables)
+# MONDOO_API_TOKEN - Mondoo API token for provider auth
+# TF_VAR_mondoo_org_id - Mondoo organization ID (e.g., "lunalectric")
+
+# Tags
+tags = {
+  Project     = "intune-prototype"
+  Environment = "dev"
+  ManagedBy   = "terraform"
+  Purpose     = "windows-remediation-poc"
+}

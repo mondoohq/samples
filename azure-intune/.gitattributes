@@ -1,0 +1,2 @@
+testbed/installers/**/*.exe filter=lfs diff=lfs merge=lfs -text
+testbed/installers/**/*.msi filter=lfs diff=lfs merge=lfs -text
