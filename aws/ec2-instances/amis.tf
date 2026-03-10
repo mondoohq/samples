@@ -64,6 +64,23 @@ data "aws_ami" "amazon2_cis" {
   owners = ["679593333241"]
 }
 
+# RHEL 7
+data "aws_ami" "rhel7" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["RHEL-7.9_HVM-*-x86_64*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["309956199498"] // Red Hat
+}
+
 data "aws_ami" "rhel8" {
   most_recent = true
 
