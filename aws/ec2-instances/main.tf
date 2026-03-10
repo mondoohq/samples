@@ -1063,7 +1063,7 @@ module "ubuntu2204_cis_arm" {
   create                      = var.create_ubuntu2204_cis_arm
   name                        = "${var.prefix}-ubuntu2204-cis-arm-${random_id.instance_id.id}"
   ami                         = data.aws_ami.ubuntu2204_cis_arm64.id
-  instance_type               = var.linux_instance_type
+  instance_type               = var.linux_instance_type_arm64
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
   key_name                    = var.aws_key_pair_name
