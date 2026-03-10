@@ -168,7 +168,7 @@ data "aws_ami" "ubuntu1804" {
 
   filter {
     name   = "name"
-    values = ["ubuntu-pro-server/images/hvm-ssd/ubuntu-bionic-18.04-arm64-pro-server-*"]
+    values = ["ubuntu-pro-server/images/hvm-ssd/ubuntu-bionic-18.04-amd64-pro-server-*"]
   }
 
   filter {
