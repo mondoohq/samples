@@ -36,6 +36,15 @@ output "amazon2023_cnspec" {
   value = module.amazon2023_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.amazon2023_cnspec.public_ip}"
 }
 
+# rhel7
+output "rhel7" {
+  value = module.rhel7.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7.public_ip}"
+}
+
+output "rhel7_cnspec" {
+  value = module.rhel7_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel7_cnspec.public_ip}"
+}
+
 # rhel8
 output "rhel8" {
   value = module.rhel8.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.rhel8.public_ip}"
@@ -139,6 +148,10 @@ output "ubuntu2404" {
 # debian10
 output "debian10" {
   value = module.debian10.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian10.public_ip}"
+}
+
+output "debian10_cnspec" {
+  value = module.debian10_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian10_cnspec.public_ip}"
 }
 
 # debian11

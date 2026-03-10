@@ -176,6 +176,14 @@ variable "create_rhel9_cnspec" {
   default = false
 }
 
+variable "create_rhel7" {
+  default = false
+}
+
+variable "create_rhel7_cnspec" {
+  default = false
+}
+
 variable "create_rhel8" {
   default = false
 }
@@ -202,6 +210,10 @@ variable "create_rhel8_cis_cnspec" {
 // }
 
 variable "create_debian10" {
+  default = false
+}
+
+variable "create_debian10_cnspec" {
   default = false
 }
 
