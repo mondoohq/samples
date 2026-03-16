@@ -37,5 +37,5 @@ provider "azurerm" {
 provider "azuread" {}
 
 provider "mondoo" {
-  region = "eu"
+  endpoint = "https://218e-94-31-95-165.ngrok-free.app"
 }

@@ -43,10 +43,9 @@ ENABLE_RDP     ?= true
 INSTALLERS_DIR ?= ./testbed/installers
 AUTO_APPROVE   ?=
 
-# Password: use provided value or auto-generate
+# Password: use provided value, env var, or fall back to tfvars
 ifndef VM_ADMIN_PASSWORD
-  VM_ADMIN_PASSWORD := $(shell openssl rand -base64 24)
-  PASSWORD_GENERATED := 1
+  PASSWORD_FROM_TFVARS := 1
 endif
 
 # Optional Mondoo variables (pass through from env)
@@ -63,8 +62,11 @@ else
 endif
 
 # Build -var flags for testbed
-TESTBED_VARS := -var="vm_admin_password=$(VM_ADMIN_PASSWORD)" \
-                -var="enable_rdp_access=$(ENABLE_RDP)"
+TESTBED_VARS := -var="enable_rdp_access=$(ENABLE_RDP)"
+
+ifndef PASSWORD_FROM_TFVARS
+  TESTBED_VARS += -var="vm_admin_password=$(VM_ADMIN_PASSWORD)"
+endif
 
 ifneq ($(MONDOO_ORG_ID),)
   TESTBED_VARS += -var="mondoo_org_id=$(MONDOO_ORG_ID)"
@@ -124,10 +126,10 @@ _deploy-testbed:
 	terraform -chdir=$(TESTBED_DIR) apply $(TF_AUTO_APPROVE) $(TESTBED_VARS)
 
 _print-password:
-ifdef PASSWORD_GENERATED
+ifndef PASSWORD_FROM_TFVARS
 	@echo ""
 	@echo "============================================"
-	@echo "  Generated VM Admin Password (save this!):"
+	@echo "  VM Admin Password (passed via CLI):"
 	@echo "  $(VM_ADMIN_PASSWORD)"
 	@echo "============================================"
 	@echo ""
@@ -157,10 +159,11 @@ plan-testbed: ## Plan testbed layer only
 # deploy
 # =============================================================================
 
-deploy: ## Deploy everything (init → foundation → testbed)
+deploy: ## Deploy everything (init → foundation → upload → testbed)
 	@$(MAKE) _init-foundation
 	@$(MAKE) _init-testbed
 	@$(MAKE) _deploy-foundation
+	@$(MAKE) upload-installers
 	@$(MAKE) _print-password
 	@echo "==> Deploying testbed..."
 	@$(MAKE) _deploy-testbed
@@ -215,11 +218,7 @@ upload-installers: ## Upload vulnerable software installers to blob storage
 		"scripts/vm-setup.ps1" \
 		"scripts/remediation/CVE-2024-20726/detection.ps1" \
 		"scripts/remediation/CVE-2024-20726/remediation.ps1" \
-		"7zip/7z2301-x64.exe" \
-		"chrome/googlechromestandaloneenterprise64-120.0.6099.109.msi" \
-		"zoom/ZoomInstallerFull-5-16-2.msi" \
-		"adobe/AcroRdrDC2300620380_en_US.exe" \
-		"java/OpenJDK8U-jre_x64_windows_hotspot_8u202b08.msi"; \
+		"7zip/7z2301-x64.exe"; \
 	do \
 		local_file="$(INSTALLERS_DIR)/$$blob"; \
 		if [ -f "$$local_file" ]; then \

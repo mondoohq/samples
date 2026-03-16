@@ -1,7 +1,7 @@
 variable "project_name" {
   description = "Project name used for resource naming"
   type        = string
-  default     = "hackathon-intune"
+  default     = "cz-intune"
 }
 
 variable "environment" {
@@ -13,7 +13,7 @@ variable "environment" {
 variable "location" {
   description = "Azure region for resources"
   type        = string
-  default     = "eastus"
+  default     = "westeurope"
 }
 
 variable "vm_admin_username" {
@@ -67,14 +67,14 @@ variable "mondoo_api_token" {
 variable "mondoo_space_name" {
   description = "Name for the Mondoo space"
   type        = string
-  default     = "hackathon-intune"
+  default     = "cz-intune"
 }
 
 variable "tags" {
   description = "Tags to apply to all resources"
   type        = map(string)
   default = {
-    Project   = "hackathon-intune"
+    Project   = "cz-intune"
     ManagedBy = "terraform"
     Purpose   = "windows-remediation-poc"
     Layer     = "testbed"
@@ -85,6 +85,12 @@ variable "enable_rdp_access" {
   description = "Enable RDP access to VMs (adds public IP and opens port 3389)"
   type        = bool
   default     = false
+}
+
+variable "rdp_source_ip" {
+  description = "Source IP address allowed for RDP access (e.g., '94.31.95.165'). If empty, RDP is open to all when enabled."
+  type        = string
+  default     = ""
 }
 
 variable "vm_admin_principal_id" {

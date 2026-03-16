@@ -29,7 +29,7 @@ resource "azurerm_network_interface" "main" {
 
 resource "azurerm_windows_virtual_machine" "main" {
   name                = "vm-${var.resource_prefix}-${var.vm_name}"
-  computer_name       = substr(replace("${var.deploy_suffix}-${replace(var.vm_name, "workstation", "ws")}", "-", ""), 0, 15) # Max 15 chars for Windows
+  computer_name       = substr(replace("${var.computer_name_prefix}${var.deploy_suffix}${replace(var.vm_name, "workstation", "ws")}", "-", ""), 0, 15) # Max 15 chars for Windows
   resource_group_name = var.resource_group_name
   location            = var.location
   size                = var.vm_size
@@ -76,15 +76,24 @@ resource "azurerm_virtual_machine_extension" "aad_join" {
   auto_upgrade_minor_version = true
   tags                       = var.tags
 
-  # Enable Intune MDM auto-enrollment during Azure AD join
-  # mdmId is the Microsoft Intune MDM identifier
+  # mdmId is set to empty string to join Azure AD WITHOUT triggering MDM
+  # auto-enrollment (which requires Azure AD Premium and rolls back the join
+  # on failure). MDM enrollment is handled separately by the setup script
+  # using deviceenroller /c /AutoEnrollMDMUsingAADDeviceCredential.
   settings = jsonencode({
-    mdmId = "0000000a-0000-0000-c000-000000000000"
+    mdmId = ""
   })
+
+  timeouts {
+    create = "30m"
+    update = "30m"
+    delete = "15m"
+  }
 }
 
-# Custom script to install cnspec and vulnerable baseline
-# Downloads script from blob storage, passes config as base64-encoded JSON to avoid escape issues
+# Setup script: installs vulnerable software, cnspec, and enrolls in Intune MDM
+# Uses deviceenroller /c /AutoEnrollMDMUsingAADDeviceCredential for enrollment
+# without requiring Azure AD Premium or user login.
 resource "azurerm_virtual_machine_extension" "setup_script" {
   count                      = var.enable_setup_script ? 1 : 0
   name                       = "SetupScript"
@@ -98,12 +107,17 @@ resource "azurerm_virtual_machine_extension" "setup_script" {
   depends_on = [azurerm_virtual_machine_extension.aad_join]
 
   # Pass config as base64-encoded JSON and download+run script inline
-  # This avoids issues with fileUris download paths
   # MondooToken is base64-encoded separately to avoid shell escaping issues during cnspec login
   protected_settings = jsonencode({
     commandToExecute = "powershell -ExecutionPolicy Bypass -Command \"[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64encode(jsonencode({ StorageUrl = var.installer_storage_url, SasToken = var.installer_sas_token, MondooTokenBase64 = base64encode(var.mondoo_registration_token) }))}')) | Set-Content C:\\setup-config.json; $wc = New-Object System.Net.WebClient; $wc.Headers.Add('x-ms-version','2020-10-02'); $scriptUrl = '${var.installer_storage_url}/scripts/vm-setup.ps1${var.installer_sas_token}'; $wc.DownloadFile($scriptUrl, 'C:\\vm-setup.ps1'); & C:\\vm-setup.ps1\""
   })
+
+  timeouts {
+    create = "30m"
+    update = "30m"
+    delete = "15m"
+  }
 }
 
 # Note: Setup script is stored in blob storage at scripts/vm-setup.ps1
-# See infrastructure/modules/windows-vm/scripts/vm-setup.ps1 for the source
+# See modules/windows-vm/scripts/vm-setup.ps1 for the source
