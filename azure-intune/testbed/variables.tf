@@ -1,7 +1,7 @@
 variable "project_name" {
   description = "Project name used for resource naming"
   type        = string
-  default     = "cz-intune"
+  default     = "hackathon-intune"
 }
 
 variable "environment" {
@@ -73,14 +73,14 @@ variable "mondoo_api_endpoint" {
 variable "mondoo_space_name" {
   description = "Name for the Mondoo space"
   type        = string
-  default     = "cz-intune"
+  default     = "hackathon-intune"
 }
 
 variable "tags" {
   description = "Tags to apply to all resources"
   type        = map(string)
   default = {
-    Project   = "cz-intune"
+    Project   = "hackathon-intune"
     ManagedBy = "terraform"
     Purpose   = "windows-remediation-poc"
     Layer     = "testbed"

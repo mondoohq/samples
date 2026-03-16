@@ -49,7 +49,7 @@ azure-intune/
 
 Persistent resources that survive testbed teardowns:
 
-- **Resource Group**: `rg-cz-intune-foundation-<suffix>`
+- **Resource Group**: `rg-hackathon-intune-foundation-<suffix>`
 - **Storage Account**: Blob storage for vulnerable software installers (`vulnerable-apps` container)
 - **Azure AD App Registration**: Service principal with Microsoft Graph permissions for Intune API access (device management, configuration, apps, scripts)
 
@@ -57,9 +57,9 @@ Persistent resources that survive testbed teardowns:
 
 Ephemeral resources that can be destroyed and rebuilt without affecting the foundation:
 
-- **Resource Group**: `rg-cz-intune-<suffix>`
+- **Resource Group**: `rg-hackathon-intune-<suffix>`
 - **Virtual Network**: VNet + subnet + NSG (with optional RDP access)
-- **Windows 11 VM**: One workstation (`cz-intune-workstation-1`) provisioned with a vulnerable software baseline
+- **Windows 11 VM**: One workstation (`hackathon-intune-workstation-1`) provisioned with a vulnerable software baseline
 - **Mondoo Integration**: Optional space + registration token for vulnerability scanning
 - **RBAC**: VM Administrator Login role assignments for Azure AD RDP
 - **Entra ID Dynamic Group**: Groups Intune-managed devices for policy targeting
