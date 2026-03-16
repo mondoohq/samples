@@ -37,5 +37,5 @@ provider "azurerm" {
 provider "azuread" {}
 
 provider "mondoo" {
-  endpoint = "https://218e-94-31-95-165.ngrok-free.app"
+  endpoint = var.mondoo_api_endpoint
 }

@@ -64,6 +64,12 @@ variable "mondoo_api_token" {
   sensitive   = true
 }
 
+variable "mondoo_api_endpoint" {
+  description = "Mondoo API endpoint URL (e.g., 'https://api.mondoo.com' or a custom endpoint)"
+  type        = string
+  default     = ""
+}
+
 variable "mondoo_space_name" {
   description = "Name for the Mondoo space"
   type        = string

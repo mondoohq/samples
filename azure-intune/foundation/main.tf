@@ -99,7 +99,7 @@ resource "azuread_application" "intune_app" {
       type = "Role"
     }
 
-    # DeviceManagementServiceConfig.ReadWrite.All (for Autopilot registration and profiles)
+    # DeviceManagementServiceConfig.ReadWrite.All
     resource_access {
       id   = "5ac13192-7ace-4fcf-b828-1a26f28068ee"
       type = "Role"
@@ -157,8 +157,8 @@ resource "azuread_app_role_assignment" "intune_scripts" {
   resource_object_id  = data.azuread_service_principal.msgraph.object_id
 }
 
-# Grant admin consent for DeviceManagementServiceConfig.ReadWrite.All (Autopilot)
-resource "azuread_app_role_assignment" "intune_autopilot" {
+# Grant admin consent for DeviceManagementServiceConfig.ReadWrite.All
+resource "azuread_app_role_assignment" "intune_service_config" {
   app_role_id         = "5ac13192-7ace-4fcf-b828-1a26f28068ee"
   principal_object_id = azuread_service_principal.intune_sp.object_id
   resource_object_id  = data.azuread_service_principal.msgraph.object_id
