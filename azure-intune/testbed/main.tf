@@ -11,7 +11,7 @@ resource "random_string" "deploy_suffix" {
 
 locals {
   resource_prefix      = var.environment != "" ? "${var.project_name}-${var.environment}-${random_string.deploy_suffix.result}" : "${var.project_name}-${random_string.deploy_suffix.result}"
-  computer_name_prefix = "czi"
+  computer_name_prefix = "intune"
 }
 
 # -----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 variable "project_name" {
   description = "Project name used for resource naming"
   type        = string
-  default     = "hackathon-intune"
+  default     = "intune-prototype"
 }
 
 variable "location" {
@@ -14,7 +14,7 @@ variable "tags" {
   description = "Tags to apply to all resources"
   type        = map(string)
   default = {
-    Project   = "hackathon-intune"
+    Project   = "intune-prototype"
     ManagedBy = "terraform"
     Purpose   = "persistent-storage"
     Layer     = "foundation"
