@@ -37,13 +37,12 @@ Write-Host "SAS Token: [REDACTED - $(($sasToken).Length) chars]"
 Write-Host "Mondoo Token: [REDACTED - $(($mondooToken).Length) chars]"
 
 # ---------------------------------------------
-# Wait for Autopilot OOBE and Intune MDM Enrollment
-# Autopilot self-deploying mode runs during OOBE after sysprep.
-# This may take 10-20 minutes as the device re-joins Azure AD and enrolls in Intune.
+# Wait for Intune MDM Enrollment
+# After Azure AD join, wait for MDM enrollment to complete.
 # ---------------------------------------------
-Write-Host '=== Waiting for Intune MDM Enrollment (post-Autopilot OOBE) ==='
+Write-Host '=== Waiting for Intune MDM Enrollment ==='
 
-$maxWait = 1800 # 30 minutes (Autopilot OOBE can be slow)
+$maxWait = 1800 # 30 minutes
 $waited = 0
 $enrolled = $false
 
@@ -68,7 +67,7 @@ if ($enrolled) {
     Write-Host '[OK] Device is enrolled in Intune MDM'
 } else {
     Write-Host '[WARN] MDM enrollment not confirmed after 30 min timeout - continuing with setup'
-    Write-Host '[WARN] Check: Azure AD > Mobility (MDM/MAM) scope, Intune license, Autopilot profile assignment'
+    Write-Host '[WARN] Check: Azure AD > Mobility (MDM/MAM) scope, Intune license, manual enrollment via RDP'
 }
 
 # Log full dsregcmd status for debugging
