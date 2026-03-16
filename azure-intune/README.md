@@ -49,7 +49,7 @@ azure-intune/
 
 Persistent resources that survive testbed teardowns:
 
-- **Resource Group**: `rg-hackathon-intune-foundation-<suffix>`
+- **Resource Group**: `rg-intune-prototype-foundation-<suffix>`
 - **Storage Account**: Blob storage for vulnerable software installers (`vulnerable-apps` container)
 - **Azure AD App Registration**: Service principal with Microsoft Graph permissions for Intune API access (device management, configuration, apps, scripts)
 
