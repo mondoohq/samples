@@ -34,3 +34,9 @@ variable "enable_rdp_access" {
   type        = bool
   default     = false
 }
+
+variable "rdp_source_ip" {
+  description = "Source IP address allowed for RDP access (e.g., '1.2.3.4'). If empty, RDP is open to all when enabled."
+  type        = string
+  default     = ""
+}

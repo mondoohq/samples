@@ -1,9 +1,9 @@
 # Development Environment Configuration
 # Copy this file to terraform.tfvars and fill in the values
 
-project_name = "intune-prototype"
+project_name = "cz-intune"
 environment  = "dev"
-location     = "eastus"
+location     = "westeurope"
 
 # VM Configuration
 vm_admin_username = "azureadmin"
@@ -22,7 +22,7 @@ subnet_address_prefix = "10.0.1.0/24"
 
 # Tags
 tags = {
-  Project     = "intune-prototype"
+  Project     = "cz-intune"
   Environment = "dev"
   ManagedBy   = "terraform"
   Purpose     = "windows-remediation-poc"
