@@ -33,6 +33,55 @@ az vm run-command invoke \
   --command-id RunPowerShellScript \
   --scripts '
 # 7-Zip 23.01 (CVE-2024-11477, fixed in 24.07)
+# First uninstall any existing 7-Zip (winget-upgraded versions use MSI, not the NSIS EXE)
+Write-Host "Uninstalling existing 7-Zip..."
+$uninstalled = $false
+
+# Try winget uninstall first (handles both MSI and EXE installations)
+$winget = Get-Command winget -ErrorAction SilentlyContinue
+if ($winget) {
+    Write-Host "Attempting winget uninstall..."
+    winget uninstall --id 7zip.7zip --silent --accept-source-agreements 2>&1 | Write-Host
+    $uninstalled = $true
+}
+
+# Fallback: try NSIS uninstaller (original EXE-based install)
+if (-not $uninstalled) {
+    $uninstaller = "C:\Program Files\7-Zip\Uninstall.exe"
+    if (Test-Path $uninstaller) {
+        Write-Host "Using NSIS uninstaller..."
+        $p = Start-Process -FilePath $uninstaller -ArgumentList "/S" -Wait -PassThru -NoNewWindow
+        Write-Host "Uninstall exit code: $($p.ExitCode)"
+        $uninstalled = $true
+    }
+}
+
+# Fallback: try MSI uninstall via registry (winget without winget CLI)
+if (-not $uninstalled) {
+    $regPaths = @(
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*",
+        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
+    )
+    $7zipEntry = Get-ItemProperty $regPaths -ErrorAction SilentlyContinue |
+        Where-Object { $_.DisplayName -like "*7-Zip*" } | Select-Object -First 1
+    if ($7zipEntry -and $7zipEntry.UninstallString) {
+        Write-Host "Using registry uninstall: $($7zipEntry.UninstallString)"
+        if ($7zipEntry.UninstallString -match "msiexec") {
+            $productCode = $7zipEntry.UninstallString -replace ".*(\{[^}]+\}).*", '"$1"'
+            $p = Start-Process msiexec.exe -ArgumentList "/x $productCode /qn" -Wait -PassThru -NoNewWindow
+        } else {
+            $p = Start-Process cmd.exe -ArgumentList "/c `"$($7zipEntry.UninstallString) /S`"" -Wait -PassThru -NoNewWindow
+        }
+        Write-Host "Uninstall exit code: $($p.ExitCode)"
+        $uninstalled = $true
+    }
+}
+
+if (-not $uninstalled) {
+    Write-Host "No existing 7-Zip installation found, proceeding with install."
+}
+Start-Sleep -Seconds 3
+
 $url = "'"$STORAGE_URL"'/7zip/7z2301-x64.exe?'"$SAS"'"
 $installer = "C:\7z2301-x64.exe"
 
