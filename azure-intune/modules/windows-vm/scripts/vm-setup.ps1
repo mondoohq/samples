@@ -1,12 +1,13 @@
 <#
 .SYNOPSIS
-    VM Setup Script - Installs vulnerable software baseline and cnspec agent
+    VM Setup Script - Installs vulnerable software baseline, cnspec agent, and enrolls in Intune
 .DESCRIPTION
-    Reads configuration from C:\setup-config.json and installs:
-    - Vulnerable software from Azure blob storage
-    - Mondoo cnspec agent for security scanning
+    Reads configuration from C:\setup-config.json and:
+    - Waits for Azure AD join to complete
+    - Enrolls the device in Intune MDM using AAD device credentials (no user login or Azure AD Premium required)
+    - Installs vulnerable software from Azure blob storage
+    - Installs Mondoo cnspec agent for security scanning
     - Configures RDP for Azure AD login
-    - Triggers Intune MDM enrollment
 #>
 
 $ErrorActionPreference = 'Continue'
@@ -37,6 +38,116 @@ $mondooToken = if ($mondooTokenBase64) { [System.Text.Encoding]::UTF8.GetString(
 Write-Host "Storage URL: $storageUrl"
 Write-Host "SAS Token: [REDACTED - $(($sasToken).Length) chars]"
 Write-Host "Mondoo Token: [REDACTED - $(($mondooToken).Length) chars]"
+
+# ---------------------------------------------
+# Wait for Azure AD Join to complete
+# The AADLoginForWindows extension runs before this script,
+# but we verify it completed successfully.
+# ---------------------------------------------
+Write-Host '=== Verifying Azure AD Join ==='
+
+$maxWait = 300 # 5 minutes
+$waited = 0
+$aadJoined = $false
+
+while ($waited -lt $maxWait -and -not $aadJoined) {
+    $dsregOutput = & "$env:windir\system32\dsregcmd.exe" /status 2>&1 | Out-String
+    if ($dsregOutput -match 'AzureAdJoined\s*:\s*YES') {
+        $aadJoined = $true
+        Write-Host "[OK] Device is Azure AD joined (confirmed after ${waited}s)"
+    } else {
+        Write-Host "  Waiting for Azure AD join... (${waited}s elapsed)"
+        Start-Sleep -Seconds 15
+        $waited += 15
+    }
+}
+
+if (-not $aadJoined) {
+    Write-Host '[ERROR] Azure AD join not detected after timeout - MDM enrollment will likely fail'
+}
+
+# ---------------------------------------------
+# Configure Intune MDM enrollment URLs
+# Pre-populate the MDM enrollment URLs in the registry so that manual
+# enrollment via Settings UI works without extra configuration.
+# ---------------------------------------------
+Write-Host '=== Configuring Intune MDM Enrollment ==='
+
+# Set MDM enrollment URLs in the registry (required when mdmId is not used in AAD join)
+$dsregOutput = & "$env:windir\system32\dsregcmd.exe" /status 2>&1 | Out-String
+$tenantId = if ($dsregOutput -match 'TenantId\s*:\s*([\w-]+)') { $Matches[1] } else { '' }
+Write-Host "Detected Tenant ID: $tenantId"
+
+if ($tenantId) {
+    $mdmRegPath = "HKLM:\SYSTEM\CurrentControlSet\Control\CloudDomainJoin\TenantInfo\$tenantId"
+    if (-not (Test-Path $mdmRegPath)) {
+        New-Item -Path $mdmRegPath -Force | Out-Null
+    }
+    Set-ItemProperty -Path $mdmRegPath -Name 'MdmEnrollmentUrl' -Value 'https://enrollment.manage.microsoft.com/enrollmentserver/discovery.svc'
+    Set-ItemProperty -Path $mdmRegPath -Name 'MdmTermsOfUseUrl' -Value 'https://portal.manage.microsoft.com/TermsofUse.aspx'
+    Set-ItemProperty -Path $mdmRegPath -Name 'MdmComplianceUrl' -Value 'https://portal.manage.microsoft.com/?portalAction=Compliance'
+    Write-Host '[OK] MDM enrollment URLs configured in registry'
+} else {
+    Write-Host '[ERROR] Could not detect tenant ID from dsregcmd - MDM enrollment may fail'
+}
+
+# NOTE: Automatic MDM enrollment (deviceenroller /c /AutoEnrollMDM) requires
+# Azure AD Premium P1/P2 for MDM user scope configuration. Without Premium,
+# Intune enrollment must be done manually via RDP:
+#   Settings > Accounts > Access work or school > Connect > "Enroll only in device management"
+Write-Host '[INFO] Intune MDM enrollment requires a manual step via RDP (no Azure AD Premium)'
+
+# Log device registration status
+Write-Host '=== Device Registration Status ==='
+& "$env:windir\system32\dsregcmd.exe" /status 2>&1
+
+# ---------------------------------------------
+# Install winget (Windows Package Manager)
+# The Azure Marketplace Windows 11 Enterprise image does not include
+# winget. Intune remediation scripts depend on winget to detect and
+# update software, so we must install it before Intune policies run.
+# ---------------------------------------------
+Write-Host '=== Installing winget ==='
+
+$wingetDir = 'C:\WingetInstall'
+New-Item -ItemType Directory -Force -Path $wingetDir | Out-Null
+
+try {
+    # Download VCLibs dependency
+    $vcLibsUrl = 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx'
+    Invoke-WebRequest -Uri $vcLibsUrl -OutFile "$wingetDir\VCLibs.appx"
+
+    # Download Microsoft.UI.Xaml dependency
+    Invoke-WebRequest -Uri 'https://www.nuget.org/api/v2/package/Microsoft.UI.Xaml/2.8.6' -OutFile "$wingetDir\microsoft.ui.xaml.2.8.6.zip"
+    Expand-Archive "$wingetDir\microsoft.ui.xaml.2.8.6.zip" -DestinationPath "$wingetDir\microsoft.ui.xaml" -Force
+    $xamlAppx = Get-ChildItem "$wingetDir\microsoft.ui.xaml" -Recurse -Filter 'Microsoft.UI.Xaml.2.8.appx' |
+        Where-Object { $_.FullName -match 'x64' } | Select-Object -First 1
+
+    # Download winget
+    $wingetUrl = 'https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
+    Invoke-WebRequest -Uri $wingetUrl -OutFile "$wingetDir\winget.msixbundle"
+
+    # Install as provisioned package (available to all users)
+    $deps = @("$wingetDir\VCLibs.appx")
+    if ($xamlAppx) { $deps += $xamlAppx.FullName }
+    Add-AppxProvisionedPackage -Online -PackagePath "$wingetDir\winget.msixbundle" -DependencyPackagePath $deps -SkipLicense -ErrorAction SilentlyContinue
+
+    # Add to system PATH so scripts running as SYSTEM can find it
+    $wingetExe = Get-ChildItem 'C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller*' -Recurse -Filter 'winget.exe' -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($wingetExe) {
+        $currentPath = [Environment]::GetEnvironmentVariable('PATH', 'Machine')
+        if ($currentPath -notlike "*$($wingetExe.DirectoryName)*") {
+            [Environment]::SetEnvironmentVariable('PATH', "$currentPath;$($wingetExe.DirectoryName)", 'Machine')
+        }
+        Write-Host "[OK] winget installed at $($wingetExe.FullName)"
+    } else {
+        Write-Host '[WARN] winget package installed but exe not found'
+    }
+} catch {
+    Write-Host "[ERROR] Failed to install winget: $_"
+}
+
+Remove-Item -Path $wingetDir -Recurse -Force -ErrorAction SilentlyContinue
 
 $tempDir = 'C:\VulnerableInstallers'
 
@@ -196,25 +307,15 @@ try {
 }
 
 # ---------------------------------------------
-# Trigger Intune MDM Auto-Enrollment
-# ---------------------------------------------
-Write-Host '=== Triggering Intune MDM Enrollment ==='
-try {
-    Start-Sleep -Seconds 30
-    & "$env:windir\system32\deviceenroller.exe" /c /AutoEnrollMDM
-    Write-Host 'MDM auto-enrollment triggered (user login still required)'
-} catch {
-    Write-Host "MDM enrollment trigger failed: $_"
-}
-
-# ---------------------------------------------
 # Generate verification report
 # ---------------------------------------------
 Write-Host '=== Generating Verification Report ==='
 $report = @{
-    Timestamp = (Get-Date).ToString('o')
-    Hostname = $env:COMPUTERNAME
-    Applications = @()
+    Timestamp      = (Get-Date).ToString('o')
+    Hostname       = $env:COMPUTERNAME
+    AzureAdJoined  = $aadJoined
+    IntuneEnrolled = $enrolled
+    Applications   = @()
 }
 
 $appsToVerify = @(
@@ -227,10 +328,10 @@ $appsToVerify = @(
 
 foreach ($app in $appsToVerify) {
     $status = @{
-        Name = $app.Name
+        Name            = $app.Name
         ExpectedVersion = $app.ExpectedVersion
-        Installed = $false
-        ActualVersion = 'N/A'
+        Installed       = $false
+        ActualVersion   = 'N/A'
     }
 
     if (Test-Path $app.Path) {

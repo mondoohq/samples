@@ -37,5 +37,5 @@ provider "azurerm" {
 provider "azuread" {}
 
 provider "mondoo" {
-  region = "eu"
+  endpoint = var.mondoo_api_endpoint
 }

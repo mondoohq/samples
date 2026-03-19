@@ -98,6 +98,12 @@ resource "azuread_application" "intune_app" {
       id   = "9255e99d-faf5-445e-bbf7-cb71482737c4"
       type = "Role"
     }
+
+    # DeviceManagementServiceConfig.ReadWrite.All
+    resource_access {
+      id   = "5ac13192-7ace-4fcf-b828-1a26f28068ee"
+      type = "Role"
+    }
   }
 
   web {
@@ -147,6 +153,13 @@ resource "azuread_app_role_assignment" "directory_read" {
 # Grant admin consent for DeviceManagementScripts.ReadWrite.All (Device Health Scripts beta API)
 resource "azuread_app_role_assignment" "intune_scripts" {
   app_role_id         = "9255e99d-faf5-445e-bbf7-cb71482737c4"
+  principal_object_id = azuread_service_principal.intune_sp.object_id
+  resource_object_id  = data.azuread_service_principal.msgraph.object_id
+}
+
+# Grant admin consent for DeviceManagementServiceConfig.ReadWrite.All
+resource "azuread_app_role_assignment" "intune_service_config" {
+  app_role_id         = "5ac13192-7ace-4fcf-b828-1a26f28068ee"
   principal_object_id = azuread_service_principal.intune_sp.object_id
   resource_object_id  = data.azuread_service_principal.msgraph.object_id
 }
