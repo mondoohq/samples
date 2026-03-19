@@ -66,10 +66,9 @@ if (-not $uninstalled) {
         Where-Object { $_.DisplayName -like "*7-Zip*" } | Select-Object -First 1
     if ($7zipEntry -and $7zipEntry.UninstallString) {
         Write-Host "Using registry uninstall: $($7zipEntry.UninstallString)"
-        if ($7zipEntry.UninstallString -match "msiexec") {
-            $productCode = $7zipEntry.UninstallString -replace ".*(\{[^}]+\}).*", '"$1"'
-            $p = Start-Process msiexec.exe -ArgumentList "/x $productCode /qn" -Wait -PassThru -NoNewWindow
-        } else {
+        if ($7zipEntry.PSChildName -match "^\{.*\}$") {
+            $p = Start-Process msiexec.exe -ArgumentList "/x $($7zipEntry.PSChildName) /qn" -Wait -PassThru -NoNewWindow
+        } elseif ($7zipEntry.UninstallString) {
             $p = Start-Process cmd.exe -ArgumentList "/c `"$($7zipEntry.UninstallString) /S`"" -Wait -PassThru -NoNewWindow
         }
         Write-Host "Uninstall exit code: $($p.ExitCode)"
