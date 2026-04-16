@@ -19,16 +19,61 @@ locals {
     cnspec scan local --config /etc/opt/mondoo/mondoo.yml --asset-name $(uname -r)
   EOT
 
-  windows_user_data_cnspec = <<-EOT
-    <powershell>
+  windows_ssh_bootstrap = <<-EOT
+    $ErrorActionPreference = 'Stop'
+    $ProgressPreference = 'SilentlyContinue'
     Set-ExecutionPolicy Unrestricted -Scope Process -Force;
-    Add-WindowsCapability -Online -Name OpenSSH.Server
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
+
+    function Install-OpenSSHFromGitHub {
+      $archivePath = "$env:TEMP\OpenSSH-Win64.zip"
+      $installPath = "C:\Program Files\OpenSSH-Win64"
+      Invoke-WebRequest -Uri "https://github.com/PowerShell/Win32-OpenSSH/releases/latest/download/OpenSSH-Win64.zip" -OutFile $archivePath
+      if (Test-Path $installPath) {
+        Remove-Item -Path $installPath -Recurse -Force
+      }
+      Expand-Archive -Path $archivePath -DestinationPath "C:\Program Files" -Force
+      & "$installPath\install-sshd.ps1"
+      & "$installPath\ssh-keygen.exe" -A
+    }
+
+    # Windows Server 2016 lacks the OpenSSH capability, and some 2019 images
+    # cannot install it during first boot, so fall back to Win32-OpenSSH when
+    # the optional feature path does not yield an sshd service.
+    $openSshCapability = Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH.Server*' | Select-Object -First 1
+    if ($openSshCapability) {
+      try {
+        if ($openSshCapability.State -ne 'Installed') {
+          Add-WindowsCapability -Online -Name $openSshCapability.Name
+        }
+      } catch {
+        Write-Host "Falling back to Win32-OpenSSH because the optional feature install failed: $($_.Exception.Message)"
+      }
+    }
+
+    if (-not (Get-Service -Name sshd -ErrorAction SilentlyContinue)) {
+      Install-OpenSSHFromGitHub
+    }
+
+    if (-not (Get-Service -Name sshd -ErrorAction SilentlyContinue)) {
+      throw "OpenSSH Server installation did not create the sshd service"
+    }
+
     New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
-    Start-Service sshd
+    if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue)) {
+      New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+    }
     Set-Service -Name sshd -StartupType 'Automatic'
+    if ((Get-Service -Name sshd).Status -ne 'Running') {
+      Start-Service sshd
+    }
     $NewPassword = ConvertTo-SecureString "${var.windows_admin_password}" -AsPlainText -Force
     Set-LocalUser -Name Administrator -Password $NewPassword
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
+  EOT
+
+  windows_user_data_cnspec = <<-EOT
+    <powershell>
+    ${local.windows_ssh_bootstrap}
     iex ((New-Object System.Net.WebClient).DownloadString('https://install.mondoo.com/ps1'));
     Install-Mondoo -RegistrationToken '${var.mondoo_registration_token}' -Service enable -UpdateTask enable -Time 12:00 -Interval 3;
     cnspec scan local --config C:\ProgramData\Mondoo\mondoo.yml;
@@ -37,13 +82,7 @@ locals {
 
   windows_user_data = <<-EOT
     <powershell>
-    Set-ExecutionPolicy Unrestricted -Scope Process -Force;
-    Add-WindowsCapability -Online -Name OpenSSH.Server
-    New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
-    Start-Service sshd
-    Set-Service -Name sshd -StartupType 'Automatic'
-    $NewPassword = ConvertTo-SecureString "${var.windows_admin_password}" -AsPlainText -Force
-    Set-LocalUser -Name Administrator -Password $NewPassword
+    ${local.windows_ssh_bootstrap}
     </powershell>
   EOT
 }
