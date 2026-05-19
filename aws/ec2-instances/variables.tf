@@ -257,14 +257,13 @@ variable "create_debian13_cnspec" {
   default = false
 }
 
-// CIS Debian 13 - uncomment when CIS image is available
-// variable "create_debian13_cis" {
-//   default = false
-// }
+variable "create_debian13_cis" {
+  default = false
+}
 
-// variable "create_debian13_cis_cnspec" {
-//   default = false
-// }
+variable "create_debian13_cis_cnspec" {
+  default = false
+}
 
 variable "create_suse12" {
   default = false
