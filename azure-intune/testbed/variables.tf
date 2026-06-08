@@ -94,7 +94,7 @@ variable "enable_rdp_access" {
 }
 
 variable "rdp_source_ip" {
-  description = "Source IP address allowed for RDP access (e.g., '94.31.95.165'). If empty, RDP is open to all when enabled."
+  description = "Source IP address allowed for RDP access (e.g., '203.0.113.10'). If empty, RDP is open to all when enabled."
   type        = string
   default     = ""
 }
