@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make deploy:*)",
+      "Bash(make help:*)",
+      "Bash(az account:*)",
+      "Bash(az role:*)",
+      "Bash(az group:*)",
+      "Bash(make init:*)",
+      "Bash(make destroy:*)",
+      "Bash(grep:*)",
+      "Bash(terraform:*)",
+      "Bash(make upload-installers:*)",
+      "Bash(az vm:*)",
+      "Bash(tail:*)",
+      "Bash(git lfs:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

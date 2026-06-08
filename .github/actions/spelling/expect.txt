@@ -1,3 +1,4 @@
+AAD
 akic
 baf
 bru
@@ -7,6 +8,7 @@ Ckxomxaar
 cpe
 cqc
 dfdaf
+direnv
 Dvf
 dvwa
 eecdfd
@@ -15,6 +17,7 @@ fjw
 functionapp
 fzvkw
 Gci
+hackathon
 hacklab
 hnlj
 hostpid
@@ -24,6 +27,7 @@ icanhazip
 Ikp
 JFUz
 Jhb
+JRE
 kalilinux
 kbcxs
 kvct
@@ -36,11 +40,13 @@ meterpreter
 MIIJKg
 msfconsole
 mondoosatest
+myorg
 nch
 NCIs
 ndots
 nginx
 noproxy
+NSG
 OPENSSH
 Perfetto
 pfuj
