@@ -24,6 +24,12 @@ variable "deploy_suffix" {
   default     = ""
 }
 
+variable "computer_name_prefix" {
+  description = "Short prefix for Windows computer name (max ~7 chars, combined with deploy_suffix and vm_name must stay under 15 chars)"
+  type        = string
+  default     = ""
+}
+
 variable "vm_size" {
   description = "Azure VM size"
   type        = string

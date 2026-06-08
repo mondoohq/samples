@@ -3,7 +3,7 @@
 
 project_name = "intune-prototype"
 environment  = "dev"
-location     = "eastus"
+location     = "westeurope"
 
 # VM Configuration
 vm_admin_username = "azureadmin"

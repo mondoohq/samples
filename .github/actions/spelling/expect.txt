@@ -7,6 +7,7 @@ chronos
 Ckxomxaar
 cpe
 cqc
+deviceenroller
 dfdaf
 direnv
 Dvf
@@ -25,6 +26,7 @@ hushlogin
 IBAA
 icanhazip
 Ikp
+IME
 JFUz
 Jhb
 JRE
@@ -65,6 +67,7 @@ unnyfkbt
 upperdir
 vmss
 webserver
+winget
 xdsp
 XVCJ
 XXXX
