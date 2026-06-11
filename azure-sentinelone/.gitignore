@@ -1,0 +1,3 @@
+# SentinelOne agent installer (you supply it; not for version control)
+*.exe
+*.msi
