@@ -56,9 +56,11 @@ pmuench
 procs
 randomart
 rdm
+rdp
 rhel
 rkd
 secops
+sentinelone
 Thu
 timesync
 umxf
@@ -66,7 +68,9 @@ unminimize
 unnyfkbt
 upperdir
 vmss
+vnet
 webserver
+westeurope
 winget
 xdsp
 XVCJ

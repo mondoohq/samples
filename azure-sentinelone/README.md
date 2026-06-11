@@ -39,7 +39,7 @@ subscription_id = "00000000-0000-0000-0000-000000000000"
 
 publicIP = "1.2.3.4/32" # your egress IP for RDP
 
-sentinelone_site_token     = "eyJ1cmwi..."                              # from the S1 console
+sentinelone_site_token     = "REPLACE_WITH_S1_SCOPE_TOKEN"              # from the S1 console
 sentinelone_installer_path = "./SentinelOneInstaller_windows_64bit.exe" # .msi or .exe both work
 
 # Optional overrides
