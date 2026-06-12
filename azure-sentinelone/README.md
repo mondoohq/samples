@@ -37,7 +37,7 @@ Create `terraform.tfvars`:
 tenant_id       = "00000000-0000-0000-0000-000000000000"
 subscription_id = "00000000-0000-0000-0000-000000000000"
 
-publicIP = "1.2.3.4/32" # your egress IP for RDP
+publicIP = "1.2.3.4/32" # your egress IP, allowed for RDP (3389) and SSH (22)
 
 sentinelone_site_token     = "REPLACE_WITH_S1_SCOPE_TOKEN"              # from the S1 console
 sentinelone_installer_path = "./SentinelOneInstaller_windows_64bit.exe" # .msi or .exe both work
@@ -80,6 +80,19 @@ the VM at:
 
 The new hosts should appear in the SentinelOne console within a few minutes
 of `terraform apply` finishing.
+
+## SSH access
+
+The install script enables Windows OpenSSH Server on every VM and the NSG
+opens port 22 to `var.publicIP`. Connect with the same local admin
+credentials used for RDP:
+
+```bash
+ssh adminuser@<public-ip-or-fqdn>
+```
+
+Password auth only (no key auth is configured). Get the password with
+`terraform output -raw rdp_credentials`.
 
 ## Find image SKUs
 
