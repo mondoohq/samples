@@ -82,5 +82,39 @@ if ($null -eq $service) {
 }
 Write-Host "SentinelAgent service status: $($service.Status)"
 
+# OpenSSH Server: ships as a Windows Capability on Win10 1809+/Server 2019+.
+# Adding it auto-creates the "OpenSSH-Server-In-TCP" firewall rule; we just
+# need to enable + start sshd and make sure it survives reboots.
+Write-Host '=== Enabling OpenSSH Server ==='
+$sshCapability = Get-WindowsCapability -Online -Name 'OpenSSH.Server*' |
+    Select-Object -First 1
+if ($null -eq $sshCapability) {
+    Write-Warning 'OpenSSH.Server capability not found on this image - skipping SSH enablement.'
+} else {
+    if ($sshCapability.State -ne 'Installed') {
+        Write-Host "Installing $($sshCapability.Name)"
+        Add-WindowsCapability -Online -Name $sshCapability.Name | Out-Null
+    } else {
+        Write-Host "$($sshCapability.Name) already installed"
+    }
+
+    Set-Service -Name sshd -StartupType Automatic
+    Start-Service sshd
+    Write-Host "sshd service status: $((Get-Service sshd).Status)"
+
+    # The capability install adds OpenSSH-Server-In-TCP, but only for the
+    # profile the NIC was on at install time. Force it to all profiles so
+    # SSH stays reachable if Windows reclassifies the network later.
+    $fwRule = Get-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -ErrorAction SilentlyContinue
+    if ($null -eq $fwRule) {
+        New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' `
+            -DisplayName 'OpenSSH Server (sshd)' `
+            -Enabled True -Direction Inbound -Protocol TCP -Action Allow `
+            -LocalPort 22 -Profile Any | Out-Null
+    } else {
+        Set-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -Enabled True -Profile Any
+    }
+}
+
 Write-Host "=== SentinelOne agent install completed: $(Get-Date) ==="
 Stop-Transcript
