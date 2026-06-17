@@ -164,6 +164,10 @@ variable "create_rhel9_cis" {
   default = false
 }
 
+variable "create_rhel10_cis" {
+  default = false
+}
+
 variable "create_rhel9_cis_cnspec" {
   default = false
 }
