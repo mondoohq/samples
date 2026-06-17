@@ -86,7 +86,7 @@ data "aws_ami" "rhel8" {
 
   filter {
     name   = "name"
-    values = ["RHEL_HA-8.6.0_HVM-*"]
+    values = ["RHEL-8.*_HVM-*-x86_64-*"]
   }
 
   filter {
@@ -94,7 +94,7 @@ data "aws_ami" "rhel8" {
     values = ["hvm"]
   }
 
-  owners = ["309956199498"]
+  owners = ["309956199498"] // Red Hat
 }
 
 data "aws_ami" "rhel8_cis" {
