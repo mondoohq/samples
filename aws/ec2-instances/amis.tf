@@ -271,7 +271,7 @@ data "aws_ami" "ubuntu2404_cis" {
 
   filter {
     name   = "name"
-    values = ["CIS Ubuntu Linux 24.04*"]
+    values = ["CIS Ubuntu Linux 24.04*Level 1*"]
   }
 
   filter {
