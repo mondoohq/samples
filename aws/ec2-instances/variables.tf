@@ -123,6 +123,10 @@ variable "create_ubuntu2204_cis" {
   default = false
 }
 
+variable "create_ubuntu2404_cis" {
+  default = false
+}
+
 variable "create_ubuntu2204_cis_cnspec" {
   default = false
 }
