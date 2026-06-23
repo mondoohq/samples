@@ -425,8 +425,10 @@ data "aws_ami" "debian12_cis" {
   most_recent = true
 
   filter {
-    name   = "name"
-    values = ["CIS Debian Linux 12*"]
+    name = "name"
+    # Pin to the Level 1 server image; most_recent over the bare wildcard can
+    # select STIG/Level 2 variants (see os-security-testing#123).
+    values = ["CIS Debian Linux 12*Level 1*"]
   }
 
   filter {
@@ -457,8 +459,10 @@ data "aws_ami" "debian13_cis" {
   most_recent = true
 
   filter {
-    name   = "name"
-    values = ["CIS Debian Linux 13*"]
+    name = "name"
+    # Pin to the Level 1 server image; most_recent over the bare wildcard can
+    # select STIG/Level 2 variants (see os-security-testing#123).
+    values = ["CIS Debian Linux 13*Level 1*"]
   }
 
   filter {
@@ -531,8 +535,10 @@ data "aws_ami" "oracle8_cis" {
   most_recent = true
 
   filter {
-    name   = "name"
-    values = ["CIS Oracle Linux 8 Benchmark*"]
+    name = "name"
+    # Pin to the Level 1 server image; the bare wildcard also matches the
+    # Level 2 image, which most_recent can select (see os-security-testing#123).
+    values = ["CIS Oracle Linux 8 Benchmark*Level 1*"]
   }
 
   filter {
@@ -564,8 +570,10 @@ data "aws_ami" "oracle9_cis" {
   most_recent = true
 
   filter {
-    name   = "name"
-    values = ["CIS Oracle Linux 9 Benchmark*"]
+    name = "name"
+    # Pin to the Level 1 server image; most_recent over the bare wildcard can
+    # select STIG/Level 2 variants (see os-security-testing#123).
+    values = ["CIS Oracle Linux 9 Benchmark*Level 1*"]
   }
 
   filter {
@@ -684,8 +692,10 @@ data "aws_ami" "rocky9_cis" {
   most_recent = true
 
   filter {
-    name   = "name"
-    values = ["CIS Rocky Linux 9 Benchmark*"]
+    name = "name"
+    # Pin to the Level 1 server image; most_recent over the bare wildcard can
+    # select STIG/Level 2 variants (see os-security-testing#123).
+    values = ["CIS Rocky Linux 9 Benchmark*Level 1*"]
   }
 
   filter {
