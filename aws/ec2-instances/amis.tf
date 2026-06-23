@@ -249,8 +249,11 @@ data "aws_ami" "ubuntu2204_cis" {
   most_recent = true
 
   filter {
-    name   = "name"
-    values = ["CIS Ubuntu Linux 22.04*"]
+    name = "name"
+    # Pin to the Level 1 server image. The bare "CIS Ubuntu Linux 22.04*"
+    # wildcard let most_recent match non-Level-1 variants (STIG / Level 2 /
+    # container) that scan well below Level 1 (see os-security-testing#123).
+    values = ["CIS Ubuntu Linux 22.04*Level 1*"]
   }
 
   filter {
@@ -387,8 +390,11 @@ data "aws_ami" "debian11_cis" {
   most_recent = true
 
   filter {
-    name   = "name"
-    values = ["CIS Debian Linux 11*"]
+    name = "name"
+    # Pin to the Level 1 server image. The bare "CIS Debian Linux 11*"
+    # wildcard let most_recent match non-Level-1 variants (STIG / Level 2 /
+    # container) that scan well below Level 1 (see os-security-testing#123).
+    values = ["CIS Debian Linux 11*Level 1*"]
   }
 
   filter {
