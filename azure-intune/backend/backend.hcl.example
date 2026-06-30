@@ -1,0 +1,20 @@
+# Partial backend config for the azurerm remote state backend.
+#
+# Auth is Azure AD only (shared-key access is disabled on the account). You must
+# be a member of the "Mondoo Staff" group, which holds "Storage Blob Data
+# Contributor" on the storage account. Just `az login` first - no keys needed.
+#
+# Usage:
+#   cp backend/backend.hcl.example backend/backend.hcl   # backend.hcl is gitignored
+#   az login
+#   terraform init -backend-config=../backend/backend.hcl
+#
+# NOTE: set `key` per config:
+#   foundation/ -> foundation.terraform.tfstate
+#   testbed/    -> testbed.terraform.tfstate
+
+resource_group_name  = "rg-cz-tfstate"
+storage_account_name = "cztfstate464dc4a4"
+container_name       = "tfstate"
+key                  = "testbed.terraform.tfstate"
+use_azuread_auth     = true
