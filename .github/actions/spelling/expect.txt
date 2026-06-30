@@ -8,6 +8,7 @@ chronos
 Ckxomxaar
 cpe
 cqc
+cztfstate
 deviceenroller
 dfdaf
 direnv
