@@ -18,6 +18,11 @@ override.tf.json
 *_override.tf.json
 *.tfplan
 
+# Remote state backend config (may contain access keys) - keep the .example only
+backend.hcl
+*.backend.hcl
+*.auto.tfbackend
+
 # OS
 .DS_Store
 Thumbs.db
