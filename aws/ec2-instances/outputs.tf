@@ -10,6 +10,14 @@ output "data_public_ip_address" {
   value = chomp(data.http.clientip.response_body)
 }
 
+output "amazon2023_cis" {
+  value = module.amazon2023_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.amazon2023_cis.public_ip}"
+}
+
+output "amazon2023_cis_cnspec" {
+  value = module.amazon2023_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.amazon2023_cis_cnspec.public_ip}"
+}
+
 # amazon2_instances
 output "amazon2" {
   value = module.amazon2.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.amazon2.public_ip}"
@@ -17,14 +25,6 @@ output "amazon2" {
 
 output "amazon2_cnspec" {
   value = module.amazon2_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.amazon2_cnspec.public_ip}"
-}
-
-output "amazon2_cis" {
-  value = module.amazon2_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.amazon2_cis.public_ip}"
-}
-
-output "amazon2_cis_cnspec" {
-  value = module.amazon2_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} ec2-user@${module.amazon2_cis_cnspec.public_ip}"
 }
 
 # amazon2023_instances
@@ -169,14 +169,6 @@ output "debian11" {
 
 output "debian11_cnspec" {
   value = module.debian11_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11_cnspec.public_ip}"
-}
-
-output "debian11_cis" {
-  value = module.debian11_cis.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11_cis.public_ip}"
-}
-
-output "debian11_cis_cnspec" {
-  value = module.debian11_cis_cnspec.public_ip == null ? "" : "ssh -o StrictHostKeyChecking=no -i ~/.ssh/${var.aws_key_pair_name} admin@${module.debian11_cis_cnspec.public_ip}"
 }
 
 # debian12
