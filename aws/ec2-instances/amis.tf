@@ -22,6 +22,28 @@ data "aws_ami" "amazon2023" {
   owners = ["137112412989"]
 }
 
+data "aws_ami" "amazon2023_cis" {
+  most_recent = true
+
+  filter {
+    name = "name"
+    # Pin to the Level 1 server image; excludes Level 2, STIG, PCS and NVIDIA variants.
+    values = ["CIS Amazon Linux 2023 Benchmark - Level 1 - v*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["679593333241"]
+}
+
 data "aws_ami" "amazon2" {
   most_recent = true
 
@@ -43,30 +65,11 @@ data "aws_ami" "amazon2" {
   owners = ["137112412989"]
 }
 
-data "aws_ami" "amazon2_cis" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["CIS Amazon Linux 2 *Level 2*"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["679593333241"]
-}
-
 # RHEL 7
 data "aws_ami" "rhel7" {
   most_recent = true
+  # All images for this EOL distro are deprecated; without this the lookup returns nothing.
+  include_deprecated = true
 
   filter {
     name   = "name"
@@ -356,6 +359,8 @@ data "aws_ami" "ubuntu2404_arm64" {
 
 data "aws_ami" "debian10" {
   most_recent = true
+  # All images for this EOL distro are deprecated; without this the lookup returns nothing.
+  include_deprecated = true
 
   filter {
     name   = "name"
@@ -384,25 +389,6 @@ data "aws_ami" "debian11" {
   }
 
   owners = ["136693071363"]
-}
-
-data "aws_ami" "debian11_cis" {
-  most_recent = true
-
-  filter {
-    name = "name"
-    # Pin to the Level 1 server image. The bare "CIS Debian Linux 11*"
-    # wildcard let most_recent match non-Level-1 variants (STIG / Level 2 /
-    # container) that scan well below Level 1 (see os-security-testing#123).
-    values = ["CIS Debian Linux 11*Level 1*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["679593333241"]
 }
 
 data "aws_ami" "debian12" {

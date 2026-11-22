@@ -95,11 +95,11 @@ variable "create_amazon2_cnspec" {
   default = false
 }
 
-variable "create_amazon2_cis" {
+variable "create_amazon2023_cis" {
   default = false
 }
 
-variable "create_amazon2_cis_cnspec" {
+variable "create_amazon2023_cis_cnspec" {
   default = false
 }
 
@@ -230,14 +230,6 @@ variable "create_debian11" {
 }
 
 variable "create_debian11_cnspec" {
-  default = false
-}
-
-variable "create_debian11_cis" {
-  default = false
-}
-
-variable "create_debian11_cis_cnspec" {
   default = false
 }
 

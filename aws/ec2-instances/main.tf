@@ -133,6 +133,36 @@ module "amazon2023_cnspec" {
 
 // Amazon Linux 2
 
+module "amazon2023_cis" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.7.1"
+
+  create                      = var.create_amazon2023_cis
+  name                        = "${var.prefix}-amazon2023-cis-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.amazon2023_cis.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+}
+
+module "amazon2023_cis_cnspec" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.7.1"
+
+  create                      = var.create_amazon2023_cis_cnspec
+  name                        = "${var.prefix}-amazon2023-cis-cnspec-${random_id.instance_id.id}"
+  ami                         = data.aws_ami.amazon2023_cis.id
+  instance_type               = var.linux_instance_type
+  vpc_security_group_ids      = [module.linux_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  associate_public_ip_address = true
+  user_data                   = base64encode(local.linux_user_data)
+  user_data_replace_on_change = true
+}
+
 module "amazon2" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.7.1"
@@ -154,36 +184,6 @@ module "amazon2_cnspec" {
   create                      = var.create_amazon2_cnspec
   name                        = "${var.prefix}-amazon2-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.amazon2.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-  user_data                   = base64encode(local.linux_user_data)
-  user_data_replace_on_change = true
-}
-
-module "amazon2_cis" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.7.1"
-
-  create                      = var.create_amazon2_cis
-  name                        = "${var.prefix}-amazon2-cis-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.amazon2_cis.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-}
-
-module "amazon2_cis_cnspec" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.7.1"
-
-  create                      = var.create_amazon2_cis_cnspec
-  name                        = "${var.prefix}-amazon2-cis-cnspec-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.amazon2_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
@@ -247,36 +247,6 @@ module "debian11_cnspec" {
   create                      = var.create_debian11_cnspec
   name                        = "${var.prefix}-debian11-cnspec-${random_id.instance_id.id}"
   ami                         = data.aws_ami.debian11.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-  user_data                   = base64encode(local.linux_user_data)
-  user_data_replace_on_change = true
-}
-
-module "debian11_cis" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.7.1"
-
-  create                      = var.create_debian11_cis
-  name                        = "${var.prefix}-debian11-cis-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.debian11_cis.id
-  instance_type               = var.linux_instance_type
-  vpc_security_group_ids      = [module.linux_sg.security_group_id]
-  subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = var.aws_key_pair_name
-  associate_public_ip_address = true
-}
-
-module "debian11_cis_cnspec" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.7.1"
-
-  create                      = var.create_debian11_cis_cnspec
-  name                        = "${var.prefix}-debian11-cis-cnspec-${random_id.instance_id.id}"
-  ami                         = data.aws_ami.debian11_cis.id
   instance_type               = var.linux_instance_type
   vpc_security_group_ids      = [module.linux_sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
